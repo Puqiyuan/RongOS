@@ -72,3 +72,5 @@ reboot: install
 clean:
 	rm *.bin *.lst *.map *.obj *.gas *.rong *.img *.sys *.bim -f
 	rm bootpack.nas -f
+	rm dsctbl.nas -f
+	rm graphic.nas -f
