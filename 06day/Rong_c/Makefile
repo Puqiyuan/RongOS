@@ -1,0 +1,74 @@
+OBJS_BOOTPACK = bootpack.obj naskfunc.obj hankaku.obj graphic.obj dsctbl.obj
+
+TOOLPATH = ../z_tools/
+INCPATH = ../z_tools/haribote/
+
+nask = $(TOOLPATH)nask.exe
+cc1 = $(TOOLPATH)cc1.exe -I$(INCPATH) -Os -Wall -quiet
+gas2nask = $(TOOLPATH)gas2nask.exe -a
+obj2bim = $(TOOLPATH)obj2bim.exe
+makefont = $(TOOLPATH)makefont.exe
+bin2obj = $(TOOLPATH)bin2obj.exe
+bim2hrb = $(TOOLPATH)bim2hrb.exe
+rulefile = $(TOOLPATH)haribote/haribote.url
+edimg = $(TOOLPATH)edimg.exe
+
+default:
+	make -r img
+
+ipl10.bin: ipl10.nas
+	wine $(nask) ipl10.nas ipl10.bin ipl10.lst
+
+asmhead.bin: asmhead.nas
+	wine $(nask) asmhead.nas asmhead.bin asmhead.lst
+
+hankaku.bin: hankaku.txt
+	wine $(makefont) hankaku.txt hankaku.bin
+
+hankaku.obj: hankaku.bin
+	wine $(bin2obj) hankaku.bin hankaku.obj _hankaku
+
+bootpack.bim: bootpack.obj naskfunc.obj hankaku.obj graphic.obj dsctbl.obj 
+	wine $(obj2bim) @/home/pqy/pqy7172/RongOS/source_w/tolset/z_tools/haribote/haribote.rul out:bootpack.bim stack:3136k \
+	map:bootpack.map bootpack.obj naskfunc.obj hankaku.obj graphic.obj \
+	dsctbl.obj
+
+bootpack.rong: bootpack.bim
+	wine $(bim2hrb) bootpack.bim bootpack.rong 0
+
+Rongbote.sys: asmhead.bin bootpack.rong
+	cat asmhead.bin bootpack.rong > Rongbote.sys
+
+Rongbote.img: ipl10.bin Rongbote.sys
+	wine $(edimg) imgin:../z_tools/fdimg0at.tek wbinimg src:ipl10.bin \
+	len:512 from:0 to:0 copy from:Rongbote.sys to:@: imgout:Rongbote.img
+
+%.gas: %.c
+	wine $(cc1) -o $*.gas $*.c
+
+%.nas: %.gas
+	wine $(gas2nask) $*.gas $*.nas
+
+%.obj: %.nas
+	wine $(nask) $*.nas $*.obj $*.lst
+
+img:
+	make -r Rongbote.img
+
+vrun: Rongbote.img
+	qemu-system-x86_64 -fda Rongbote.img
+
+drun: Rongbote.img install clean
+	sudo qemu-system-x86_64 -fda /dev/sdb
+
+install: Rongbote.img
+	sudo dd if=Rongbote.img of=/dev/sdb bs=512 count=2880
+	sudo sync
+
+reboot: install
+	make clean
+	reboot
+
+clean:
+	rm *.bin *.lst *.map *.obj *.gas *.rong *.img *.sys *.bim -f
+	rm bootpack.nas -f
