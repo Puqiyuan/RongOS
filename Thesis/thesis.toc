@@ -1,0 +1,23 @@
+\boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {1}Chapter --- Preliminary Works}{1}{chapter.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {1.1}Development Environment}{1}{section.1.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {1.2}Tools}{1}{section.1.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {1.3}Install}{1}{section.1.3}
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {2}Chapter --- Boot Loader}{2}{chapter.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2.1}Chose Disk}{2}{section.2.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2.2}The Structure of Floppy Disk}{2}{section.2.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2.3}The Source Codes and Comments of Boot Loader}{2}{section.2.3}
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{参考文献}{8}{appendix*.5}
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{指导教师简介}{8}{section*.6}
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{致\hspace {1em}谢}{10}{section*.8}
