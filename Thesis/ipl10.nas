@@ -3,7 +3,8 @@
 org 0x7c00
 	jmp entry
 	;The next codes specify the format of standard FAT12 floppy disk.
-db 0x90
+db 0x90 ;db is the abbreation of "define byte", it literally places that byte
+	;right there in the executable.
 db "RONGBOOT"
 dw 512
 db 1
