@@ -2,27 +2,27 @@
 	
 org 0x7c00
 	jmp entry
-	;The next codes specify the format of standard FAT12 floppy disk.
+	; The next codes specify the format of standard FAT12 floppy disk.
 db 0x90 ;db is the abbreation of "define byte", it literally places that byte
-	;right there in the executable.
+	; right there in the executable.
 db "RONGBOOT" ;The name of boot sector, must be 8 byte.
-dw 512
-db 1
-dw 1
-db 2
-dw 224
-dw 2880
-db 0xf0
-dw 9
-dw 18
-dw 2
-dd 0
-dd 2880
-db 0,0,0x29
-dd 0xffffffff
-db "RONGBOOTOS "
-db "FAT12   "
-resb 18
+dw 512 ; the size of every sector, must be 512 byte.
+db 1 ; the size of cluster, must be 1.
+dw 1 ; the start point of FAT, 1 general case.
+db 2 ; the number of FAT, must be 2.
+dw 224 ; the size of root directory, 224 in general.
+dw 2880 ; the size of this floppy disk, must be 2880.
+db 0xf0 ; the kind of disk.
+dw 9 ; the length of FAT.
+dw 18 ; how many sectors in one track, must be 18.
+dw 2 ; the number of head, must be 2.
+dd 0 ; no partion, must be 0.
+dd 2880 ; the size if re-writer one time.
+db 0,0,0x29 ; just fixed, no meaning.
+dd 0xffffffff 
+db "RONGBOOTOS " ; the name of disk.
+db "FAT12   " ; the name of disk formate.
+resb 18 ; reserved 18 byte.
 	
 	
 entry:
