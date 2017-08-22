@@ -1,0 +1,157 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+	\PYG{n+no}{CYLS}\PYG{k+kd}{ equ} \PYG{l+m+mi}{10}
+
+\PYG{k}{org} \PYG{l+m+mh}{0x7c00}
+	\PYG{n+nf}{jmp} \PYG{n+nv}{entry}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x90}
+\PYG{k+kd}{db} \PYG{l+s}{\PYGZdq{}RONGBOOT\PYGZdq{}}
+\PYG{k+kd}{dw} \PYG{l+m+mi}{512}
+\PYG{k+kd}{db} \PYG{l+m+mi}{1}
+\PYG{k+kd}{dw} \PYG{l+m+mi}{1}
+\PYG{k+kd}{db} \PYG{l+m+mi}{2}
+\PYG{k+kd}{dw} \PYG{l+m+mi}{224}
+\PYG{k+kd}{dw} \PYG{l+m+mi}{2880}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0xf0}
+\PYG{k+kd}{dw} \PYG{l+m+mi}{9}
+\PYG{k+kd}{dw} \PYG{l+m+mi}{18}
+\PYG{k+kd}{dw} \PYG{l+m+mi}{2}
+\PYG{k+kd}{dd} \PYG{l+m+mi}{0}
+\PYG{k+kd}{dd} \PYG{l+m+mi}{2880}
+\PYG{k+kd}{db} \PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mh}{0x29}
+\PYG{k+kd}{dd} \PYG{l+m+mh}{0xffffffff}
+\PYG{k+kd}{db} \PYG{l+s}{\PYGZdq{}RONGBOOTOS \PYGZdq{}}
+\PYG{k+kd}{db} \PYG{l+s}{\PYGZdq{}FAT12   \PYGZdq{}}
+\PYG{k+kd}{resb} \PYG{l+m+mi}{18}
+
+
+\PYG{n+nl}{entry:}
+	\PYG{n+nf}{mov} \PYG{n+nb}{ax}\PYG{p}{,} \PYG{l+m+mi}{0}
+	\PYG{n+nf}{mov} \PYG{n+nb}{ss}\PYG{p}{,} \PYG{n+nb}{ax}
+	\PYG{n+nf}{mov} \PYG{n+nb}{sp}\PYG{p}{,} \PYG{l+m+mh}{0x7c00}
+	\PYG{n+nf}{mov} \PYG{n+nb}{ds}\PYG{p}{,} \PYG{n+nb}{ax}
+
+	\PYG{n+nf}{mov} \PYG{n+nb}{si}\PYG{p}{,} \PYG{n+nv}{msg\PYGZus{}init}
+	\PYG{n+nf}{jmp} \PYG{n+nv}{init}
+
+
+\PYG{n+nl}{init:}
+	\PYG{n+nf}{mov} \PYG{n+nb}{al}\PYG{p}{,} \PYG{p}{[}\PYG{n+nb}{si}\PYG{p}{]}
+	\PYG{n+nf}{add} \PYG{n+nb}{si}\PYG{p}{,} \PYG{l+m+mi}{1}
+	\PYG{n+nf}{cmp} \PYG{n+nb}{al}\PYG{p}{,} \PYG{l+m+mi}{0}
+	\PYG{n+nf}{je} \PYG{n+nv}{load}
+	\PYG{n+nf}{mov} \PYG{n+nb}{ah}\PYG{p}{,} \PYG{l+m+mh}{0x0e}
+	\PYG{n+nf}{mov} \PYG{n+nb}{bx}\PYG{p}{,} \PYG{l+m+mi}{15}
+	\PYG{n+nf}{int} \PYG{l+m+mh}{0x10}
+	\PYG{n+nf}{jmp} \PYG{n+nv}{init}
+
+
+\PYG{n+nl}{msg\PYGZus{}init:}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0a}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0d}
+\PYG{k+kd}{db} \PYG{l+s}{\PYGZdq{}Copyright: GPL\PYGZdq{}}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0a}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0d}
+\PYG{k+kd}{db} \PYG{l+s}{\PYGZdq{}Author: Qiyuan Pu\PYGZdq{}}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0a}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0d}
+\PYG{k+kd}{db} \PYG{l+s}{\PYGZdq{}https://github.com/Puqiyuan/RongOS\PYGZdq{}}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0a}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0d}
+\PYG{k+kd}{db} \PYG{l+s}{\PYGZdq{}IPL is loading, please waiting...\PYGZdq{}}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0a}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0d}
+\PYG{k+kd}{db} \PYG{l+s}{\PYGZdq{}......\PYGZdq{}}
+
+
+\PYG{n+nl}{load:}
+
+	\PYG{n+nf}{mov} \PYG{n+nb}{ax}\PYG{p}{,} \PYG{l+m+mi}{0}
+
+	\PYG{n+nf}{mov} \PYG{n+nb}{ax}\PYG{p}{,} \PYG{l+m+mh}{0x0820}
+	\PYG{n+nf}{mov} \PYG{n+nb}{es}\PYG{p}{,} \PYG{n+nb}{ax}
+	\PYG{n+nf}{mov} \PYG{n+nb}{ch}\PYG{p}{,} \PYG{l+m+mi}{0}
+	\PYG{n+nf}{mov} \PYG{n+nb}{dh}\PYG{p}{,} \PYG{l+m+mi}{0}
+	\PYG{n+nf}{mov} \PYG{n+nb}{cl}\PYG{p}{,} \PYG{l+m+mi}{2}
+
+\PYG{n+nl}{readloop:}
+	\PYG{n+nf}{mov} \PYG{n+nb}{si}\PYG{p}{,} \PYG{l+m+mi}{0}
+
+\PYG{n+nl}{retry:}
+	\PYG{n+nf}{mov} \PYG{n+nb}{ah}\PYG{p}{,} \PYG{l+m+mh}{0x02}
+	\PYG{n+nf}{mov} \PYG{n+nb}{al}\PYG{p}{,} \PYG{l+m+mi}{1}
+	\PYG{n+nf}{mov} \PYG{n+nb}{bx}\PYG{p}{,} \PYG{l+m+mi}{0}
+	\PYG{n+nf}{mov} \PYG{n+nb}{dl}\PYG{p}{,} \PYG{l+m+mh}{0x00}
+	\PYG{n+nf}{int} \PYG{l+m+mh}{0x13}
+	\PYG{n+nf}{jnc} \PYG{n+nv}{next}
+	\PYG{n+nf}{add} \PYG{n+nb}{si}\PYG{p}{,} \PYG{l+m+mi}{1}
+	\PYG{n+nf}{cmp} \PYG{n+nb}{si}\PYG{p}{,} \PYG{l+m+mi}{5}
+	\PYG{n+nf}{jae} \PYG{n+nv}{error}
+	\PYG{n+nf}{mov} \PYG{n+nb}{ah}\PYG{p}{,} \PYG{l+m+mh}{0x00}
+	\PYG{n+nf}{mov} \PYG{n+nb}{dl}\PYG{p}{,} \PYG{l+m+mh}{0x00}
+	\PYG{n+nf}{int} \PYG{l+m+mh}{0x13}
+	\PYG{n+nf}{jmp} \PYG{n+nv}{retry}
+
+\PYG{n+nl}{next:}
+	\PYG{n+nf}{mov} \PYG{n+nb}{ax}\PYG{p}{,} \PYG{n+nb}{es}
+	\PYG{n+nf}{add} \PYG{n+nb}{ax}\PYG{p}{,} \PYG{l+m+mh}{0x0020}
+	\PYG{n+nf}{mov} \PYG{n+nb}{es}\PYG{p}{,} \PYG{n+nb}{ax}
+	\PYG{n+nf}{add} \PYG{n+nb}{cl}\PYG{p}{,} \PYG{l+m+mi}{1}
+	\PYG{n+nf}{cmp} \PYG{n+nb}{cl}\PYG{p}{,} \PYG{l+m+mi}{18}
+	\PYG{n+nf}{jbe} \PYG{n+nv}{readloop}
+	\PYG{n+nf}{mov} \PYG{n+nb}{cl}\PYG{p}{,} \PYG{l+m+mi}{1}
+	\PYG{n+nf}{add} \PYG{n+nb}{dh}\PYG{p}{,} \PYG{l+m+mi}{1}
+	\PYG{n+nf}{cmp} \PYG{n+nb}{dh}\PYG{p}{,} \PYG{l+m+mi}{2}
+	\PYG{n+nf}{jb} \PYG{n+nv}{readloop}
+	\PYG{n+nf}{mov} \PYG{n+nb}{dh}\PYG{p}{,} \PYG{l+m+mi}{0}
+	\PYG{n+nf}{add} \PYG{n+nb}{ch}\PYG{p}{,} \PYG{l+m+mi}{1}
+	\PYG{n+nf}{cmp} \PYG{n+nb}{ch}\PYG{p}{,} \PYG{n+nv}{CYLS}
+	\PYG{n+nf}{jb} \PYG{n+nv}{readloop}
+	\PYG{n+nf}{jmp} \PYG{n+nv}{correct}
+
+
+\PYG{n+nl}{fin:}
+	\PYG{n+nf}{hlt}
+	\PYG{n+nf}{jmp} \PYG{n+nv}{fin}
+
+
+\PYG{n+nl}{error:}
+	\PYG{n+nf}{mov} \PYG{n+nb}{si}\PYG{p}{,} \PYG{n+nv}{msg}
+
+
+\PYG{n+nl}{correct:}
+	\PYG{n+nf}{mov} \PYG{n+nb}{si}\PYG{p}{,} \PYG{n+nv}{msg\PYGZus{}corr}
+
+
+\PYG{n+nl}{putloop:}
+	\PYG{n+nf}{mov} \PYG{n+nb}{al}\PYG{p}{,} \PYG{p}{[}\PYG{n+nb}{si}\PYG{p}{]}
+	\PYG{n+nf}{add} \PYG{n+nb}{si}\PYG{p}{,} \PYG{l+m+mi}{1}
+	\PYG{n+nf}{cmp} \PYG{n+nb}{al}\PYG{p}{,} \PYG{l+m+mi}{0}
+	\PYG{n+nf}{mov} \PYG{p}{[}\PYG{l+m+mh}{0x0ff0}\PYG{p}{],} \PYG{n+nb}{ch}
+	\PYG{n+nf}{je} \PYG{l+m+mh}{0xc200}
+	\PYG{n+nf}{mov} \PYG{n+nb}{ah}\PYG{p}{,} \PYG{l+m+mh}{0x0e}
+	\PYG{n+nf}{mov} \PYG{n+nb}{bx}\PYG{p}{,} \PYG{l+m+mi}{15}
+	\PYG{n+nf}{int} \PYG{l+m+mh}{0x10}
+	\PYG{n+nf}{jmp} \PYG{n+nv}{putloop}
+
+
+\PYG{n+nl}{msg\PYGZus{}corr:}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0a}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0d}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0a}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0d}
+\PYG{k+kd}{db} \PYG{l+s}{\PYGZdq{}OK: IPL loaded\PYGZdq{}}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0a}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0d}
+\PYG{k+kd}{db} \PYG{l+m+mi}{0}
+
+
+\PYG{n+nl}{msg:}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0a}
+\PYG{k+kd}{db} \PYG{l+s}{\PYGZdq{}IPL load error\PYGZdq{}}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0a}
+\PYG{k+kd}{db} \PYG{l+m+mi}{0}
+\PYG{k+kd}{resb} \PYG{l+m+mh}{0x7dfe}\PYG{o}{\PYGZhy{}}\PYG{k+kc}{\PYGZdl{}}
+
+
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x55}\PYG{p}{,} \PYG{l+m+mh}{0xaa}
+\end{Verbatim}
