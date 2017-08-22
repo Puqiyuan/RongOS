@@ -1,4 +1,4 @@
-pdf: thesis.tex
+pdf: thesis.tex 
 	latexmk thesis.tex
 
 clean:
