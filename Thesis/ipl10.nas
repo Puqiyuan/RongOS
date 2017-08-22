@@ -1,6 +1,6 @@
 	CYLS equ 10
 	
-org 0x7c00
+org 0x7c00 ; load the program to address 0x7c00.
 	jmp entry
 	; The next codes specify the format of standard FAT12 floppy disk.
 db 0x90 ;db is the abbreation of "define byte", it literally places that byte
@@ -23,10 +23,10 @@ dd 0xffffffff
 db "RONGBOOTOS " ; the name of disk.
 db "FAT12   " ; the name of disk formate.
 resb 18 ; reserved 18 byte.
-	
+	; end FAT12 formate.
 	
 entry:
-	mov ax, 0
+	mov ax, 0 ; init the registers.
 	mov ss, ax
 	mov sp, 0x7c00
 	mov ds, ax
@@ -37,12 +37,12 @@ entry:
 
 init:
 	mov al, [si]
-	add si, 1
+	add si, 1 ; increment by 1.
 	cmp al, 0
 	je load
-	mov ah, 0x0e
-	mov bx, 15
-	int 0x10
+	mov ah, 0x0e ; show a character.
+	mov bx, 15   ; specify the color of the character.
+	int 0x10 ; call BIOS function, video card is number 10.
 	jmp init
 	
 
@@ -154,4 +154,5 @@ db 0
 resb 0x7dfe-$
 
 	
-db 0x55, 0xaa
+db 0x55, 0xaa ; the sector end with 0x55 0xaa, the sector is
+	;boot sector.
