@@ -5,7 +5,7 @@ org 0x7c00
 	;The next codes specify the format of standard FAT12 floppy disk.
 db 0x90 ;db is the abbreation of "define byte", it literally places that byte
 	;right there in the executable.
-db "RONGBOOT" ;The name of boot sector, muse be 8 byte.
+db "RONGBOOT" ;The name of boot sector, must be 8 byte.
 dw 512
 db 1
 dw 1
