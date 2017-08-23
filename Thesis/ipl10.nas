@@ -39,15 +39,15 @@ init:
 	mov al, [si]
 	add si, 1 ; increment by 1.
 	cmp al, 0
-	je load
-	mov ah, 0x0e ; show a character.
+	je load ; if al == 0, jmp to load, the msg_init info displayed.
+	mov ah, 0x0e ; write a character in TTY mode.
 	mov bx, 15   ; specify the color of the character.
 	int 0x10 ; call BIOS function, video card is number 10.
 	jmp init
 	
 
 msg_init:
-db 0x0a
+db 0x0a ; new line
 db 0x0d
 db "Copyright: GPL"
 db 0x0a
