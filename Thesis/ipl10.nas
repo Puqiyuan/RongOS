@@ -40,6 +40,8 @@ init:
 	add si, 1 ; increment by 1.
 	cmp al, 0
 	je load ; if al == 0, jmp to load, the msg_init info displayed.
+; the lastest character is null character, coding in 0.
+	
 	mov ah, 0x0e ; write a character in TTY mode.
 	mov bx, 15   ; specify the color of the character.
 	int 0x10 ; call BIOS function, video card is number 10.
@@ -68,14 +70,15 @@ load:
 
 	mov ax, 0
 	
-	mov ax, 0x0820
+	mov ax, 0x0820 ; load these sectors to memory begin with 0x0820.
 	mov es, ax
 	mov ch, 0 ; cylinder 0.
 	mov dh, 0 ; magnetict head 0.
 	mov cl, 2 ; sector 2.
 
 readloop:
-	mov si, 0
+	mov si, 0 ; si register is a counter, try read a sector
+	; five times.
 
 retry:
 	mov ah, 0x02 ; parameter 0x02 to ah, read disk.
@@ -84,11 +87,13 @@ retry:
 	mov dl, 0x00 ; the number of driver number.
 	int 0x13 ; after prepared parameters, call 0x13 interrupted.
 
-	jnc next
-	add si, 1
-	cmp si, 5
-	jae error
-	mov ah, 0x00
+	jnc next ; if no carry read next sector.
+	add si, 1 ; tring again read sector, counter add 1.
+	cmp si, 5 ; until five times
+	jae error ; if tring times large than five, failed.
+
+	; reset the status of floppy and read again.
+	mov ah, 0x00 
 	mov dl, 0x00
 	int 0x13
 	jmp retry
