@@ -4,6 +4,22 @@
 \usepackage[utf8]{inputenc}
 \usepackage{listings}
 \usepackage{verbatim}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows}
+\usetikzlibrary{positioning}
+
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum
+height=1cm,text centered, draw=black, fill=red!30]
+
+\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum
+width=3cm, minimum height=1cm, text centered, text width = 3cm, draw=black, fill=blue!30]
+
+\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered,
+text width = 3cm, draw=black, fill=orange!30]
+\tikzstyle{decision} = [diamond, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=green!30]
+
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
 
 \addbibresource{thesis.bib}    % 参照教程自己去写一个.bib文件
 
@@ -152,8 +168,31 @@ $$18 * 80 * 2 * 512 = 1474560 Byte = 1440 KB.$$
 The IPL(Initial Program Loader) in C0-H0-S1(cylinder 0, head 0, sector 2), and the next
 sector is C0-H0-S2.
 
-\section{The Source Codes and Comments of Boot Loader}
-\label{sec:source-codes-comm}
+
+
+\section{The Implement of Boot Loader}
+\label{sec:imple-boot-loader}
+
+\subsection{Structure of Program}
+\label{sec:structure-program}
+
+
+\begin{center}
+  \begin{tikzpicture}[node distance = 2cm]
+    \node (start) [startstop]  {Start};
+%    \node (in1) [io, below of=start] {si=msg_init al=[si]};
+%   \node (pro1) [process, below of = in1] {si=si+1}
+ %  \node (dec1) [decision, below of = pro1, yshift = -0.5cm] {al=0?}
+  %  \draw[arrow] (start) --- (in1);
+ %   \draw[arrow] (in1) -- (pro1);
+ %   \draw[arrow] (pro1) -- (dec1);
+  \end{tikzpicture}
+\end{center}
+
+
+\subsection{Codes and Comments}
+\label{sec:codes-comments}
+
 
 \inputminted[linenos=true]{nasm}{./ipl10.nas}
 
