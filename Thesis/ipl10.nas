@@ -70,19 +70,20 @@ load:
 	
 	mov ax, 0x0820
 	mov es, ax
-	mov ch, 0
-	mov dh, 0
-	mov cl, 2
+	mov ch, 0 ; cylinder 0.
+	mov dh, 0 ; magnetict head 0.
+	mov cl, 2 ; sector 2.
 
 readloop:
 	mov si, 0
 
 retry:
-	mov ah, 0x02
-	mov al, 1
+	mov ah, 0x02 ; parameter 0x02 to ah, read disk.
+	mov al, 1 ; parameter 1 to al, read disk.
 	mov bx, 0
-	mov dl, 0x00
-	int 0x13
+	mov dl, 0x00 ; the number of driver number.
+	int 0x13 ; after prepared parameters, call 0x13 interrupted.
+
 	jnc next
 	add si, 1
 	cmp si, 5
