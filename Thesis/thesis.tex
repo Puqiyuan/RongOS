@@ -137,9 +137,20 @@ This picture show the inside of floppy disk:
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=.5\textwidth]{flpy1}
-  \caption{Floppy Disk Structure 1}
+  \caption{Floppy Disk Structure}
   \label{fig:flpy1.png}
 \end{figure}
+
+The floppy store information in two sides. There are $80$ cylinders from the outermost to
+the core in each side, numbering $0$, $1$, ..., $79$. The head can assign be $0$ or $1$,
+representing two sides of floppy. When specify head number and cylinder number, forming a
+ring, named track in jargon. The track is large so we divide it to 18 small parts, named
+sector. A sector can store $512$ byte. So the capacity of a floppy is:
+
+$$18 * 80 * 2 * 512 = 1474560 Byte = 1440 KB.$$
+
+The IPL(Initial Program Loader) in C0-H0-S1(cylinder 0, head 0, sector 2), and the next
+sector is C0-H0-S2.
 
 \section{The Source Codes and Comments of Boot Loader}
 \label{sec:source-codes-comm}
