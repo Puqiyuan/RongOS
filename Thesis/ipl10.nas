@@ -1,4 +1,17 @@
-	CYLS equ 10
+; read ten cylinders to memory begin with 0x8200.
+; read order:
+	; C0-H0-S1 --- C0-H0-S18
+	; C0-H1-S1 --- C0-H0-S18
+	; C1-H0-S1 --- C1-H0-S18
+        ; C1-H1-S1 --- C1-H1-S18
+        ;          ...
+	; C9-H1-S1 --- C9-H1-S18
+        ; C is cylinder, H is head, S is sector.
+	; total 10 * 2 * 18 * 512 = 184320Byte = 180KB.
+	; begin with 0x8200, end with 0x34fff in memory.
+	
+	
+	CYLS equ 10 ; read 10 cylinders, 
 	
 org 0x7c00 ; load the program to address 0x7c00.
 	jmp entry
@@ -27,11 +40,14 @@ resb 18 ; reserved 18 byte.
 	
 entry:
 	mov ax, 0 ; init the registers.
-	mov ss, ax
-	mov sp, 0x7c00
+	mov ss, ax ; can not directly write ss segment register.
+	mov sp, 0x7c00 ; the instructions of this program
+        ; loaded to 0x7c00 in memory, so sp=0x7c00, from here
+	; to execute.
+	
 	mov ds, ax
 	
-	mov si, msg_init
+	mov si, msg_init ; show some init message.
 	jmp init
 	
 
@@ -47,7 +63,7 @@ init:
 	int 0x10 ; call BIOS function, video card is number 10.
 	jmp init
 	
-
+;show some init messages.
 msg_init:
 db 0x0a ; new line
 db 0x0d
@@ -73,7 +89,7 @@ load:
 	mov ax, 0x0820 ; load these sectors to memory begin with 0x0820.
 	mov es, ax
 	mov ch, 0 ; cylinder 0.
-	mov dh, 0 ; magnetict head 0.
+	mov dh, 0 ; head 0.
 	mov cl, 2 ; sector 2.
 
 readloop:
@@ -100,24 +116,27 @@ retry:
 
 next:
 	mov ax, es
-	add ax, 0x0020
-	mov es, ax
-	add cl, 1
-	cmp cl, 18
-	jbe readloop
-	mov cl, 1
-	add dh, 1
-	cmp dh, 2
+	; we can not directly add to es register.
+	add ax, 0x0020 ; add 0x0020 to ax
+	mov es, ax ; the memory increase 0x0020 * 16 = 512 byte.
+	; size of a sector.
+	add cl, 1 ; sector number add 1.
+	cmp cl, 18 ; one track have 18 sector.
+	jbe readloop ; jump if below or equal 18, read the next sector.
+	mov cl, 1 ; cl number reset to 1, ready to read the other side.
+	add dh, 1 ; the other side of floppy.
+	cmp dh, 2 ; only two sides of floppy.
+	jb readloop ; if dh < 2, read 18 sectors of the other sides
+	; of floppy.
+	mov dh, 0 ; after finished read the other side, reset head to 0.
+	add ch, 1 ; two sides of a cylinder readed, add 1 to ch.
+	cmp ch, CYLS ; read 10 cylinders.
 	jb readloop
-	mov dh, 0
-	add ch, 1
-	cmp ch, CYLS
-	jb readloop
-	jmp correct
+	jmp correct ; if 10 cylinders readed, show correct message.
 	
 
 fin:
-	hlt
+	hlt ; halt the cpu.
 	jmp fin
 
 	
