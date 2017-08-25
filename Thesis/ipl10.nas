@@ -86,7 +86,7 @@ load:
 
 	mov ax, 0
 	
-	mov ax, 0x0820 ; load these sectors to memory begin with 0x0820.
+	mov ax, 0x0820 ; load C0-H0-S2 to memory begin with 0x0820.
 	mov es, ax
 	mov ch, 0 ; cylinder 0.
 	mov dh, 0 ; head 0.
