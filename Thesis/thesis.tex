@@ -154,6 +154,25 @@ Maybe you also need to add i386 architecture cause of AMD64 on your machine to u
 \subsection{Boot Loader}
 \label{sec:boot-loader}
 
+\subsubsection{Description}
+\label{sec:description}
+
+\subsubsection{The Structure of Boot Loader Program}
+\label{sec:struct-boot-load}
+
+\begin{center}
+  \begin{tikzpicture}
+    \node (start) [startstop] {Start};
+    \node (in1) [io, below=of start,align=center] {$si=msg\_init$\\$al=[si]$};
+    \node (pro1) [process, below=of in1, yshift = -0.5cm] {$si=si+1$};
+    \node (dec1) [decision, below=of pro1, yshift= -0.5cm] {$al=0?$};
+    \draw[arrow] (start) -- (in1);
+    \draw[arrow] (in1) -- (pro1);
+    \draw[arrow] (pro1) -- (dec1);
+  \end{tikzpicture}
+\end{center}
+
+
 
 \chapter{Implementation}
 
