@@ -1,0 +1,22 @@
+\input{printable}
+\begin{document}
+
+\begin{tikzpicture}
+    \node (start) [startstop]  {Start};
+    \node (in1) [io, below=of start,align=center] {$si=msg\_init$};
+    \node (in2) [io, below=of in1, align=center] {$al=[si]$};
+    \node (pro1) [process, below=of in2] {$si=si+1$};
+    \node (dec1) [decision, below=of pro1, yshift = -0.5cm] {$al=0?$};
+    
+    \draw[arrow] (start) -- (in1);
+    \draw[arrow] (in1) -- (in2);
+    \draw[arrow] (in2) -- (pro1);
+    \draw[arrow] (pro1) -- (dec1);
+    
+\end{tikzpicture}
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

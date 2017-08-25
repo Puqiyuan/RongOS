@@ -1,27 +1,9 @@
-\documentclass{swfcthesis}
+\documentclass{swfcthesis_p}
 \usepackage{xcolor}
 \usepackage{hyperref}
 \usepackage[utf8]{inputenc}
 \usepackage{listings}
 \usepackage{verbatim}
-\usepackage{tikz}
-\usetikzlibrary{shapes.geometric, arrows}
-\usetikzlibrary{positioning}
-
-
-\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum
-height=1cm,text centered, draw=black, fill=red!30]
-
-\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum
-width=5cm, minimum height=1cm, text width = 4cm, draw=black, fill=blue!30]
-
-\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered,
-text width = 3cm, draw=black, fill=orange!30]
-\tikzstyle{decision} = [diamond, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=green!30]
-
-\tikzstyle{arrow} = [thick,->,>=stealth]
-
-
 \addbibresource{thesis.bib}    % 参照教程自己去写一个.bib文件
 
 \begin{document}
@@ -155,65 +137,6 @@ Maybe you also need to add i386 architecture cause of AMD64 on your machine to u
 \subsection{Boot Loader}
 \label{sec:boot-loader}
 
-
-The below is the flowchart of boot loader program:
-
-  \begin{tikzpicture}[node distance=0.3cm]
-    \node (start) [startstop] {Start};
-    \node (in1) [io, below=of start, align=center]
-    {
-      \begin{tabular}{c}
-        $si=msg\_init$
-      \end{tabular}
-    };
-    \node (in2) [io, below=of in1,align=center]
-    {
-      \begin{tabular}{c}
-        $al=s[i]$
-      \end{tabular}
-    };
-    \node (pro1) [process, below=of in2, yshift = -0.5cm] {$si=si+1$};
-    \node (dec1) [decision, below=of pro1, yshift= -0.5cm] {$al=0?$};
-    \node (pro2) [process, right=of dec1] {$int\ 0x10$};
-    \node (pro3) [process, below=of dec1] {$je\ load$};
-    \node (in3) [io, below=of pro3, align=center]
-    {
-      \begin{tabular}{cc}
-        $ax=0$ & $ax=0x0820$ \\
-        $es=ax$ & $ch=0$ \\
-        $dh=0$ & $cl=2$ \\
-      \end{tabular}
-    };
-    \node (in4) [io, below=of in3, align=center]
-    {
-      \begin{tabular}{c}
-        $si=0$
-      \end{tabular}
-    };
-    \node (in5) [io, right=of in4, align=center]
-    {
-      \begin{tabular}{cc}
-        $ah=0x02$  & $al=1$\\
-        $bx=0$ & $dl=0x00$
-      \end{tabular}
-    };
-%    \node (pro4) [process, below=of in5] {$int\ 0x13$};
-    
- %   \draw[arrow] (in5) -- (pro4);
-    \draw[arrow] (in4) -- (in5);
-    \draw[arrow] (in3) -- (in4);
-    \draw[arrow] (start) -- (in1);
-    \draw[arrow] (in1) -- (in2);
-    \draw[arrow] (in2) -- (pro1);
-    \draw[arrow] (pro1) -- (dec1);
-    \draw[arrow] (dec1) -- node[anchor=south] {no}(pro2);
-    \draw[arrow] (pro2) |- (in2);
-    \draw[arrow] (dec1) -- node[anchor=west] {yes} (pro3);
-    \draw[arrow] (pro3) -- (in3);
-  \end{tikzpicture}
-
-
-
 \chapter{Implementation}
 
 \section{Boot Loader}
@@ -251,7 +174,12 @@ sector is C0-H0-S2.
 
 \subsection{Flowchart of Boot Loader}
 \label{sec:flowch-boot-load}
-
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=.5\textwidth]{../FlowchartTex/1/flowchart_p.pdf}
+  \caption{Flowchart of Boot Loader}
+  \label{fig:flowchart-of-boot-loader}
+\end{figure}
 
 
 
