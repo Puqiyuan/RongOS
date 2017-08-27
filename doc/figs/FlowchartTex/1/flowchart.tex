@@ -26,12 +26,23 @@
     \node (dec6) [decision, right=of pro8] {$ch<CYLS?$};
     \node (stop2) [startstop, above=of dec6] {$corStop$};
 
-    \draw[-, thick] (in4.west) ($(in4.west) + (-1.9em, 0)$)|- ($(dec6.south) + (0,
-    -0.9em)$) to node [auto, swap] {yes} (dec6.south);
+    \draw[<-, thick, >=stealth] (in4.west) -- ($(in4.west) + (-1.9em, 0)$) |- ($(dec6.south) + (0,-0.9em)$)
+    to node [auto, swap] {yes} (dec6.south);
+
+    \draw[thick] (dec5.south) to node [auto,swap] {yes} ($(dec5.south) + (0,-2.1em)$);
+
+    \draw[thick] (dec4.west) to node [auto, swap] {yes}  ($(dec4.west) + (-2.1em, 0)$);
+
+
     
-    \draw[-, thick] (in4.west) ($(in4.west) + (-1.9em, 0)$)|- ($(dec5.south) + (0, -2em)$) to node [auto, swap] {yes} (dec5.south);
-    \draw[<-, thick]  (in4.west) -| ($(dec4.west) + (-2em,0)$) to node [auto, swap] {yes}
-    (dec4.west);
+
+%    \draw[-, thick] (in4.west) ($(in4.west) + (-1.9em, 0)$)|- ($(dec6.south) + (0,
+ %   -0.9em)$) to node [auto, swap] {yes} (dec6.south);
+    
+    %\draw[-, thick] (in4.west) ($(in4.west) + (-1.9em, 0)$)|- ($(dec5.south) + (0, -2em)$) to node [auto, swap] {yes} (dec5.south);
+%    \draw[<-, thick]  (in4.west) -| ($(dec4.west) + (-2em,0)$) to node [auto, swap] {yes}
+ %   (dec4.west);
+    
     \draw[arrow] (dec6) -- node[anchor=west] {no} (stop2);
     \draw[arrow] (pro8) -- (dec6);
     \draw[arrow] (dec5) --node[anchor=north] {no} (pro8);
