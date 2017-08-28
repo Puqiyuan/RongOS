@@ -144,6 +144,11 @@ This is working flow of boot loader:
   \label{fig:working-flow-boot-loader}
 \end{figure}
 
+The instructions of boot loader saved in C0-H0-S1 of floppy, the first cylinder, head 0,
+the first sector, total 512 byte. These instructions end with 0x55 0xaa, so BIOS will load
+C0-H0-S1 to memory, then the instructions in C0-H0-S1 will load C0-H0-S2 --- C9-H1-S18,
+total $10*2*18*512=184320byte=180KB$(including boot sector, C0-H0-S1) to main memory.
+
 
 
 \chapter{Implementation}
@@ -182,14 +187,38 @@ sector is C0-H0-S2.
 
 
 \subsection{Flowchart of Boot Loader}
+The following is the flowchart of boot loader:
 \label{sec:flowch-boot-load}
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width=1.1\textwidth]{../figs/FlowchartTex/1/flowchartp.pdf}
+  \includegraphics[width=1\textwidth]{../figs/FlowchartTex/1/flowchartp.pdf}
   \caption{Flowchart of Boot Loader}
   \label{fig:flowchart-of-boot-loader}
 \end{figure}
 
+Firstly, the boot sector display some boot information, when $al=0$, the null
+character of boot information hit. Interrupt $0x10$ is used for show a character.
+\par
+Then jump to load C0-H0-S2, $ax$ register saved the
+address where beginning puts the sectors from floppy. And preparing parameters for
+interrupt $0x13$ in registers. The $0x13$ interrupt used for read sector from floppy to
+memory.
+\par If there is a carry, representing some thing wrong when read floppy, so reset the
+registers and try again read floppy, until five times trying. Register $si$ is a counter. If
+no carry, jump to next segmentation, as one sector read to memory already, the address
+space should increase 512 byte. Then sector number($cl$ register) added 1 and compare it to 18, if it's
+smaller than 18, jump to $readloop$, read the next sector. If the value of $cl$ register
+bigger or equal to than 18, meaning that one track 18 sector in this side of floppy read already, then
+reversed the head, add 1 to $dh$ register. If the value of $dh$ register after adding
+larger than or equal to 2, it's saying the original head is 1, one track of two sides read
+already. Otherwise the value of $dh$ register smaller than 2, read this side indicating by
+$dh$ register, jump to $readloop$ segmentation.
+
+\par So the next step is moving a cylinder, add 1 to register $ch$. Otherwise the
+value of $dh$ register smaller than 2, read this side indicating by $dh$ register, jump to
+$readloop$ segmentation. After $ch$ register add 1, if it's smaller than 10, jump to
+$readloop$, otherwise end loading floppy to memory process, for we only load ten cylinders
+of floppy.
 
 
 
