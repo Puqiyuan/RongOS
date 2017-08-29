@@ -10,11 +10,11 @@
 	; total 10 * 2 * 18 * 512 = 184320Byte = 180KB.
 	; begin with 0x8200, end with 0x34fff in memory.
 	
-	
 	CYLS equ 10 ; read 10 cylinders, 
 	
 org 0x7c00 ; load the program to address 0x7c00.
 	jmp entry
+	
 	; The next codes specify the format of standard FAT12 floppy disk.
 db 0x90 ;db is the abbreation of "define byte", it literally places that byte
 	; right there in the executable.
@@ -36,7 +36,8 @@ dd 0xffffffff
 db "RONGBOOTOS " ; the name of disk.
 db "FAT12   " ; the name of disk formate.
 resb 18 ; reserved 18 byte.
-	; end FAT12 formate.
+; end FAT12 formate.
+
 	
 entry:
 	mov ax, 0 ; init the registers.
@@ -49,8 +50,8 @@ entry:
 	
 	mov si, msg_init ; show some init message.
 	jmp init
-	
 
+	
 init:
 	mov al, [si]
 	add si, 1 ; increment by 1.
@@ -62,8 +63,9 @@ init:
 	mov bx, 15   ; specify the color of the character.
 	int 0x10 ; call BIOS function, video card is number 10.
 	jmp init
-	
 ;show some init messages.
+
+	
 msg_init:
 db 0x0a ; new line
 db 0x0d
@@ -83,19 +85,19 @@ db "......"
 
 	
 load:
-
 	mov ax, 0
-	
 	mov ax, 0x0820 ; load C0-H0-S2 to memory begin with 0x0820.
 	mov es, ax
 	mov ch, 0 ; cylinder 0.
 	mov dh, 0 ; head 0.
 	mov cl, 2 ; sector 2.
 
+	
 readloop:
 	mov si, 0 ; si register is a counter, try read a sector
-	; five times.
+; five times.
 
+	
 retry:
 	mov ah, 0x02 ; parameter 0x02 to ah, read disk.
 	mov al, 1 ; parameter 1 to al, read disk.
@@ -114,6 +116,7 @@ retry:
 	int 0x13
 	jmp retry
 
+	
 next:
 	mov ax, es
 	; we can not directly add to es register.
@@ -133,8 +136,6 @@ next:
 	cmp ch, CYLS ; read 10 cylinders.
 	jb readloop
 	jmp correct ; if 10 cylinders readed, show correct message.
-	
-
 fin:
 	hlt ; halt the cpu.
 	jmp fin
@@ -142,12 +143,12 @@ fin:
 	
 error:
 	mov si, msg
-	
 
+	
 correct:
 	mov si, msg_corr
-	
 
+	
 putloop:
 	mov al, [si]
 	add si, 1
@@ -158,8 +159,8 @@ putloop:
 	mov bx, 15
 	int 0x10
 	jmp putloop
-	
 
+	
 msg_corr:
 db 0x0a
 db 0x0d
@@ -169,15 +170,11 @@ db "OK: IPL loaded"
 db 0x0a
 db 0x0d
 db 0
-
-	
 msg:
 db 0x0a
 db "IPL load error"
 db 0x0a
 db 0
 resb 0x7dfe-$
-
-	
 db 0x55, 0xaa ; the sector end with 0x55 0xaa, the sector is
 	;boot sector.

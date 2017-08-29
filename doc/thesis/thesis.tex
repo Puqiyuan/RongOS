@@ -149,6 +149,10 @@ the first sector, total 512 byte. These instructions end with 0x55 0xaa, so BIOS
 C0-H0-S1 to memory, then the instructions in C0-H0-S1 will load C0-H0-S2 --- C9-H1-S18,
 total $10*2*18*512=184320byte=180KB$(including boot sector, C0-H0-S1) to main memory.
 
+\subsection{32-bit Mode and Import C Codes}
+\label{sec:32-bit-mode}
+
+
 
 
 \chapter{Implementation}
@@ -227,6 +231,17 @@ of floppy.
 
 
 \inputminted[linenos=true]{nasm}{../../src/06day/RongC/ipl10.nas}
+
+\subsection{Running Result}
+\label{sec:running-result}
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=1.1\textwidth]{iplRes.png}
+  \caption{Running Result of Boot Loader}
+  \label{fig:iplRes}
+\end{figure}
+
+
 
 \section{32-bit Mode and Import C Codes}
 
