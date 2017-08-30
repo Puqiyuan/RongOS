@@ -26,34 +26,34 @@
 \Docname{本科毕业（设计）论文}    %本科？研究生？
 \Abstract{操作系统管理着计算机的硬件和软件资源，它是向上层应用软件提供服务（接口）的核心系
   统软件，这些服务包括进程管理，内存管理，文件系统，网络通信，安全机制等。操作系统的设计与
-  实现则是软件工业的基础与内核。为此，在国务院提出的《中国制造2025》中专门强调了操作系统的
+  实现则是软件工业的基础。为此，在国务院提出的《中国制造2025》中专门强调了操作系统的
   开发。但长期以来，操作系统核心开发技术都掌握在外国人手中，技术受制，对于我们的软件工业来
-  说很不利。本文拟从零开始设计开发一个简单的操作系统，包括boot loader，中断，内存管理，图
+  说很不利。本文从零开始设计开发一个简单的操作系统，包括boot loader，中断，内存管理，图
   形接口，多任务，以及在这个系统上的几个小应用等。尽管这个系统很简单，但它为自主开发操作系
   统做了一个小小的尝试。}
-\Keywords{操作系统，开发，自主}
+\Keywords{操作系统，进程，内存，中断，boot loader}
 \Acknowledgments{首先我想感谢我的老师，王晓林。大学期间，他给了我很多指导，包括专业方面和
   上大学的意义等。很多时候，他对学生的要求看起来都是不近情理的，但正是通过这个“痛苦”的过程，
   我锻炼了坚强的意志，和战胜困难的信心。谢谢你，王老师。我最想感谢的是我的女友，她容忍我在
   完成这个设计时的很多个夜晚不陪她，给我支持，鼓励我，不抱怨。所以我愿意把这个简单操作系统
   命名为RongOS, 蓉便是她名字的最后一个字。谢谢你，我最亲爱的。}
-\enTitle{The implement of a simple OS --- RongOS}
+\enTitle{RongOS --- A simple OS implementation}
 \enAuthor{Qiyuan Pu}
 \enUniv{Southwest Forestry University}
 \enSchool{School of Computer and Information Science} %英文院系名称
-\enAbstract{Operating system manages the sources of hardware and software, it lie in the
-  core of the system software and provide service(interface) to upper application. These
+\enAbstract{Operating system manages the sources of hardware, it lies in the
+  core of the system software and provides services(interfaces) to upper applications. These
   service including process management, memory management, file system, network
-  communication, security mechanism etc. The design and implement of operating system is
+  communication, security mechanism etc. Operating system development is
   the foundation and core of software industry. Therefore, <<Made in China 2025>>
-  emphasize the development of operating system that put forward by The State Council. For
-a long time, however, the kernel development technology grasped in the hand of foreigner,
+  emphasize the development of operating system that put forward by The State Council of China. For
+a long time, however, the OS kernel development technology grasped in the hand of foreigner,
 it's bad for our software industry cause of limited technology. So this article will
 design and develop a simple operating system, including boot loader, interrupt, memory
-management, graphic interface, multitasking, and some little application depend on this
-system. In spite of the simple of this system, it's a small trying for autonomous
+management, graphic interface, multitasking, and some little applications based on this
+system. In spite of the simplicity of this system, it's a small trying for autonomous
 development operating system.}
-\enKeywords{operating system, development, autonomous}
+\enKeywords{operating system, boot loader, process, interrupt, memory management}
 
 %%% 下面六行不要动！
 \makepreliminarypages% 封面
