@@ -69,13 +69,18 @@ development operating system.}
 
 
 \section{Preliminary Works}
+For development, 
 
 \subsection{Development Environment}
 \label{sec:devel-envir}
 
-Operating System: Debian 4.11.0-1-amd64 \\
-\hspace*{0.8cm}Debug System: QEMU emulator version 2.8.1(Debian 1:2.8+dfsg-7)\\
-\hspace*{0.8cm}Emacs version: GNU Emacs 25.2.2
+
+\begin{description}
+\item[OS platform:] 4.12.0-1-amd64
+\item [Editor:] GNU Emacs 25.2.2
+\item [Run time VM:] QEMU emulator 2.8.1
+
+\end{description}
 
 \subsection{Tools}
 \label{sec:tools}
@@ -83,6 +88,7 @@ Operating System: Debian 4.11.0-1-amd64 \\
 Some tools used to develop RongOS, see
 tools.\footnote{\url{https://github.com/Puqiyuan/RongOS/tree/master/Tools}}.
 
+\begin{comment}
 \subsection{Install}
 \label{sec:install}
 
@@ -104,9 +110,6 @@ Maybe you also need to add i386 architecture cause of AMD64 on your machine to u
      $ sudo dpkg --add-architecture i386
      $ sudo apt-get update
 \end{lstlisting}
-
-
-\begin{comment}
 \subsection{表格示例}
 
 下面是一个表格的例子：
@@ -159,18 +162,18 @@ total $10*2*18*512=184320byte=180KB$(including boot sector, C0-H0-S1) to main me
 
 \section{Boot Loader}
 
-\subsection{Chose Disk}
+\subsection{Choose Disk}
 \label{sec:chose-disk}
 
-There are many ways to boot a operating system, from hard disk, USB, floppy disk etc. I
-chose floppy disk, although it is out of date. For my purpose is that develop a simple
+There are many ways to boot an operating system, from hard disk, USB, floppy disk etc. I
+choose floppy disk, although it is out of date. For my purpose is that develop a simple
 operating system, pay my attention on how to development. The structure of floppy disk is
 simple and for my simple operating system it's enough.
 
-\subsection{The Structure of Floppy Disk}
+\subsection{The Structure of a Floppy Disk}
 \label{sec:struct-floppy-disk}
 
-This picture show the inside of floppy disk:
+Fig.~\ref{fig:flpy1.png} shows the inside of a floppy disk:
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=.5\textwidth]{../figs/bootLoader/flpy1.png}
@@ -178,21 +181,27 @@ This picture show the inside of floppy disk:
   \label{fig:flpy1.png}
 \end{figure}
 
-The floppy store information in two sides. There are $80$ cylinders from the outermost to
-the core in each side, numbering $0$, $1$, ..., $79$. The head can assign be $0$ or $1$,
+\par
+A floppy disk, also called a floppy, diskette, or just disk, is a type of disk storage
+composed of a disk of thin and flexible magnetic storage medium, sealed in a rectangular
+plastic enclosure lined with fabric that removes dust particles. Floppy disks are read and
+written by a floppy disk drive (FDD).
+
+\par
+For $3.5$ inch HD floppy,  There are $80$ cylinders from the outermost to
+the core on each side, numbering $0$, $1$, ..., $79$. The head can assign be $0$ or $1$,
 representing two sides of floppy. When specify head number and cylinder number, forming a
 ring, named track in jargon. The track is large so we divide it to 18 small parts, named
 sector. A sector can store $512$ byte. So the capacity of a floppy is:
 
 $$18 * 80 * 2 * 512 = 1474560 Byte = 1440 KB.$$
 
-The IPL(Initial Program Loader) in C0-H0-S1(cylinder 0, head 0, sector 2), and the next
-sector is C0-H0-S2.
 
 
 \subsection{Flowchart of Boot Loader}
-The following is the flowchart of boot loader:
 \label{sec:flowch-boot-load}
+
+Fig.~\ref{fig:flowchart-of-boot-loader} shows how the boot loader works.
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=1\textwidth]{../figs/FlowchartTex/1/flowchartp.pdf}
@@ -200,14 +209,21 @@ The following is the flowchart of boot loader:
   \label{fig:flowchart-of-boot-loader}
 \end{figure}
 
-Firstly, the boot sector display some boot information, when $al=0$, the null
-character of boot information hit. Interrupt $0x10$ is used for show a character.
-\par
-Then jump to load C0-H0-S2, $ax$ register saved the
+The boot loader is implemented in Intel assembly.
+
+\begin{enumerate}
+\item Display boot information;
+Firstly, the boot sector display some boot information, when $al=0$, the null character of
+boot information hit. Interrupt $0x10$ is used for show a character.
+
+\item Read the second sector;
+  Then jump to load C0-H0-S2, $ax$ register saved the
 address where beginning puts the sectors from floppy. And preparing parameters for
 interrupt $0x13$ in registers. The $0x13$ interrupt used for read sector from floppy to
 memory.
-\par If there is a carry, representing some thing wrong when read floppy, so reset the
+
+\item Read two sides of a track;
+  If there is a carry, representing some thing wrong when read floppy, so reset the
 registers and try again read floppy, until five times trying. Register $si$ is a counter. If
 no carry, jump to next segmentation, as one sector read to memory already, the address
 space should increase 512 byte. Then sector number($cl$ register) added 1 and compare it to 18, if it's
@@ -217,23 +233,22 @@ reversed the head, add 1 to $dh$ register. If the value of $dh$ register after a
 larger than or equal to 2, it's saying the original head is 1, one track of two sides read
 already. Otherwise the value of $dh$ register smaller than 2, read this side indicating by
 $dh$ register, jump to $readloop$ segmentation.
-
-\par So the next step is moving a cylinder, add 1 to register $ch$. Otherwise the
+\item The next cylinder;
+So the next step is moving a cylinder, add 1 to register $ch$. Otherwise the
 value of $dh$ register smaller than 2, read this side indicating by $dh$ register, jump to
 $readloop$ segmentation. After $ch$ register add 1, if it's smaller than 10, jump to
 $readloop$, otherwise end loading floppy to memory process, for we only load ten cylinders
 of floppy.
+  
+  
+\end{enumerate}
 
-
-
-\subsection{Codes and Comments of Boot Loader}
-\label{sec:codes-comments}
-
-
-\inputminted[linenos=true]{nasm}{../../src/06day/RongC/ipl10.nas}
 
 \subsection{Running Result}
 \label{sec:running-result}
+
+Fig. ~\ref{fig:iplRes} shows the running results of boot loader. From this picture we
+see that the boot loader loaded 10 cylinders from floppy successfully. 
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=1.1\textwidth]{iplRes.png}
