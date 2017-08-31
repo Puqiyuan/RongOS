@@ -216,6 +216,8 @@ The boot loader is implemented in Intel assembly.
 Firstly, the boot sector display some boot information, when $al=0$, the null character of
 boot information hit. Interrupt $0x10$ is used for show a character.
 
+\inputminted[firstline=55, lastline=65, linenos=true]{nasm}{../../src/06day/RongC/ipl10.nas}
+
 \item Read the second sector;
   Then jump to load C0-H0-S2, $ax$ register saved the
 address where beginning puts the sectors from floppy. And preparing parameters for
