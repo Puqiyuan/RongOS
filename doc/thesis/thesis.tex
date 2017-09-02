@@ -212,19 +212,18 @@ Fig.~\ref{fig:flowchart-of-boot-loader} shows how the boot loader works.
 The boot loader is implemented in Intel assembly.
 
 \begin{enumerate}
-\item Display boot information;
+\item Display boot information:
 Firstly, the boot sector display some boot information, when $al=0$, the null character of
-boot information hit. Interrupt $0x10$ is used for show a character.
+boot information hit. Interrupt $0x10$ is used for show a character. Appendix
+~\ref{lst:dis-boo-inf} is the code to perform this function.
 
-\inputminted[firstline=55, lastline=65, linenos=true]{nasm}{../../src/06day/RongC/ipl10.nas}
-
-\item Read the second sector;
+\item Read the second sector:
   Then jump to load C0-H0-S2, $ax$ register saved the
 address where beginning puts the sectors from floppy. And preparing parameters for
 interrupt $0x13$ in registers. The $0x13$ interrupt used for read sector from floppy to
-memory.
+memory. Appendix ~\ref{lst:rea-sec-sec} is the code to perform this function.
 
-\item Read two sides of a track;
+\item Read two sides of a track:
   If there is a carry, representing some thing wrong when read floppy, so reset the
 registers and try again read floppy, until five times trying. Register $si$ is a counter. If
 no carry, jump to next segmentation, as one sector read to memory already, the address
@@ -234,14 +233,17 @@ bigger or equal to than 18, meaning that one track 18 sector in this side of flo
 reversed the head, add 1 to $dh$ register. If the value of $dh$ register after adding
 larger than or equal to 2, it's saying the original head is 1, one track of two sides read
 already. Otherwise the value of $dh$ register smaller than 2, read this side indicating by
-$dh$ register, jump to $readloop$ segmentation.
-\item The next cylinder;
+$dh$ register, jump to $readloop$ segmentation. Appendix ~\ref{lst:rea-two-sid} is the
+code to perform this function.
+
+
+\item The next cylinder:
 So the next step is moving a cylinder, add 1 to register $ch$. Otherwise the
 value of $dh$ register smaller than 2, read this side indicating by $dh$ register, jump to
 $readloop$ segmentation. After $ch$ register add 1, if it's smaller than 10, jump to
 $readloop$, otherwise end loading floppy to memory process, for we only load ten cylinders
-of floppy.
-  
+of floppy. Appendix ~\ref{lst:the-nex-cyl} is the code to perform this function.
+
   
 \end{enumerate}
 
@@ -304,7 +306,35 @@ see that the boot loader loaded 10 cylinders from floppy successfully.
 
 %%% 下面是附录部分，可以没有。
 
-%\chapter{我也不知道为什么要写附录} %附录一
+\chapter{Main Program Code} %附录一
+\begin{listing}[H]
+  \inputminted[firstline=55, lastline=65,
+  linenos=true]{nasm}{../../src/06day/RongC/ipl10.nas}
+  
+  \caption{Display boot information}
+  \label{lst:dis-boo-inf}
+
+\end{listing}
+
+\begin{listing}[H]
+  \inputminted[firstline=87,lastline=106,linenos=true]{nasm}{../../src/06day/RongC/ipl10.nas}
+  \caption{Read the second sector}
+  \label{lst:rea-sec-sec}
+\end{listing}
+
+\begin{listing}[H]
+  \inputminted[firstline=108,lastline=132,linenos=true]{nasm}{../../src/06day/RongC/ipl10.nas}
+  \caption{Read two sides of a track}
+  \label{lst:rea-two-sid}
+  
+\end{listing}
+
+\begin{listing}[H]
+  \inputminted[firstline=134,lastline=137,linenos=true]{nasm}{../../src/06day/RongC/ipl10.nas}
+  \caption{The next cylinder}
+  \label{lst:the-nex-cyl}
+\end{listing}
+
 
 %可以参考模版目录中的 appendix.tex 文件来写。
 
