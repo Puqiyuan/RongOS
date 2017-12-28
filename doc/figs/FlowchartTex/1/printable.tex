@@ -1,24 +1,16 @@
 \documentclass{standalone}
 
-
 \usepackage{tikz}
-\usetikzlibrary{shapes.geometric, arrows}
-\usetikzlibrary{positioning}
-
+\usetikzlibrary{shapes.geometric, arrows,positioning,calc}
 
 \tikzstyle{startstop} = [rectangle, rounded corners, minimum width=2cm, minimum
-height=0.5cm,text centered, draw=black]
+height=0.5cm, align=center, draw]
 
-\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum
-width=2.5cm, minimum height=0.5cm, text centered, text width = 1.5cm, draw=black]
+\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, align=center, draw]
 
-\tikzstyle{process} = [rectangle, minimum width=2cm, minimum height=0.5cm, text centered,
-text width = 1cm, draw=black]
-\tikzstyle{decision} = [diamond, minimum width=2cm, minimum height=0.5cm, text centered,
-draw=black]
+\tikzstyle{process} = [rectangle, align=center, draw]
 
-\tikzstyle{blcok1} = [rectangle, rounded corners, minimum width=0.5cm, minimum
-height=0.25cm,text centered, draw=black]
+\tikzstyle{decision} = [shape aspect=2,diamond, align=center, draw]
 
 \tikzstyle{arrow} = [thick,->,>=stealth]
 

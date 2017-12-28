@@ -285,7 +285,7 @@ doi=false,isbn=false,style=caspervector,utf8,sorting=centy]{biblatex}
 }
 
 \RequirePackage{minted} % minted has to be loaded at last!!!
-\usemintedstyle{bw}
+%\usemintedstyle{bw}
 
 \renewcommand{\listingscaption}{程序} % used by minted
 \renewcommand{\listoflistingscaption}{程序目录}
