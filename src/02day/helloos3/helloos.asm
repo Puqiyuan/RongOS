@@ -31,6 +31,11 @@ entry:
 	mov sp, 0x7c00
 	mov ds, ax
 	mov es, ax
+
+	mov si, msg
+
+putloop:
+	
 	
 	
 	
