@@ -1,0 +1,86 @@
+[2] Config.pm:302> INFO - This is Biber 2.9
+[3] Config.pm:305> INFO - Logfile is 'thesis.blg'
+[195] biber:313> INFO - === Fri Dec 29, 2017, 15:19:19
+[307] Biber.pm:371> INFO - Reading 'thesis.bcf'
+[850] Biber.pm:857> INFO - Found 1 citekeys in bib section 0
+[851] Biber.pm:860> DEBUG - The citekeys for section 0 are: china_2025
+[911] Biber.pm:930> DEBUG - Adding datalist of type 'entry' with sortingtemplate 'none', sortingnamekeytemplatename 'global', labelprefix '', uniquenametemplate 'global', labelalphanametemplate 'global' and name 'none/global//global/global' for section 0
+[952] Biber.pm:3981> INFO - Processing section 0
+[955] Biber.pm:4116> DEBUG - Looking for directly cited keys: china_2025
+[1014] Biber.pm:4154> INFO - Looking for bibtex format file 'thesis.bib' for section 0
+[1015] bibtex.pm:228> DEBUG - Caching data for BibTeX format file 'thesis.bib' for section 0
+[1017] bibtex.pm:1468> INFO - LaTeX decoding ...
+[1043] bibtex.pm:1294> INFO - Found BibTeX data source 'thesis.bib'
+[1046] bibtex.pm:1395> DEBUG - Cached Text::BibTeX entry for key 'os_wiki' from BibTeX file 'thesis.bib'
+[1048] bibtex.pm:1395> DEBUG - Cached Text::BibTeX entry for key 'china_2025' from BibTeX file 'thesis.bib'
+[1049] bibtex.pm:1395> DEBUG - Cached Text::BibTeX entry for key '30_os' from BibTeX file 'thesis.bib'
+[1049] bibtex.pm:284> DEBUG - Text::BibTeX cache keys: china_2025, 30_os, os_wiki
+[1050] bibtex.pm:285> DEBUG - Wanted keys: china_2025
+[1050] bibtex.pm:288> DEBUG - Looking for key 'china_2025' in Text::BibTeX cache
+[1051] bibtex.pm:296> DEBUG - Found key 'china_2025' in Text::BibTeX cache
+[1051] bibtex.pm:719> DEBUG - Source mapping (type=driver, key=china_2025): Deleting field 'day'
+[1052] bibtex.pm:564> DEBUG - Source mapping (type=driver, key=china_2025): Entry type is 'misc' but map wants 'conference', skipping step ...
+[1053] bibtex.pm:564> DEBUG - Source mapping (type=driver, key=china_2025): Entry type is 'misc' but map wants 'electronic', skipping step ...
+[1053] bibtex.pm:564> DEBUG - Source mapping (type=driver, key=china_2025): Entry type is 'misc' but map wants 'www', skipping step ...
+[1054] bibtex.pm:557> DEBUG - Source mapping (type=driver, key=china_2025): Entry type is 'misc' but map wants 'mastersthesis' and step has 'final' set, skipping rest of map ...
+[1054] bibtex.pm:557> DEBUG - Source mapping (type=driver, key=china_2025): Entry type is 'misc' but map wants 'phdthesis' and step has 'final' set, skipping rest of map ...
+[1055] bibtex.pm:557> DEBUG - Source mapping (type=driver, key=china_2025): Entry type is 'misc' but map wants 'techreport' and step has 'final' set, skipping rest of map ...
+[1055] bibtex.pm:620> DEBUG - Source mapping (type=driver, key=china_2025): No field 'hyphenation', skipping step ...
+[1056] bibtex.pm:620> DEBUG - Source mapping (type=driver, key=china_2025): No field 'address', skipping step ...
+[1056] bibtex.pm:620> DEBUG - Source mapping (type=driver, key=china_2025): No field 'school', skipping step ...
+[1057] bibtex.pm:620> DEBUG - Source mapping (type=driver, key=china_2025): No field 'annote', skipping step ...
+[1057] bibtex.pm:620> DEBUG - Source mapping (type=driver, key=china_2025): No field 'archiveprefix', skipping step ...
+[1057] bibtex.pm:620> DEBUG - Source mapping (type=driver, key=china_2025): No field 'journal', skipping step ...
+[1058] bibtex.pm:620> DEBUG - Source mapping (type=driver, key=china_2025): No field 'primaryclass', skipping step ...
+[1058] bibtex.pm:620> DEBUG - Source mapping (type=driver, key=china_2025): No field 'key', skipping step ...
+[1059] bibtex.pm:620> DEBUG - Source mapping (type=driver, key=china_2025): No field 'pdf', skipping step ...
+[1059] bibtex.pm:810> DEBUG - Creating biber Entry object with key 'china_2025'
+[1082] bibtex.pm:849> DEBUG - Adding entry with key 'china_2025' to entry list
+[1082] bibtex.pm:333> DEBUG - Wanted keys now: 
+[1082] Biber.pm:4161> DEBUG - Directly cited keys not found for section '0': 
+[1083] Biber.pm:4180> DEBUG - Building dependents for keys: china_2025
+[1083] Biber.pm:4187> DEBUG - Citekeys for section '0' after fetching data: china_2025
+[1084] Biber.pm:1190> DEBUG - Creating dynamic entries (sets/related) for section 0
+[1084] Biber.pm:1245> DEBUG - Resolving XDATA entries for section 0
+[1084] Biber.pm:1273> DEBUG - Adding set members to citekeys for section 0
+[1085] Biber.pm:1331> DEBUG - Recording set information
+[1085] Biber.pm:1370> DEBUG - Processing explicit and implicit xref/crossrefs for section 0
+[1086] Biber.pm:1692> DEBUG - Processing static entry information in section 0
+[1087] Biber.pm:2424> DEBUG - labeltitle information of entry china_2025 is unset
+[1088] Biber.pm:2706> DEBUG - Populated datalist 'none/global//global/global' of type 'entry' with attributes 'none/global//global/global' in section 0 with keys: china_2025
+[1088] Biber.pm:1728> DEBUG - Processing entries in section 0 (before uniqueness)
+[1089] Biber.pm:1755> DEBUG - Finished processing entries in section 0 (before uniqueness)
+[1089] Biber.pm:2977> DEBUG - Entering uniquename processing
+[1090] Biber.pm:2990> DEBUG - Entering uniquelist processing
+[1090] Biber.pm:2531> DEBUG - Postprocessing visible names for section 0
+[1091] Biber.pm:1774> DEBUG - Postprocessing entries in section 0 (after uniqueness)
+[1093] Biber.pm:1807> DEBUG - Finished processing entries in section 0 (after uniqueness)
+[1093] Biber.pm:1825> DEBUG - Final processing for entries in section 0
+[1095] Internals.pm:1102> DEBUG - Sorting object for key 'china_2025' -> [1]
+[1096] Biber.pm:3764> DEBUG - Sorting is by default case-SENSITIVE
+[1096] Biber.pm:3770> DEBUG - Keys before sort:
+[1096] Biber.pm:3772> DEBUG - china_2025 => 1
+[1097] Biber.pm:3786> DEBUG - Locale for sorting is 'en-US'
+[1157] UCollate.pm:56> DEBUG - Collation options: (
+  "level",
+  4,
+  "upper_before_lower",
+  1,
+  "variable",
+  "non-ignorable",
+  "normalization",
+  "prenormalized",
+)
+[1158] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[1158] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[1159] Biber.pm:3809> INFO - Sorting list 'none/global//global/global' of type 'entry' with template 'none' and locale 'en-US'
+[1160] Biber.pm:3810> DEBUG - Sorting with Unicode::Collate (upper_before_lower => 1, variable => non-ignorable, normalization => prenormalized, level => 4, UCA version: 9.0.0, Locale: default)
+[1161] Biber.pm:3815> INFO - No sort tailoring available for locale 'en-US'
+[1162] Biber.pm:3914> DEBUG - Keys after sort:
+[1163] Biber.pm:3916> DEBUG - china_2025 => 1
+[1194] bbl.pm:613> DEBUG - Preparing final output using class Biber::Output::bbl...
+[1194] bbl.pm:617> INFO - Writing 'thesis.bbl' with encoding 'UTF-8'
+[1195] bbl.pm:623> DEBUG - Writing entries for section 0
+[1196] bbl.pm:655> DEBUG - Writing entries in 'none/global//global/global' list of type 'entry'
+[1196] bbl.pm:663> DEBUG - Writing entry for key 'china_2025'
+[1200] bbl.pm:720> INFO - Output to thesis.bbl

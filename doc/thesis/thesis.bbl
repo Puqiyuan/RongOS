@@ -1,0 +1,54 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 2.9 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global}
+    \entry{china_2025}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=40f28bb52c3dfb708e154516961614f9}{%
+           family={国务院},
+           familyi={国\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {chinese}%
+      }
+      \strng{namehash}{40f28bb52c3dfb708e154516961614f9}
+      \strng{fullhash}{40f28bb52c3dfb708e154516961614f9}
+      \strng{bibnamehash}{40f28bb52c3dfb708e154516961614f9}
+      \strng{authorbibnamehash}{40f28bb52c3dfb708e154516961614f9}
+      \strng{authornamehash}{40f28bb52c3dfb708e154516961614f9}
+      \strng{authorfullhash}{40f28bb52c3dfb708e154516961614f9}
+      \field{sortinit}{1}
+      \field{sortinithash}{2174f786c6195e7fe2ee1c229b416e29}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{month}{5}
+      \field{title}{中国制造2025}
+      \field{year}{2015}
+      \verb{urlraw}
+      \verb http://www.gov.cn/zhengce/content/2015-05/19/content_9784.htm
+      \endverb
+      \verb{url}
+      \verb http://www.gov.cn/zhengce/content/2015-05/19/content_9784.htm
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

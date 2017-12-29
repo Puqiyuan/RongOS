@@ -3,19 +3,19 @@
 \usepackage{todonotes}
 %\usepackage[inline]{enumitem}
 
-\makeatletter
-% This command ignores the optional argument for itemize and enumerate lists
-\newcommand{\inlineitem}[1][]{%
-\ifnum\enit@type=\tw@
-    {\descriptionlabel{#1}}
-  \hspace{\labelsep}%
-\else
-  \ifnum\enit@type=\z@
-       \refstepcounter{\@listctr}\fi
-    \quad\@itemlabel\hspace{\labelsep}%
-\fi}
-\makeatother
-\parindent=0pt
+% \makeatletter
+% % This command ignores the optional argument for itemize and enumerate lists
+% \newcommand{\inlineitem}[1][]{%
+% \ifnum\enit@type=\tw@
+%     {\descriptionlabel{#1}}
+%   \hspace{\labelsep}%
+% \else
+%   \ifnum\enit@type=\z@
+%        \refstepcounter{\@listctr}\fi
+%     \quad\@itemlabel\hspace{\labelsep}%
+% \fi}
+% \makeatother
+% \parindent=0pt
 
 \addbibresource{thesis.bib}    % 参照教程自己去写一个.bib文件
 
@@ -167,38 +167,86 @@ tools:\todo{need rephrase}
 
 \section{Instruction Set}
 \label{sec:instruction-set}
+An instruction set architecture (ISA) is an abstract model of a computer. It is also
+referred to as architecture or computer architecture. An ISA defines everything a machine
+language programmer needs to know in order to program a computer.
 
-\begin{itemize}
-\item db: the abbreviation of define byte, write a byte, also 8 bits to file.
-\item resb: the abbreviation of reserve byte, reserved bytes and filling 0x00 in these
-  reserved space.
-\item dw: the abbreviation of define word, write two bytes, also 16 bits to file.
-\item dd: the abbreviation of define double-word, write four bytes, also 32 bits to file.
-\item org: load the program to specified address.
-\item jmp: jump to another instruction.
-\item mov: assign the right value to left variable.
-  
-\end{itemize}
+\par An ISA may be classified in a number of different ways. A common classification is by
+architectural complexity. A complex instruction set computer (CISC) has many specialized
+instructions, some of which may only be rarely used in practical programs. A reduced
+instruction set computer (RISC) simplifies the processor by efficiently implementing only
+the instructions that are frequently used in programs, while the less common operations
+are implemented as subroutines, having their resulting additional processor execution time
+offset by infrequent use.
 
-\section{Register}
+\par On traditional architectures, an instruction includes an opcode that specifies the
+operation to perform, such as add contents of memory to register—and zero or more operand
+specifiers, which may specify registers, memory locations, or literal
+data. The simple OS is based on x86 architecture, the following instructions are common
+for RongOS:
+
+\begin{description}
+\item[db:] the abbreviation of define byte, write a byte, also 8 bits to file.
+\item[resb:] the abbreviation of reserve byte, reserved bytes and filling 0x00 in these reserved space.
+\item[dw:] the abbreviation of define word, write two bytes, also 16 bits to file.
+\item[dd:] the abbreviation of define double-word, write four bytes, also 32 bits to file.
+\item[org:] load the program to specified address.
+\item[jmp:] jump to another instruction.
+\item[mov:] assign the right value to left variable.
+\end{description}
+
+\section{x86 Registers}
 \label{sec:register}
 
-\begin{itemize}
-\item ax: accumulator \inlineitem cx: counter \inlineitem dx: data
-  
-\item bx: base \inlineitem sp: stack pointer \inlineitem bp: base pointer
-  
-\item si: source index \inlineitem di: destination index \inlineitem al: accumulator low
+In computer architecture, a processor register is a quickly accessible location available
+to a computer's central processing unit (CPU). Registers usually consist of a small amount
+of fast storage, although some registers have specific hardware functions, and may be
+read-only or write-only.  Almost all computers, whether load/store architecture or not,
+load data from a larger memory into registers where it is used for arithmetic operations
+and is manipulated or tested by machine instructions. Manipulated data is then often
+stored back to main memory, either by the same instruction or by a subsequent one. Modern
+processors use either static or dynamic RAM as main memory, with the latter usually
+accessed via one or more cache levels.
 
-\item cl: counter low \inlineitem{dl: data low} \inlineitem{bl: base low}
+\par Processor registers are normally at the top of the memory hierarchy, and provide the
+fastest way to access data. The term normally refers only to the group of registers that
+are directly encoded as part of an instruction, as defined by the instruction
+set. Registers are normally measured by the number of bits they can hold, for example, an
+"8-bit register" or a "32-bit register". For x86 architecture, these registers existing:
 
-\item ah: accumulator high \inlineitem{ch: counter high} \inlineitem{dh: data high}
 
-\item bh: base high \inlineitem{es: extra segment} \inlineitem{cs: code segment}
+\begin{multicols}{3}
+  \begin{description}
+  \item[ax:] accumulator
+  \item[bx:] base
+  \item[cx:] counter
+  \item[dx:] data
+  \item[bl:] base low
+  \item[al:] accumulator low
+  \item[cl:] counter low
+  \item[dl:] data low
+  \item[bh:] base high
+  \item[ah:] accumulator high
+  \item[ch:] counter high
+  \item[dh:] data high
+  \item[sp:] stack pointer
+  \item[bp:] base pointer
+  \item[si:] source index
+  \item[di:] destination index
+  \item[es:] extra segment
+  \item[cs:] code segment
+  \item[ss:] stack segment
+  \item[ds:] data segment
+  \item[fs:] no name
+%  \item[gs:] no name
+  \end{description}
+\end{multicols}
 
-
-\end{itemize}
-
+In these registers, bx, bp, si and di can be used to specify the address of memory. But
+ax, cx, dx and sp can not.  When mov instruction using, the number of bit of operation
+number should be same. 16 bits registers: ax, cx, dx, bx, sp, bp, si, di, es, cs, ss, ds
+and fs. 8 bits registers: al, cl, dl, bl, ah, ch, dh and bh. Actually, all these 8 bits
+registers are part of corresponding 16 bits registers, low 8 bits or high 8 bits.
 \chapter{Design}
 
 \section{Top Level Design}
