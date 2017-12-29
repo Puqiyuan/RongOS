@@ -1,38 +1,32 @@
 \defcounter {refsection}{0}\relax 
-\contentsline {todo}{need rewrite}{3}{section*.1}
+\contentsline {todo}{compiler?}{2}{section*.5}
 \defcounter {refsection}{0}\relax 
-\contentsline {todo}{worldwide previous research work}{1}{section*.6}
+\contentsline {todo}{debugger?}{2}{section*.6}
 \defcounter {refsection}{0}\relax 
-\contentsline {todo}{assembler?}{1}{section*.7}
+\contentsline {todo}{need more words.}{2}{section*.7}
 \defcounter {refsection}{0}\relax 
-\contentsline {todo}{compiler?}{1}{section*.8}
+\contentsline {todo}{What's Qemu?}{2}{section*.9}
 \defcounter {refsection}{0}\relax 
-\contentsline {todo}{debugger?}{1}{section*.9}
+\contentsline {todo}{What's Wine?}{2}{section*.11}
 \defcounter {refsection}{0}\relax 
-\contentsline {todo}{need more words.}{1}{section*.10}
+\contentsline {todo}{need rephrase}{2}{section*.13}
 \defcounter {refsection}{0}\relax 
-\contentsline {todo}{What's Qemu?}{1}{section*.12}
+\contentsline {todo}{Figure: System overview diagram}{4}{section.3.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {todo}{What's Wine?}{2}{section*.14}
+\contentsline {todo}{need some description}{4}{section*.14}
 \defcounter {refsection}{0}\relax 
-\contentsline {todo}{need rephrase}{2}{section*.16}
+\contentsline {todo}{Question: is this section about how bootloader works, or about how to load it into the mem?}{4}{section*.15}
 \defcounter {refsection}{0}\relax 
-\contentsline {todo}{Figure: System overview diagram}{3}{section.2.1}
+\contentsline {todo}{need a new figure}{4}{section*.17}
 \defcounter {refsection}{0}\relax 
-\contentsline {todo}{need some description}{3}{section*.17}
+\contentsline {todo}{Figure: MBR structure}{4}{figure.caption.16}
 \defcounter {refsection}{0}\relax 
-\contentsline {todo}{Question: is this section about how bootloader works, or about how to load it into the mem?}{3}{section*.18}
+\contentsline {todo}{the 446 bytes code in MBR is for \ldots }{4}{section*.18}
 \defcounter {refsection}{0}\relax 
-\contentsline {todo}{need a new figure}{3}{section*.20}
+\contentsline {todo}{need rephrase}{6}{section*.19}
 \defcounter {refsection}{0}\relax 
-\contentsline {todo}{Figure: MBR structure}{3}{figure.caption.19}
+\contentsline {todo}{cite wikipedia}{6}{section*.21}
 \defcounter {refsection}{0}\relax 
-\contentsline {todo}{the 446 bytes code in MBR is for \ldots }{3}{section*.21}
+\contentsline {todo}{need a better chart}{7}{section*.23}
 \defcounter {refsection}{0}\relax 
-\contentsline {todo}{need rephrase}{5}{section*.22}
-\defcounter {refsection}{0}\relax 
-\contentsline {todo}{cite wikipedia}{5}{section*.24}
-\defcounter {refsection}{0}\relax 
-\contentsline {todo}{need a better chart}{6}{section*.26}
-\defcounter {refsection}{0}\relax 
-\contentsline {todo}{need a better pic.}{7}{section*.28}
+\contentsline {todo}{need a better pic.}{8}{section*.25}

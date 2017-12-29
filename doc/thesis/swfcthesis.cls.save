@@ -1,7 +1,7 @@
-% The swfcthesis class is for producing senior year theses
-% and dissertations that meet the SWFU requirements.
+% The swfcthesis class is for producing senior year theses and dissertations
+% that meet the SWFU requirements.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{swfcthesis}
+\ProvidesClass{swfcthesis}%[TeX Live 2016/Debian]
 
 % pass unknown options to book
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{book}}
@@ -9,22 +9,19 @@
 
 \LoadClass[a4paper,12pt,oneside]{book}
 
-\RequirePackage{ifxetex} % This class is for XeTeX only
+\RequirePackage{ifxetex} % This class can only be processed with XeTeX
 
-\RequirePackage[%showframe,showcrop,
-top=3cm,bottom=2.5cm,left=3cm,right=2.5cm,
+\RequirePackage[top=3cm,bottom=2.5cm,left=3cm,right=2.5cm,
 nomarginpar,headheight=15pt, % to avoid "headheight too small"
+%showframe,showcrop,
 ]{geometry}
 
-\RequirePackage{etoolbox}
 \RequirePackage{indentfirst}
 \RequirePackage{tabu,longtable,multicol,multirow,array}
-\RequirePackage{ulem}
 
 % graphicx
-\RequirePackage{graphicx} % before xltxtra
-\graphicspath{% mind the trailing “/”
-  {./figs/}{../figs/}{./img/}{../img/}{./pics/}{../pics/}{./}{../}}
+\RequirePackage[xetex]{graphicx} % before xltxtra
+\graphicspath{{./figs/}{../figs/}{./img/}{../img/}{./}{../}} %mind the trailing “/”
 
 % titlesec
 \RequirePackage{titlesec} % \titleformat, \titlespacing
@@ -38,17 +35,43 @@ nomarginpar,headheight=15pt, % to avoid "headheight too small"
 
 % fancyhdr
 \RequirePackage{fancyhdr}
+\fancypagestyle{plain}{%
+  \fancyhf{} % clear all header and footer fields
+  \fancyfoot[C]{\fontsize{8}{8}\selectfont -- \thepage\ --}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
 \fancyhf{}
 \fancyfoot[C]{\fontsize{8}{8}\selectfont -- \thepage\ --}
 \fancyhead[C]{\slshape \leftmark}
 
-\fancypagestyle{plain}{% for the 1st page of each chapter
-  \fancyhf{}%
-  \fancyfoot[C]{\fontsize{8}{8}\selectfont -- \thepage\ --}
-  \renewcommand{\headrulewidth}{0pt}}
-
 \RequirePackage{enumitem} % \setlist
 \setlist{nosep} % kills all vertical spacing
+
+\RequirePackage[backend=biber,%
+url=false,hyperref=true,%
+date=edtf,seconds=true,% to suppress compile warnings
+doi=false,isbn=false,style=caspervector,utf8,sorting=centy]{biblatex}
+
+\renewcommand*{\bibfont}{\small} % 11pt
+\DeclareFieldFormat*{year}{#1}
+\DeclareFieldFormat*{url}{}% suppress url. it's a temp workaround until caspervector fix
+                           % its bug. But there is an extra period at the end of the
+                           % entry. TODO!
+
+%%%% caspervector provides \supercite already.
+% \DeclareCiteCommand{\supercite}[\mkbibsuperscript]
+% {\iffieldundef{prenote}
+%   {}
+%   {\BibliographyWarning{Ignoring prenote argument}}%
+%   \iffieldundef{postnote}
+%   {}
+%   {\BibliographyWarning{Ignoring postnote argument}}}
+% {\usebibmacro{citeindex}%
+%   \bibopenbracket\usebibmacro{cite}\bibclosebracket}
+% {\supercitedelim}
+% {}
+\let\cite=\supercite
 
 % caption
 \RequirePackage{caption} % \captionsetup
@@ -59,7 +82,7 @@ nomarginpar,headheight=15pt, % to avoid "headheight too small"
 
 \RequirePackage{hyperref}
 \hypersetup{%
-  bookmarksnumbered, pdfpagelabels=true, plainpages=false, breaklinks=true,
+  bookmarksnumbered,pdfpagelabels=true,plainpages=false,breaklinks=true,
   colorlinks=false,
   pdfborderstyle={/S/U/W .3},% border style will be underline of width .3pt 
   linkbordercolor=red,       % internal links
@@ -68,68 +91,65 @@ nomarginpar,headheight=15pt, % to avoid "headheight too small"
   urlbordercolor=blue,       % external links
 }
 
-% Buggy! Must before loading biblatex!
-\RequirePackage[tt=false]{libertine} % keyboard symbol for my tutorial.
-
 % before xunicode!
-\RequirePackage{amsmath,amsfonts,amssymb,marvosym,pifont}
+\RequirePackage{amsmath,amsfonts,amssymb,latexsym,marvosym,pifont}
+\RequirePackage[tt=false]{libertine} % keyboard symbol
+\newcommand{\Ca}{\LKeyCtrlX{a}}      % mainly for the tutorial doc
+\newcommand{\Cb}{\LKeyCtrlX{b}}
+\newcommand{\Cc}{\LKeyCtrlX{c}}
+\newcommand{\Cd}{\LKeyCtrlX{d}}
+\newcommand{\Ce}{\LKeyCtrlX{e}}
+\newcommand{\Cf}{\LKeyCtrlX{f}}
+\newcommand{\Cg}{\LKeyCtrlX{g}}
+\newcommand{\Ch}{\LKeyCtrlX{h}}
+\newcommand{\Ci}{\LKeyCtrlX{i}}
+\newcommand{\Cj}{\LKeyCtrlX{j}}
+\newcommand{\Ck}{\LKeyCtrlX{k}}
+\newcommand{\Cl}{\LKeyCtrlX{l}}
+\newcommand{\Cm}{\LKeyCtrlX{m}}
+\newcommand{\Cn}{\LKeyCtrlX{n}}
+\newcommand{\Cp}{\LKeyCtrlX{p}}
+\newcommand{\Cs}{\LKeyCtrlX{s}}
+\newcommand{\Cv}{\LKeyCtrlX{v}}
+\newcommand{\Cx}{\LKeyCtrlX{x}}
+\newcommand{\Cy}{\LKeyCtrlX{y}}
+\newcommand{\Cslash}{\LKeyCtrl{}+\biolinumKeyGlyph{slash}}
+\newcommand{\Se}{\LKeyWin{}+\LKey{e}}
+\newcommand{\Md}{\LKeyAltX{d}}
+\newcommand{\Mv}{\LKeyAltX{v}}
+\newcommand{\Mx}{\LKeyAltX{x}}
+\newcommand{\MEnter}{\LKeyAlt{}+\LKeyEnter{}}
+\newcommand{\Tab}{\LKeyTab{}}
+\newcommand{\Enter}{\LKeyEnter{}}
+\newcommand{\Caps}{\LKeyCapsLock{}}
+\newcommand{\Ctrl}{\LKeyCtrl{}}
 
 \RequirePackage{xltxtra} %fontspec,xunicode are loaded here.
 \RequirePackage[CJKmath=true,AutoFakeSlant=true]{xeCJK} % slant header
+\RequirePackage{xpinyin}
 
 % \singlespacing, \onehalfspacing, \doublespacing
 \RequirePackage[doublespacing]{setspace}
 \renewcommand{\doublespacing}{\setstretch{1.6}}
 
-\RequirePackage[backend=biber,
-style=chem-angew,sorting=none,
-%style=caspervector,sorting=centy,utf8, % caspervector is buggy!
-hyperref=true,doi=false,isbn=false,%url=false,
-date=edtf,seconds=true,% to suppress compile warnings
-]{biblatex}
-
-\renewcommand*{\bibfont}{\small} % 11pt
-
-%\DeclareFieldFormat*{year}{#1}
-%\DeclareFieldFormat*{url}{}% suppress url for caspervector to workaround its bug
-
-%%%% chem-angew/caspervector provides \supercite already.
-% \DeclareCiteCommand{\supercite}[\mkbibsuperscript]{%
-%   \iffieldundef{prenote}{}{\BibliographyWarning{Ignoring prenote argument}}%
-%   \iffieldundef{postnote}{}{\BibliographyWarning{Ignoring postnote argument}}%
-% }%
-% {\mkbibbrackets{\usebibmacro{citeindex} \usebibmacro{cite} \usebibmacro{postnote}}}%
-% {\supercitedelim}{}%
-
-\let\cite=\supercite
-
-% https://tex.stackexchange.com/questions/23832/biblatex-make-title-hyperlink-to-doi-url-if-available
-\newbibmacro{string+url}[1]{%
-  \iffieldundef{url}{#1}{\href{\thefield{url}}{#1}}}
-
-\DeclareFieldFormat{title}{\usebibmacro{string+url}{\mkbibemph{#1}}}
-
 \defaultfontfeatures{Mapping=tex-text}
-% Liberation fonts is a drop-in replacement for Microsoft Times, Arial and Courier fonts
 \setmainfont{Liberation Serif}
 \setsansfont{Liberation Sans}
-\setmonofont{Liberation Mono}
+\setCJKmainfont[BoldFont={Adobe Heiti Std}]{Adobe Song Std}
+\setCJKsansfont[BoldFont={Adobe Heiti Std}]{Adobe Song Std}
+\setCJKmonofont{Noto Sans Mono CJK SC Regular}
 
-\setCJKmainfont{Noto Serif CJK SC}
-\setCJKsansfont{Noto Sans CJK SC}
-\setCJKmonofont{Noto Sans Mono CJK SC}
-
-\newCJKfontfamily\hei{Noto Sans CJK SC Bold} % \hei{Hello, world!}
-\newCJKfontfamily\song{Noto Serif CJK SC}
-\newCJKfontfamily\kai{AR PL UKai CN}
-\newCJKfontfamily\quotefont{AR PL UKai CN}
+\newCJKfontfamily\hei{Adobe Heiti Std} % \hei{Hello, world!}
+\newCJKfontfamily\song{Adobe Song Std}
+\newCJKfontfamily\kai{Adobe Kaiti Std}
+\newCJKfontfamily\quotefont{Adobe Kaiti Std}
 
 \XeTeXlinebreaklocale "zh"
 \XeTeXlinebreakskip = 0pt plus 1pt
 
 \pagenumbering{arabic}
 \renewcommand{\headrulewidth}{.4pt}
-\urlstyle{tt} % url.sty
+\urlstyle{rm}
 \raggedbottom
 
 \pagestyle{fancy}
@@ -137,11 +157,12 @@ date=edtf,seconds=true,% to suppress compile warnings
 \renewcommand{\chaptermark}[1]{\markboth{\thechapter \ \ #1}{}}
 \renewcommand{\sectionmark}[1]{\markright{\thesection \ \ #1}}
 \newcommand{\Appendix}[1]{%
-  \renewcommand{\chaptermark}[1]{%
-    \markboth{附录\ \thechapter \ \ #1}{}}
+  \renewcommand{\chaptermark}[1]%
+      {\markboth{附录\ \thechapter \ \ #1}{}}
   \titleformat{\chapter}%
-  {\centering\LARGE\bfseries}{附录\ \thechapter}{1em}{}
-  \appendix}
+      {\centering\LARGE\bfseries}{附录\ \thechapter}{1em}{}
+  \appendix
+}
 
 % set caption label style to, e.g. 3-2.
 \renewcommand{\thefigure}{\thechapter{}-\arabic{figure}}
@@ -162,9 +183,9 @@ date=edtf,seconds=true,% to suppress compile warnings
 \newcommand{\Title}[1]{\gdef\SWFCField@Title{#1}}
 \newcommand{\enTitle}[1]{\gdef\SWFCField@enTitle{#1}}
 \newcommand{\Author}[1]{\gdef\SWFCField@Author{#1}}
-%\newcommand{\Authorid}[1]{\gdef\SWFCField@Authorid{#1}} % 学号
+%\newcommand{\Authorid}[1]{\gdef\SWFCField@Authorid{#1}}
 \newcommand{\enAuthor}[1]{\gdef\SWFCField@enAuthor{#1}}
-%\newcommand{\Docname}[1]{\gdef\SWFCField@Docname{#1}}
+\newcommand{\Docname}[1]{\gdef\SWFCField@Docname{#1}}
 \newcommand{\Degree}[1]{\gdef\SWFCField@Degree{#1}}
 \newcommand{\Advisor}[1]{\gdef\SWFCField@Advisor{#1}}
 \newcommand{\AdvisorTitle}[1]{\gdef\SWFCField@AdvisorTitle{#1}}
@@ -176,29 +197,30 @@ date=edtf,seconds=true,% to suppress compile warnings
 \newcommand{\Keywords}[1]{\gdef\SWFCField@Keywords{#1}}
 \newcommand{\enKeywords}[1]{\gdef\SWFCField@enKeywords{#1}}
 \newcommand{\Acknowledgments}[1]{\gdef\SWFCField@Acknowledgments{#1}}
-% \newcommand{\School}[1]{\gdef\SWFCField@School{#1}}
-% \newcommand{\enSchool}[1]{\gdef\SWFCField@enSchool{#1}}
-% \newcommand{\Univ}[1]{\gdef\SWFCField@Univ{#1}}
-% \newcommand{\enUniv}[1]{\gdef\SWFCField@enUniv{#1}}
+\newcommand{\School}[1]{\gdef\SWFCField@School{#1}}
+\newcommand{\enSchool}[1]{\gdef\SWFCField@enSchool{#1}}
+\newcommand{\Univ}[1]{\gdef\SWFCField@Univ{#1}}
+\newcommand{\enUniv}[1]{\gdef\SWFCField@enUniv{#1}}
 \newcommand{\Subject}[1]{\gdef\SWFCField@Subject{#1}}
 
 \newcommand{\SWFCtitlepage}{% Title page layout
   \thispagestyle{empty}
   \begin{center}
-    \makebox[14.7em][s]{\huge 西南林业大学}\\[5mm]
-    \makebox[25.75em][s]{\Huge\textbf{本科毕业（设计）论文}}\\[5mm]
-    \makebox[12em][s]{\hspace{.5em}\LARGE（\SWFCField@Year{}届）}\\[60pt]
+    \makebox[14.7em][s]{{\huge\SWFCField@Univ{}}}\\[5mm]
+    \makebox[25.75em][s]{\Huge\textbf{\SWFCField@Docname{}}}\\[5mm]
+    \makebox[12em][s]{\hspace{.5em}\LARGE（\SWFCField@Year{}\,届）}\\[60pt]
     \begin{minipage}{.8\linewidth}
       \begin{Large}
-        \extrarowsep=^8mm_-7pt
-        \begin{tabu} spread \textwidth {@{}X[r]X[3.3,c]@{}}
-          \textbf{题\hspace{2em}目：}&\SWFCField@Title\\\tabucline{2-2}
-          \textbf{分院系部：} &大数据与智能工程学院\\\tabucline{2-2}
-          \textbf{专\hspace{2em}业：}&\SWFCField@Subject\\\tabucline{2-2}
-          % \textbf{学\hspace{2em}号：}&\SWFCField@Authorid\\\tabucline{2-2}
-          \textbf{姓\hspace{2em}名：}&\SWFCField@Author\\\tabucline{2-2}
-          \textbf{导师姓名：} &\SWFCField@Advisor\\\tabucline{2-2}
-          \textbf{导师职称：} &\SWFCField@AdvisorTitle\\\tabucline{2-2}
+        \extrarowsep=^8mm
+        \extrarowsep=_-7pt
+        \begin{tabu}spread\textwidth{@{}X[r]X[3.3,c]@{}}
+          \textbf{题\hspace{2em}目：}&\SWFCField@Title{}\\\tabucline{2-2}
+          \textbf{分院系部：} &\SWFCField@School{}\\\tabucline{2-2}
+          \textbf{专\hspace{2em}业：}&\SWFCField@Subject{}\\\tabucline{2-2}
+%          \textbf{学\hspace{2em}号：}&\SWFCField@Authorid{}\\\tabucline{2-2}
+          \textbf{姓\hspace{2em}名：}&\SWFCField@Author{}\\\tabucline{2-2}
+          \textbf{导师姓名：} &\SWFCField@Advisor{}\\\tabucline{2-2}
+          \textbf{导师职称：} &\SWFCField@AdvisorTitle{}\\\tabucline{2-2}
         \end{tabu}
       \end{Large}
     \end{minipage}
@@ -212,54 +234,58 @@ date=edtf,seconds=true,% to suppress compile warnings
   \providecommand\pdfbookmark[3][]{} \pdfbookmark[0]{摘要}{bm:cnAbstract}
   \thispagestyle{empty}
   \begin{center}
-    {\singlespacing\Large\textbf{\SWFCField@Title}}\\[5mm]
-    \large{\SWFCField@Author}\\
-    \large{（西南林业大学\, 大数据与智能工程学院，云南昆明\, 650224）}
+    {\singlespacing \Large{\textbf{\SWFCField@Title{}}}}\\[5mm]
+    \large{\SWFCField@Author{}}\\
+    \large{（\SWFCField@Univ{}\,\SWFCField@School{}，云南\,昆明\,650224）}
   \end{center}
-  \vspace{3ex}
-  \noindent\textbf{摘\hspace{1em}要：}~\SWFCField@Abstract\par
-  \vspace{2ex}
-  \noindent \textbf{关键词：}~\SWFCField@Keywords
-  \clearpage}
+  \vskip 3ex
+  \noindent \textbf{摘\hspace{1em}要：}~\SWFCField@Abstract{}
+  \vskip 2ex
+  \noindent \textbf{关键词：}~\SWFCField@Keywords{}
+  \clearpage
+}
 
 \newcommand{\enabstractpage}{% English abstract page  
   \providecommand\pdfbookmark[3][]{}%
   \pdfbookmark[0]{Abstract}{bm:Abstract}
   \thispagestyle{empty}
   \begin{center}
-    {\singlespacing\Large\textbf{\SWFCField@enTitle}}\\[5mm]
-    {\large\SWFCField@enAuthor}\\[3mm]
-    {\singlespacing {\large School of Big Data and Intelligence Engineering\\
-        Southwest Forestry University\\
+    {\singlespacing {\Large\textbf{\SWFCField@enTitle{}}}}\\[5mm]
+    {\large\SWFCField@enAuthor{}}\\[3mm]
+    {\singlespacing {\large\SWFCField@enSchool{}\\\SWFCField@enUniv{}\\%
         Kunming 650224, Yunnan, China}}
   \end{center}
-  \vspace{2em}
-  \noindent\textbf{Abstract: }~\SWFCField@enAbstract\par
-  \vspace{1em}
-  \noindent\textbf{Key words: }~\SWFCField@enKeywords
-  \clearpage}
+  \vskip 2em
+  \noindent\textbf{Abstract: }~\SWFCField@enAbstract{}
+  \vskip 1em
+  \noindent\textbf{Key words: }~\SWFCField@enKeywords{}
+  \clearpage
+}
 
 \newcommand{\acknowledgmentspage}{% Acknowledgments page  
   \phantomsection
   \addcontentsline{toc}{chapter}{致\hspace{1em}谢}
   \chapter*{致\hspace{1em}谢}
-  \SWFCField@Acknowledgments}
+  \SWFCField@Acknowledgments{}
+}
 
 \newcommand{\advisorinfopage}{% Advisor info page
   \phantomsection
   \addcontentsline{toc}{chapter}{指导教师简介}
   \chapter*{指导教师简介}
-  \SWFCField@AdvisorInfo
-  \clearpage}
+  \SWFCField@AdvisorInfo{}
+  \clearpage
+}
 
 \newcommand{\makepreliminarypages}{% preliminary pages
   \SWFCtitlepage
   \doublespacing % global line spacing
   \abstractpage
-  \enabstractpage}
+  \enabstractpage
+}
 
 \RequirePackage{minted} % minted has to be loaded at last!!!
-\usemintedstyle{bw}
+%\usemintedstyle{bw}
 
 \renewcommand{\listingscaption}{程序} % used by minted
 \renewcommand{\listoflistingscaption}{程序目录}
@@ -269,15 +295,11 @@ date=edtf,seconds=true,% to suppress compile warnings
 
 \newcommand{\codec}[1]{\mintinline{c}|#1|}
 
-\setminted{%
-  linenos=true,numbersep=3pt,fontsize=\small,
-  frame=leftline,framesep=10pt,%xleftmargin=2cm,
-  rulecolor=\color{lightgray},autogobble=true,breaklines=true,}
+\setminted{linenos=true,numbersep=3pt,fontsize=\small,
+  frame=leftline,framesep=10pt,rulecolor=\color{lightgray},xleftmargin=2cm,autogobble=true}
 
 \newminted{c}{}
-\newminted{shell}{}
 \newminted{latex}{}
-\newminted{bibtex}{}
 \newminted{gas}{}
 \newminted{nasm}{}
 \newminted{python}{}
@@ -285,14 +307,19 @@ date=edtf,seconds=true,% to suppress compile warnings
 \setlength{\parindent}{2em}
 
 % Initialize the variables to their default values
-% \Authorid{}\Docname{}\Univ{}\School{}\enUniv{}\enSchool{}
 \Title{}
 \Author{}
+%\Authorid{}
+\Docname{}
 \Advisor{}
 \AdvisorTitle{}
+
 \AdvisorInfo{}
+
 \Month{}
 \Year{}
+\Univ{}
+\School{}
 \Subject{}
 \Abstract{} 
 \Keywords{}
@@ -301,5 +328,7 @@ date=edtf,seconds=true,% to suppress compile warnings
 % The followings are for the English Abstract.
 \enTitle{}
 \enAuthor{}
+\enUniv{}
+\enSchool{}
 \enAbstract{}
 \enKeywords{}
