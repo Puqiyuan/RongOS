@@ -35,10 +35,29 @@ entry:
 	mov si, msg
 
 putloop:
-	
-	
-	
-	
-	
+	mov al, [si]
+	add si, 1 ; add 1 to register si.
+	cmp al, 0 ;
+	je fin
+	mov ah, 0x0e ; writer a letter.
+	mov bx, 15 ; background color.
+	int 0x10 ; call 10 interrupted.
 
-	
+	jmp putloop
+
+fin:
+	hlt
+	jmp fin
+
+msg:
+db 0x0a, 0x0a ; twl newlines.
+db "hello, world"
+db 0x0a ; newline
+db 0
+
+resb 0x7dfe - $
+db 0x55, 0xaa
+db 0xf0, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00
+resb 4600
+db 0xf0, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00
+resb 1469432
