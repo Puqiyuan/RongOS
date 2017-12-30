@@ -1,12 +1,5 @@
 pdf: thesis.tex
-	sed -i 's/flowchartp.pdf/flowcharte.pdf/g' thesis.tex
-	sed -i 's/swfcthesis/swfcthesise/g' thesis.tex
 	latexmk thesis.tex
-	mv thesis.pdf thesise.pdf
-	sed -i 's/flowcharte.pdf/flowchartp.pdf/g' thesis.tex
-	sed -i 's/swfcthesise/swfcthesis/g' thesis.tex
-	latexmk thesis.tex
-	mv thesis.pdf thesisp.pdf
 
 clean:
 	rm thesis.aux thesis.bcf thesis.bbl thesis.blg thesis.fdb_latexmk \

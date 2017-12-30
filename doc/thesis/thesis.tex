@@ -320,65 +320,12 @@ should be clarify:
   \end{tabular}
 \end{center}
 
+\section{Floppy Disk}
+\label{sec:floppy-disk}
 
-\chapter{Design}
-
-\section{Top Level Design}
-\label{sec:top-level-design}
-
-\missingfigure{System overview diagram}
-
-\todo[inline]{need some description}
-
-\section{Detailed Design}
-\label{sec:detailed-design}
-
-\subsection{Boot Loader}
-\label{sec:boot-loader}
-
-\xout{This is the workflow of the boot loader:}
-\todo[inline]{Question: is this section about how bootloader works, or about how to load
-  it into the mem?}
-
-\begin{figure}[!ht]
-  \centering
-  % \includegraphics[width=.5\textwidth]{design.pdf}
-  \todo[inline]{need a new figure}
-  \caption{Workflow of the boot loader}
-  \label{fig:working-flow-boot-loader}
-\end{figure}
-
-\missingfigure{MBR structure}
-
-\todo[inline]{the 446 bytes code in MBR is for \ldots}
-
-The instructions of the boot loader saved in C0-H0-S1 of floppy, the first cylinder, head 0,
-the first sector, total 512 byte. These instructions end with \texttt{0x55 0xaa}, so BIOS will load
-C0-H0-S1 to memory, then the instructions in C0-H0-S1 will load C0-H0-S2 --- C9-H1-S18,
-total $10*2*18*512=184320byte=180KB$(including boot sector, C0-H0-S1) to main memory.
-
-\subsection{32-bit Mode and Import C Codes}
-\label{sec:32-bit-mode}
-
-
-\chapter{Implementation}
-
-\section{Boot Loader}
-
-\subsection{Choose Disk}
-\label{sec:chose-disk}
-
-\todo[inline]{need rephrase}
-
-There are many ways to boot an operating system, from hard disk, USB, floppy disk,
-etc. \textcolor{red}{Among which, floppy disk is the simplest one to deal with, though
-  it's out of date.} \xout{I choose floppy disk, although it is out of date.} \xout{For my
-  purpose is that develop a simple operating system, pay my attention on how to
-  development.} The structure of floppy disk is simple and for my simple operating system
-it's enough.
-
-\subsection{The Structure of a Floppy Disk}
-\label{sec:struct-floppy-disk}
+There are many ways to boot an operating system, from hard disk, USB, floppy disk,etc.
+The structure of floppy disk is simple and for this simple operating
+system, it's enough.
 
 Fig.~\ref{fig:flpy1.png} shows the inside of a floppy disk:
 \begin{figure}[!ht]
@@ -388,10 +335,10 @@ Fig.~\ref{fig:flpy1.png} shows the inside of a floppy disk:
   \label{fig:flpy1.png}
 \end{figure}
 
-A floppy disk\xout{, also called a floppy, diskette, or just disk,} is a type of disk
-storage composed of a disk of thin and flexible magnetic storage medium, sealed in a
-rectangular plastic enclosure lined with fabric that removes dust particles. Floppy disks
-are read and written by a floppy disk drive (FDD)\verb|\cite{}|\todo{cite wikipedia}.
+A floppy disk, also called a floppy, diskette, or just disk, is a type of disk storage
+composed of a disk of thin and flexible magnetic storage medium, sealed in a rectangular
+plastic enclosure lined with fabric that removes dust particles. Floppy disks are read and
+written by a floppy disk drive (FDD).
 
 For $3.5$ inch HD floppy,  There are $80$ cylinders from the outermost to
 the core on each side, numbering $0$, $1$, ..., $79$. The head can assign be $0$ or $1$,
@@ -400,6 +347,23 @@ ring, named track in jargon. The track is large so we divide it to 18 small part
 sector. A sector can store $512$ byte. So the capacity of a floppy is:
 
 $$18 \times 80 \times 2 \times 512 = 1474560 Byte = 1440 KB$$
+
+
+\chapter{Design}
+
+\section{Top Level Design}
+\label{sec:top-level-design}
+
+\missingfigure{System overview diagram}
+
+
+\subsection{32-bit Mode and Import C Codes}
+\label{sec:32-bit-mode}
+
+
+\chapter{Implementation}
+
+\section{Boot Loader}
 
 \subsection{Flowchart of Boot Loader}
 \label{sec:flowch-boot-load}

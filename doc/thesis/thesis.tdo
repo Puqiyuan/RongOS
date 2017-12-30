@@ -11,22 +11,8 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {todo}{need rephrase}{2}{section*.13}
 \defcounter {refsection}{0}\relax 
-\contentsline {todo}{Figure: System overview diagram}{7}{section.3.1}
+\contentsline {todo}{Figure: System overview diagram}{8}{section.3.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {todo}{need some description}{7}{section*.14}
+\contentsline {todo}{need a better chart}{9}{section*.16}
 \defcounter {refsection}{0}\relax 
-\contentsline {todo}{Question: is this section about how bootloader works, or about how to load it into the mem?}{7}{section*.15}
-\defcounter {refsection}{0}\relax 
-\contentsline {todo}{need a new figure}{7}{section*.17}
-\defcounter {refsection}{0}\relax 
-\contentsline {todo}{Figure: MBR structure}{7}{figure.caption.16}
-\defcounter {refsection}{0}\relax 
-\contentsline {todo}{the 446 bytes code in MBR is for \ldots }{7}{section*.18}
-\defcounter {refsection}{0}\relax 
-\contentsline {todo}{need rephrase}{9}{section*.19}
-\defcounter {refsection}{0}\relax 
-\contentsline {todo}{cite wikipedia}{9}{section*.21}
-\defcounter {refsection}{0}\relax 
-\contentsline {todo}{need a better chart}{10}{section*.23}
-\defcounter {refsection}{0}\relax 
-\contentsline {todo}{need a better pic.}{11}{section*.25}
+\contentsline {todo}{need a better pic.}{10}{section*.18}
