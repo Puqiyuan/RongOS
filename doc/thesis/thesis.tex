@@ -1,4 +1,5 @@
 \documentclass{swfcthesis}
+\setlength{\arrayrulewidth}{0.5mm}
 
 \usepackage{todonotes}
 %\usepackage[inline]{enumitem}
@@ -247,6 +248,35 @@ ax, cx, dx and sp can not.  When mov instruction using, the number of bit of ope
 number should be same. 16 bits registers: ax, cx, dx, bx, sp, bp, si, di, es, cs, ss, ds
 and fs. 8 bits registers: al, cl, dl, bl, ah, ch, dh and bh. Actually, all these 8 bits
 registers are part of corresponding 16 bits registers, low 8 bits or high 8 bits.
+
+\section{Interrupt Call}
+\label{sec:interrupted-call}
+BIOS interrupt calls perform hardware control or I/O functions requested by a program,
+return system information to the program, or do both. A key element of the purpose of BIOS
+calls is abstraction-the BIOS calls perform generally defined functions, and the specific
+details of how those functions are executed on the particular hardware of the system are
+encapsulated in the BIOS and hidden from the program. The following interrupt calls are
+common for RongOS:
+
+\begin{center}
+  \begin{tabular}{|c|c|c|c|}
+    \hline
+    Interrupt Number & Register Parameter & Return Value & Function\\ \hline
+    0x10 &  \begin{tabular}{@{}c@{}c@{}} ah=0x0e(write character in tty mode) \\ al=character
+              code \\  bh=0, bl=colorcolor\end{tabular} & null & video services \\
+    \hline
+    0x13 & \begin{tabular}{@{}c@{}c@{}c@{}c@{}c@{}c@{}}ah=0x02(read sectors) \\ ah=0x03(write sectors) \\ ah=0x04(verify sectors)
+             \\ ah=0x0c(seek to specified track) \\ al=number of sectors processing \\ ch=cylinder
+             \verb|&| 0xff \\ dh=header number dl=driver number \end{tabular}
+                     & \begin{tabular}{@{}c@{}c@{}c@{}}FLACS.CF=0 \\ no
+                         error, ah = 0 \\
+                         FLAGS.CF=1
+                         \\ error, ah=error number \end{tabular}& disk services \\
+    
+    \hline
+  \end{tabular}
+\end{center}
+
 \chapter{Design}
 
 \section{Top Level Design}
