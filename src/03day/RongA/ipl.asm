@@ -33,7 +33,7 @@ entry:
 	mov dh, 0 ; header 0
 	mov cl, 2 ; sector 2
 
-	mov ah, 0x01; read sector
+	mov ah, 0x02; read sector
 	mov al, 1 ; continue processing one sector
 	mov bx, 0
 	mov dl, 0x00 ; A driver
