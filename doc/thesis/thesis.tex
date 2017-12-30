@@ -194,6 +194,7 @@ for RongOS:
 \item[org:] load the program to specified address.
 \item[jmp:] jump to another instruction.
 \item[mov:] assign the right value to left variable.
+\item[jc:] the abbreviation of jump if carry, it means if carry flag is 1, jump.
 \end{description}
 
 \section{x86 Registers}
@@ -239,7 +240,7 @@ set. Registers are normally measured by the number of bits they can hold, for ex
   \item[ss:] stack segment
   \item[ds:] data segment
   \item[fs:] no name
-%  \item[gs:] no name
+    % \item[gs:] no name
   \end{description}
 \end{multicols}
 
@@ -265,17 +266,60 @@ common for RongOS:
     0x10 &  \begin{tabular}{@{}c@{}c@{}} ah=0x0e(write character in tty mode) \\ al=character
               code \\  bh=0, bl=colorcolor\end{tabular} & null & video services \\
     \hline
-    0x13 & \begin{tabular}{@{}c@{}c@{}c@{}c@{}c@{}c@{}}ah=0x02(read sectors) \\ ah=0x03(write sectors) \\ ah=0x04(verify sectors)
+    0x13 & \begin{tabular}{@{}c@{}c@{}c@{}c@{}c@{}c@{}c@{}}ah=0x02(read sectors) \\ ah=0x03(write sectors) \\ ah=0x04(verify sectors)
              \\ ah=0x0c(seek to specified track) \\ al=number of sectors processing \\ ch=cylinder
-             \verb|&| 0xff \\ dh=header number dl=driver number \end{tabular}
+             \verb|&| 0xff  cl=sector number \\ dh=header number dl=driver number \\
+             es:bx=buffer address \end{tabular}
                      & \begin{tabular}{@{}c@{}c@{}c@{}}FLACS.CF=0 \\ no
                          error, ah = 0 \\
                          FLAGS.CF=1
-                         \\ error, ah=error number \end{tabular}& disk services \\
+                         \\ error, ah=error number \\ \end{tabular}& disk services \\
     
     \hline
   \end{tabular}
 \end{center}
+
+\section{Memory Map}
+\label{sec:memory-map}
+
+In the boot process, a memory map is passed on from the firmware in order to instruct an
+operating system kernel about memory layout. It contains the information regarding the
+size of total memory, any reserved regions and may also provide other details specific to
+the architecture. For load  RongOS to memory, the memory lay out
+should be clarify:
+
+\begin{center}
+  \begin{tabular}{|c|c|c|c|} \hline
+    Range(in hexadecimal) & Range(in decimal) & Size(in bytes) & Usage \\
+    \hline
+    0000 --- 03ff & 0000 --- 1023 & 1024 &  interrupt vector table \\
+    \hline
+    0400 --- 04ff & 1024 --- 1279 & 256 & BIOS data area \\
+    \hline
+    0500 --- 051f & 1280 --- 1311 & 32 & Reserved \\
+    \hline
+    0520 --- 7bff & 1312 --- 31743 & 30432 & conventional memory  \\
+    \hline
+    7c00 --- 7dff & 31744 --- 32255 & 512 & master boot record \\
+    \hline
+    7e00 --- 9ffff & 32256 --- 655359 & 623104 & conventional memory \\
+    \hline
+    a0000 --- affff & 655360 --- 720895 & 64K & VGA graphics RAM \\
+    \hline
+    b0000 --- b7fff & 720896 --- 753663 & 32K & monochrome text mode \\
+    \hline
+    b8000 --- bffff & 753664 --- 786431 & 32K & color text mode \\
+    \hline
+    c0000 --- c7fff & 786432 --- 819199 & 32K & VGA video ROM \\
+    \hline
+    c8000 --- cbfff & 819200 --- 835583 & 16K & IDE hard drive \\
+    \hline
+    cc000 --- cffff & 835584 --- 851967 & 16K & optional adaper \\
+    
+    \hline
+  \end{tabular}
+\end{center}
+
 
 \chapter{Design}
 
