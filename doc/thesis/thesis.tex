@@ -67,8 +67,6 @@
 \section{Background}
 \label{sec:background}
 
-\fxerror{Need citations.}
-
 Contemporary software systems are beset by problems that create challenges and
 opportunities for broad new OS research. There are five areas could improve user
 experience including dependability, security, system configuration, system extension, and
@@ -89,6 +87,10 @@ configuration, system extension, and multi-processor programming
 illustrate areas were contemporary operating systems have failed to meet the software
 challenges of the modern computing environment.
 
+Please reference
+\footnote{\url{https://www.usenix.org/legacy/events/hotos05/final_papers_backup/hunt/hunt_html/}}.
+
+
 \section{Preliminary Works}
 
 \subsection{Development Environment}
@@ -108,21 +110,24 @@ challenges of the modern computing environment.
 
 Some tools used to develop RongOS, see
 tools\footnote{\url{https://github.com/Puqiyuan/RongOS/tree/master/Tools}}.
-\fxerror{need more words.}
+Note that these tools are exe format based on Windows system. In these tools, nask.exe is
+used for compiling assembly program and cc1 is a compiler.
+
 
 \subsection{Platform Setup}
 \label{sec:install}
 
 Debian System: there is a small
-tutorial\footnote{\url{http://cs2.swfc.edu.cn/~wx672/lecture_notes/linux/install.html}}. \fxerror{need
-more words.}
+tutorial\footnote{\url{http://cs2.swfc.edu.cn/~wx672/lecture_notes/linux/install.html}}. This tutorial is a sample one for set up development environment,
+the main thing is operating system --- Debian.
 
 \subsubsection{Qemu}
 \label{sec:qemu}
 
-\fxnote{What's Qemu?}
+QEMU is a generic and open source machine emulator and virtualizer. In this development
+process, QEMU used to test running result.
 
-QEMU, for my x86\_64 architecture: 
+Install QEMU, for my x86\_64 architecture: 
 \begin{verbatim}
      $ sudo apt-get install qemu-system-x86_64
 \end{verbatim}
@@ -130,9 +135,11 @@ QEMU, for my x86\_64 architecture:
 \subsubsection{Wine}
 \label{sec:wine}
 
-\fxnote{What's Wine?}
+Wine (originally an acronym for "Wine Is Not an Emulator") is a compatibility layer
+capable of running Windows applications on several POSIX-compliant operating systems, such
+as Linux, macOS, and  BSD.
 
-Note that the tools is exe formate, so on Debian system, you need to install wine:
+Note that the tools are exe format, so on Debian system, Wine need to be install:
 \begin{verbatim}
      $ sudo apt-get update
      $ sudo apt-get install wine
@@ -141,8 +148,11 @@ Note that the tools is exe formate, so on Debian system, you need to install win
 \subsubsection{Debian i386 support}
 \label{sec:debian-i386-support}
 
-Maybe you also need to add i386 architecture cause of AMD64 on your machine to use these
-tools:\fxerror{need rephrase}
+On 64-bit systems you should enable a 32-bit architecture for multiarch. This is needed
+for running 32-bit Windows applications (many modern apps are
+still 32-bit), but also for large parts of the Windows subsystem itself, our development
+tools are 32-bit Windows applications, so add this
+architecture:
 
 \begin{verbatim}
      $ sudo dpkg --add-architecture i386
@@ -155,7 +165,6 @@ tools:\fxerror{need rephrase}
 \section{Instruction Set}
 \label{sec:instruction-set}
 
-\fxerror{need citations.}
 An instruction set architecture (ISA) is an abstract model of a computer. It is also
 referred to as architecture or computer architecture. An ISA defines everything a machine
 language programmer needs to know in order to program a computer.
@@ -171,7 +180,9 @@ offset by infrequent use.
 On traditional architectures, an instruction includes an opcode that specifies the
 operation to perform, such as add contents of memory to register—and zero or more operand
 specifiers, which may specify registers, memory locations, or literal
-data. The simple OS is based on x86 architecture, the following instructions are common
+data.  Please reference \footnote{\url{https://en.wikipedia.org/wiki/Instruction_set_architecture}}.
+
+The simple RongOS is based on x86 architecture, the following instructions are common
 for RongOS:
 
 \begin{description}
@@ -185,6 +196,7 @@ for RongOS:
 \item[jc:] the abbreviation of jump if carry, it means if carry flag is 1, jump.
 \item[jnc:] jump if not carry
 \item[jae:] jump if above or equal
+\item[jbe:] jump if below or equal
 \end{description}
 
 \section{x86 Registers}
