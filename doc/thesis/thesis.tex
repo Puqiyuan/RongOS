@@ -1,29 +1,12 @@
 \documentclass{swfcthesis}
+
 \setlength{\arrayrulewidth}{0.5mm}
 
-\usepackage{todonotes}
-%\usepackage[inline]{enumitem}
-
-% \makeatletter
-% % This command ignores the optional argument for itemize and enumerate lists
-% \newcommand{\inlineitem}[1][]{%
-% \ifnum\enit@type=\tw@
-%     {\descriptionlabel{#1}}
-%   \hspace{\labelsep}%
-% \else
-%   \ifnum\enit@type=\z@
-%        \refstepcounter{\@listctr}\fi
-%     \quad\@itemlabel\hspace{\labelsep}%
-% \fi}
-% \makeatother
-% \parindent=0pt
-
-\addbibresource{thesis.bib}    % 参照教程自己去写一个.bib文件
+\addbibresource{thesis.bib}
 
 \begin{document}
 
 \Title{RongOS --- 简单操作系统的实现}
-%\School{大数据与智能工程学院}
 \Author{蒲启元}
 \Advisor{王晓林}
 \AdvisorTitle{讲师}
@@ -56,7 +39,7 @@
 \enAuthor{Qiyuan Pu}
 
 \enAbstract{Operating system manages the resources of hardware and software, it lies
-  in the core of the system software and provides services(interfaces) to upper
+  in the core of the system software and provides services (interfaces) to upper
   applications. These services include process management, memory management, file system,
   network communication, security mechanism and more. Operating system development is the
   foundation and core of software industry. Therefore, \emph{Made in China
@@ -75,7 +58,7 @@
 \tableofcontents     % 目录
 \listoffigures       % 插图目录
 \listoftables        % 表格目录
-\listoftodos
+\listoffixmes
 
 \mainmatter
 
@@ -84,12 +67,14 @@
 \section{Background}
 \label{sec:background}
 
-\par Contemporary software systems are beset by problems that create challenges and
+\fxerror{Need citations.}
+
+Contemporary software systems are beset by problems that create challenges and
 opportunities for broad new OS research. There are five areas could improve user
 experience including dependability, security, system configuration, system extension, and
 multiprocessor programming.
 
-\par The products of forty years of OS research are sitting in everyone's desktop
+The products of forty years of OS research are sitting in everyone's desktop
 computer, cell phone, car, etc., and it is not a pretty picture.
 Modern software systems are broadly speaking complex, insecure, unpredictable, prone to
 failure, hard to use, and difficult to maintain. Part of the difficult is that good
@@ -99,7 +84,7 @@ systems, which placed new demands that existing architectures struggled to meet.
 problems will not have simple solutions, but the changes must be pervasive, starting at
 the bottom of the software stack, in the operating system.
 
-\par The world needs broad operating system research. Dependability, security, system
+The world needs broad operating system research. Dependability, security, system
 configuration, system extension, and multi-processor programming
 illustrate areas were contemporary operating systems have failed to meet the software
 challenges of the modern computing environment.
@@ -114,27 +99,28 @@ challenges of the modern computing environment.
 \item[Editor:] GNU Emacs 25.2.2
 \item[Run time VM:] QEMU emulator 2.8.1
 \item[Assembler:]Nask.
-\item[Compiler:] \todo{compiler?}
-\item[Debugger:] \todo{debugger?}
+\item[Compiler:] \fxnote{compiler?}
+\item[Debugger:] \fxnote{debugger?}
 \end{description}
 
 \subsection{Tools}
 \label{sec:tools}
 
 Some tools used to develop RongOS, see
-tools.\footnote{\url{https://github.com/Puqiyuan/RongOS/tree/master/Tools}}.
-\todo[inline]{need more words.}
+tools\footnote{\url{https://github.com/Puqiyuan/RongOS/tree/master/Tools}}.
+\fxerror{need more words.}
 
 \subsection{Platform Setup}
 \label{sec:install}
 
 Debian System: there is a small
-tutorial.\footnote{\url{http://cs2.swfc.edu.cn/~wx672/lecture_notes/linux/install.html}}
+tutorial\footnote{\url{http://cs2.swfc.edu.cn/~wx672/lecture_notes/linux/install.html}}. \fxerror{need
+more words.}
 
 \subsubsection{Qemu}
 \label{sec:qemu}
 
-\todo[inline]{What's Qemu?}
+\fxnote{What's Qemu?}
 
 QEMU, for my x86\_64 architecture: 
 \begin{verbatim}
@@ -144,7 +130,7 @@ QEMU, for my x86\_64 architecture:
 \subsubsection{Wine}
 \label{sec:wine}
 
-\todo[inline]{What's Wine?}
+\fxnote{What's Wine?}
 
 Note that the tools is exe formate, so on Debian system, you need to install wine:
 \begin{verbatim}
@@ -156,7 +142,7 @@ Note that the tools is exe formate, so on Debian system, you need to install win
 \label{sec:debian-i386-support}
 
 Maybe you also need to add i386 architecture cause of AMD64 on your machine to use these
-tools:\todo{need rephrase}
+tools:\fxerror{need rephrase}
 
 \begin{verbatim}
      $ sudo dpkg --add-architecture i386
@@ -168,11 +154,13 @@ tools:\todo{need rephrase}
 
 \section{Instruction Set}
 \label{sec:instruction-set}
+
+\fxerror{need citations.}
 An instruction set architecture (ISA) is an abstract model of a computer. It is also
 referred to as architecture or computer architecture. An ISA defines everything a machine
 language programmer needs to know in order to program a computer.
 
-\par An ISA may be classified in a number of different ways. A common classification is by
+An ISA may be classified in a number of different ways. A common classification is by
 architectural complexity. A complex instruction set computer (CISC) has many specialized
 instructions, some of which may only be rarely used in practical programs. A reduced
 instruction set computer (RISC) simplifies the processor by efficiently implementing only
@@ -180,7 +168,7 @@ the instructions that are frequently used in programs, while the less common ope
 are implemented as subroutines, having their resulting additional processor execution time
 offset by infrequent use.
 
-\par On traditional architectures, an instruction includes an opcode that specifies the
+On traditional architectures, an instruction includes an opcode that specifies the
 operation to perform, such as add contents of memory to register—and zero or more operand
 specifiers, which may specify registers, memory locations, or literal
 data. The simple OS is based on x86 architecture, the following instructions are common
@@ -212,11 +200,11 @@ stored back to main memory, either by the same instruction or by a subsequent on
 processors use either static or dynamic RAM as main memory, with the latter usually
 accessed via one or more cache levels.
 
-\par Processor registers are normally at the top of the memory hierarchy, and provide the
+Processor registers are normally at the top of the memory hierarchy, and provide the
 fastest way to access data. The term normally refers only to the group of registers that
 are directly encoded as part of an instruction, as defined by the instruction
 set. Registers are normally measured by the number of bits they can hold, for example, an
-"8-bit register" or a "32-bit register". For x86 architecture, these registers existing:
+``8-bit register'' or a ``32-bit register''. For x86 architecture, these registers existing:
 
 
 \begin{multicols}{3}
@@ -261,25 +249,31 @@ details of how those functions are executed on the particular hardware of the sy
 encapsulated in the BIOS and hidden from the program. The following interrupt calls are
 common for RongOS:
 
-\begin{center}
-  \begin{tabular}{|c|c|c|c|}
-    \hline
-    Interrupt Number & Register Parameter & Return Value & Function\\ \hline
-    0x10 &  \begin{tabular}{@{}c@{}c@{}} ah=0x0e(write character in tty mode) \\ al=character
-              code \\  bh=0, bl=colorcolor\end{tabular} & null & video services \\
-    \hline
-    0x13 & \begin{tabular}{@{}c@{}c@{}c@{}c@{}c@{}c@{}c@{}}ah=0x02(read sectors) \\ ah=0x03(write sectors) \\ ah=0x04(verify sectors)
-             \\ ah=0x0c(seek to specified track) \\ al=number of sectors processing \\ ch=cylinder
-             \verb|&| 0xff  cl=sector number \\ dh=header number dl=driver number \\
-             es:bx=buffer address \end{tabular}
-                     & \begin{tabular}{@{}c@{}c@{}c@{}}FLACS.CF=0 \\ no
-                         error, ah = 0 \\
-                         FLAGS.CF=1
-                         \\ error, ah=error number \\ \end{tabular}& disk services \\
-    
-    \hline
-  \end{tabular}
-\end{center}
+\begin{table}[!ht]
+  \centering\tabulinesep=2mm
+  \begin{tabu}{|X[c,m,-1]|X[l,m]|X[-1,l,m]|X[-1,c,m]|}
+    \tabucline-
+    Interrupt\par{}Number & Register Parameter & Return Value & Function\\ \tabucline-
+    0x10 &
+    ah=0x0e(write character in tty mode)\par{}
+    al=character code\par{}
+    bh=0, bl=colorcolor& null & video services \\\tabucline-
+    0x13 &
+    ah=0x02(read sectors)\par{}
+    ah=0x03(write sectors)\par{}
+    ah=0x04(verify sectors)\par{}
+    ah=0x0c(seek to specified track)\par{}
+    al=number of sectors processing\par{}
+    ch=cylinder \& 0xff  cl=sector number\par{}
+    dh=header number dl=driver number\par{}
+    es:bx=buffer address &
+    FLACS.CF=0\par{}
+    no error, ah = 0\par{}
+    FLAGS.CF=1\par{}
+    error, ah=error number\par{}& disk services \\ \tabucline-
+  \end{tabu}
+  \caption{RongOS interrupt calls}\label{tab:intcall}
+\end{table}
 
 \section{Memory Map}
 \label{sec:memory-map}
@@ -290,37 +284,38 @@ size of total memory, any reserved regions and may also provide other details sp
 the architecture. For load  RongOS to memory, the memory lay out
 should be clarify:
 
-\begin{center}
-  \begin{tabular}{|c|c|c|c|} \hline
+\begin{table}[!ht]
+  \centering\tabulinesep=2mm
+  \begin{tabu}{|c|c|c|c|} \tabucline-
     Range(in hexadecimal) & Range(in decimal) & Size(in bytes) & Usage \\
-    \hline
+    \tabucline-
     0000 --- 03ff & 0000 --- 1023 & 1024 &  interrupt vector table \\
-    \hline
+    \tabucline-
     0400 --- 04ff & 1024 --- 1279 & 256 & BIOS data area \\
-    \hline
+    \tabucline-
     0500 --- 051f & 1280 --- 1311 & 32 & Reserved \\
-    \hline
+    \tabucline-
     0520 --- 7bff & 1312 --- 31743 & 30432 & conventional memory  \\
-    \hline
+    \tabucline-
     7c00 --- 7dff & 31744 --- 32255 & 512 & master boot record \\
-    \hline
+    \tabucline-
     7e00 --- 9ffff & 32256 --- 655359 & 623104 & conventional memory \\
-    \hline
+    \tabucline-
     a0000 --- affff & 655360 --- 720895 & 64K & VGA graphics RAM \\
-    \hline
+    \tabucline-
     b0000 --- b7fff & 720896 --- 753663 & 32K & monochrome text mode \\
-    \hline
+    \tabucline-
     b8000 --- bffff & 753664 --- 786431 & 32K & color text mode \\
-    \hline
+    \tabucline-
     c0000 --- c7fff & 786432 --- 819199 & 32K & VGA video ROM \\
-    \hline
+    \tabucline-
     c8000 --- cbfff & 819200 --- 835583 & 16K & IDE hard drive \\
-    \hline
+    \tabucline-
     cc000 --- cffff & 835584 --- 851967 & 16K & optional adaper \\
     
-    \hline
-  \end{tabular}
-\end{center}
+    \tabucline-
+  \end{tabu}
+\end{table}
 
 \section{Floppy Disk}
 \label{sec:floppy-disk}
@@ -356,8 +351,6 @@ $$18 \times 80 \times 2 \times 512 = 1474560 Byte = 1440 KB$$
 \section{Top Level Design}
 \label{sec:top-level-design}
 
-\missingfigure{System overview diagram}
-
 
 \subsection{32-bit Mode and Import C Codes}
 \label{sec:32-bit-mode}
@@ -374,7 +367,7 @@ Fig.~\ref{fig:flowchart-of-boot-loader} shows how the boot loader works.
 \begin{figure}[!ht]
   \centering
   % \includegraphics[width=1\textwidth]{../figs/FlowchartTex/1/flowcharte.pdf}
-  \todo[inline]{need a better chart}
+  \fxerror{need a better chart}
   \caption{Flowchart of Boot Loader}
   \label{fig:flowchart-of-boot-loader}
 \end{figure}
@@ -418,7 +411,7 @@ see that the boot loader loaded 10 cylinders from floppy successfully.
 \begin{figure}[!ht]
   \centering
   % \includegraphics[width=1.1\textwidth]{iplRes.png}
-  \todo[inline]{need a better pic.}
+  \fxerror{need a better pic.}
   \caption{Running Result of Boot Loader}
   \label{fig:iplRes}
 \end{figure}
