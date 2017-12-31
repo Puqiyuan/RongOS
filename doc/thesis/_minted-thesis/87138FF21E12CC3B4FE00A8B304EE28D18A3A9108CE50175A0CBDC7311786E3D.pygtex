@@ -1,0 +1,182 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{; read ten cylinders to memory begin with 0x8200.}
+\PYG{c+c1}{; read order:}
+	\PYG{c+c1}{; C0\PYGZhy{}H0\PYGZhy{}S1 \PYGZhy{}\PYGZhy{}\PYGZhy{} C0\PYGZhy{}H0\PYGZhy{}S18}
+	\PYG{c+c1}{; C0\PYGZhy{}H1\PYGZhy{}S1 \PYGZhy{}\PYGZhy{}\PYGZhy{} C0\PYGZhy{}H0\PYGZhy{}S18}
+	\PYG{c+c1}{; C1\PYGZhy{}H0\PYGZhy{}S1 \PYGZhy{}\PYGZhy{}\PYGZhy{} C1\PYGZhy{}H0\PYGZhy{}S18}
+        \PYG{c+c1}{; C1\PYGZhy{}H1\PYGZhy{}S1 \PYGZhy{}\PYGZhy{}\PYGZhy{} C1\PYGZhy{}H1\PYGZhy{}S18}
+        \PYG{c+c1}{;          ...}
+	\PYG{c+c1}{; C9\PYGZhy{}H1\PYGZhy{}S1 \PYGZhy{}\PYGZhy{}\PYGZhy{} C9\PYGZhy{}H1\PYGZhy{}S18}
+        \PYG{c+c1}{; C is cylinder, H is head, S is sector.}
+	\PYG{c+c1}{; total 10 * 2 * 18 * 512 = 184320Byte = 180KB.}
+	\PYG{c+c1}{; begin with 0x8200, end with 0x34fff in memory.}
+
+	\PYG{n+no}{CYLS}\PYG{k+kd}{ equ} \PYG{l+m+mi}{10} \PYG{c+c1}{; read 10 cylinders, }
+
+\PYG{k}{org} \PYG{l+m+mh}{0x7c00} \PYG{c+c1}{; load the program to address 0x7c00.}
+	\PYG{n+nf}{jmp} \PYG{n+nv}{entry}
+
+	\PYG{c+c1}{; The next codes specify the format of standard FAT12 floppy disk.}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x90} \PYG{c+c1}{;db is the abbreation of \PYGZdq{}define byte\PYGZdq{}, it literally places that byte}
+	\PYG{c+c1}{; right there in the executable.}
+\PYG{k+kd}{db} \PYG{l+s}{\PYGZdq{}RONGBOOT\PYGZdq{}} \PYG{c+c1}{;The name of boot sector, must be 8 byte.}
+\PYG{k+kd}{dw} \PYG{l+m+mi}{512} \PYG{c+c1}{; the size of every sector, must be 512 byte.}
+\PYG{k+kd}{db} \PYG{l+m+mi}{1} \PYG{c+c1}{; the size of cluster, must be 1.}
+\PYG{k+kd}{dw} \PYG{l+m+mi}{1} \PYG{c+c1}{; the start point of FAT, 1 general case.}
+\PYG{k+kd}{db} \PYG{l+m+mi}{2} \PYG{c+c1}{; the number of FAT, must be 2.}
+\PYG{k+kd}{dw} \PYG{l+m+mi}{224} \PYG{c+c1}{; the size of root directory, 224 in general.}
+\PYG{k+kd}{dw} \PYG{l+m+mi}{2880} \PYG{c+c1}{; the size of this floppy disk, must be 2880.}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0xf0} \PYG{c+c1}{; the kind of disk.}
+\PYG{k+kd}{dw} \PYG{l+m+mi}{9} \PYG{c+c1}{; the length of FAT.}
+\PYG{k+kd}{dw} \PYG{l+m+mi}{18} \PYG{c+c1}{; how many sectors in one track, must be 18.}
+\PYG{k+kd}{dw} \PYG{l+m+mi}{2} \PYG{c+c1}{; the number of head, must be 2.}
+\PYG{k+kd}{dd} \PYG{l+m+mi}{0} \PYG{c+c1}{; no partion, must be 0.}
+\PYG{k+kd}{dd} \PYG{l+m+mi}{2880} \PYG{c+c1}{; the size if re\PYGZhy{}writer one time.}
+\PYG{k+kd}{db} \PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mh}{0x29} \PYG{c+c1}{; just fixed, no meaning.}
+\PYG{k+kd}{dd} \PYG{l+m+mh}{0xffffffff} 
+\PYG{k+kd}{db} \PYG{l+s}{\PYGZdq{}RONGBOOTOS \PYGZdq{}} \PYG{c+c1}{; the name of disk.}
+\PYG{k+kd}{db} \PYG{l+s}{\PYGZdq{}FAT12   \PYGZdq{}} \PYG{c+c1}{; the name of disk formate.}
+\PYG{k+kd}{resb} \PYG{l+m+mi}{18} \PYG{c+c1}{; reserved 18 byte.}
+\PYG{c+c1}{; end FAT12 formate.}
+
+
+\PYG{n+nl}{entry:}
+	\PYG{n+nf}{mov} \PYG{n+nb}{ax}\PYG{p}{,} \PYG{l+m+mi}{0} \PYG{c+c1}{; init the registers.}
+	\PYG{n+nf}{mov} \PYG{n+nb}{ss}\PYG{p}{,} \PYG{n+nb}{ax} \PYG{c+c1}{; can not directly write ss segment register.}
+	\PYG{n+nf}{mov} \PYG{n+nb}{sp}\PYG{p}{,} \PYG{l+m+mh}{0x7c00} \PYG{c+c1}{; the instructions of this program}
+        \PYG{c+c1}{; loaded to 0x7c00 in memory, so sp=0x7c00, from here}
+	\PYG{c+c1}{; to execute.}
+
+	\PYG{n+nf}{mov} \PYG{n+nb}{ds}\PYG{p}{,} \PYG{n+nb}{ax}
+
+	\PYG{n+nf}{mov} \PYG{n+nb}{si}\PYG{p}{,} \PYG{n+nv}{msg\PYGZus{}init} \PYG{c+c1}{; show some init message.}
+	\PYG{n+nf}{jmp} \PYG{n+nv}{init}
+
+
+\PYG{n+nl}{init:}
+	\PYG{n+nf}{mov} \PYG{n+nb}{al}\PYG{p}{,} \PYG{p}{[}\PYG{n+nb}{si}\PYG{p}{]}
+	\PYG{n+nf}{add} \PYG{n+nb}{si}\PYG{p}{,} \PYG{l+m+mi}{1} \PYG{c+c1}{; increment by 1.}
+	\PYG{n+nf}{cmp} \PYG{n+nb}{al}\PYG{p}{,} \PYG{l+m+mi}{0}
+	\PYG{n+nf}{je} \PYG{n+nv}{load} \PYG{c+c1}{; if al == 0, jmp to load, the msg\PYGZus{}init info displayed.}
+\PYG{c+c1}{; the lastest character is null character, coding in 0.}
+
+	\PYG{n+nf}{mov} \PYG{n+nb}{ah}\PYG{p}{,} \PYG{l+m+mh}{0x0e} \PYG{c+c1}{; write a character in TTY mode.}
+	\PYG{n+nf}{mov} \PYG{n+nb}{bx}\PYG{p}{,} \PYG{l+m+mi}{15}   \PYG{c+c1}{; specify the color of the character.}
+	\PYG{n+nf}{int} \PYG{l+m+mh}{0x10} \PYG{c+c1}{; call BIOS function, video card is number 10.}
+	\PYG{n+nf}{jmp} \PYG{n+nv}{init}
+\PYG{c+c1}{;show some init messages.}
+
+
+\PYG{n+nl}{msg\PYGZus{}init:}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0a} \PYG{c+c1}{; new line}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0d}
+\PYG{k+kd}{db} \PYG{l+s}{\PYGZdq{}Copyright: GPL\PYGZdq{}}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0a}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0d}
+\PYG{k+kd}{db} \PYG{l+s}{\PYGZdq{}Author: Qiyuan Pu\PYGZdq{}}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0a}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0d}
+\PYG{k+kd}{db} \PYG{l+s}{\PYGZdq{}https://github.com/Puqiyuan/RongOS\PYGZdq{}}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0a}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0d}
+\PYG{k+kd}{db} \PYG{l+s}{\PYGZdq{}IPL is loading, please waiting...\PYGZdq{}}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0a}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0d}
+\PYG{k+kd}{db} \PYG{l+s}{\PYGZdq{}......\PYGZdq{}}
+
+
+\PYG{n+nl}{load:}
+	\PYG{n+nf}{mov} \PYG{n+nb}{ax}\PYG{p}{,} \PYG{l+m+mi}{0}
+	\PYG{n+nf}{mov} \PYG{n+nb}{ax}\PYG{p}{,} \PYG{l+m+mh}{0x0820} \PYG{c+c1}{; load C0\PYGZhy{}H0\PYGZhy{}S2 to memory begin with 0x0820.}
+	\PYG{n+nf}{mov} \PYG{n+nb}{es}\PYG{p}{,} \PYG{n+nb}{ax}
+	\PYG{n+nf}{mov} \PYG{n+nb}{ch}\PYG{p}{,} \PYG{l+m+mi}{0} \PYG{c+c1}{; cylinder 0.}
+	\PYG{n+nf}{mov} \PYG{n+nb}{dh}\PYG{p}{,} \PYG{l+m+mi}{0} \PYG{c+c1}{; head 0.}
+	\PYG{n+nf}{mov} \PYG{n+nb}{cl}\PYG{p}{,} \PYG{l+m+mi}{2} \PYG{c+c1}{; sector 2.}
+
+
+\PYG{n+nl}{readloop:}
+	\PYG{n+nf}{mov} \PYG{n+nb}{si}\PYG{p}{,} \PYG{l+m+mi}{0} \PYG{c+c1}{; si register is a counter, try read a sector}
+\PYG{c+c1}{; five times.}
+
+
+\PYG{n+nl}{retry:}
+	\PYG{n+nf}{mov} \PYG{n+nb}{ah}\PYG{p}{,} \PYG{l+m+mh}{0x02} \PYG{c+c1}{; parameter 0x02 to ah, read disk.}
+	\PYG{n+nf}{mov} \PYG{n+nb}{al}\PYG{p}{,} \PYG{l+m+mi}{1} \PYG{c+c1}{; parameter 1 to al, read disk.}
+	\PYG{n+nf}{mov} \PYG{n+nb}{bx}\PYG{p}{,} \PYG{l+m+mi}{0}
+	\PYG{n+nf}{mov} \PYG{n+nb}{dl}\PYG{p}{,} \PYG{l+m+mh}{0x00} \PYG{c+c1}{; the number of driver number.}
+	\PYG{n+nf}{int} \PYG{l+m+mh}{0x13} \PYG{c+c1}{; after prepared parameters, call 0x13 interrupted.}
+
+	\PYG{n+nf}{jnc} \PYG{n+nv}{next} \PYG{c+c1}{; if no carry read next sector.}
+	\PYG{n+nf}{add} \PYG{n+nb}{si}\PYG{p}{,} \PYG{l+m+mi}{1} \PYG{c+c1}{; tring again read sector, counter add 1.}
+	\PYG{n+nf}{cmp} \PYG{n+nb}{si}\PYG{p}{,} \PYG{l+m+mi}{5} \PYG{c+c1}{; until five times}
+	\PYG{n+nf}{jae} \PYG{n+nv}{error} \PYG{c+c1}{; if tring times large than five, failed.}
+
+	\PYG{c+c1}{; reset the status of floppy and read again.}
+	\PYG{n+nf}{mov} \PYG{n+nb}{ah}\PYG{p}{,} \PYG{l+m+mh}{0x00} 
+	\PYG{n+nf}{mov} \PYG{n+nb}{dl}\PYG{p}{,} \PYG{l+m+mh}{0x00}
+	\PYG{n+nf}{int} \PYG{l+m+mh}{0x13}
+	\PYG{n+nf}{jmp} \PYG{n+nv}{retry}
+
+
+\PYG{n+nl}{next:}
+	\PYG{n+nf}{mov} \PYG{n+nb}{ax}\PYG{p}{,} \PYG{n+nb}{es}
+	\PYG{c+c1}{; we can not directly add to es register.}
+	\PYG{n+nf}{add} \PYG{n+nb}{ax}\PYG{p}{,} \PYG{l+m+mh}{0x0020} \PYG{c+c1}{; add 0x0020 to ax}
+	\PYG{n+nf}{mov} \PYG{n+nb}{es}\PYG{p}{,} \PYG{n+nb}{ax} \PYG{c+c1}{; the memory increase 0x0020 * 16 = 512 byte.}
+	\PYG{c+c1}{; size of a sector.}
+	\PYG{n+nf}{add} \PYG{n+nb}{cl}\PYG{p}{,} \PYG{l+m+mi}{1} \PYG{c+c1}{; sector number add 1.}
+	\PYG{n+nf}{cmp} \PYG{n+nb}{cl}\PYG{p}{,} \PYG{l+m+mi}{18} \PYG{c+c1}{; one track have 18 sector.}
+	\PYG{n+nf}{jbe} \PYG{n+nv}{readloop} \PYG{c+c1}{; jump if below or equal 18, read the next sector.}
+	\PYG{n+nf}{mov} \PYG{n+nb}{cl}\PYG{p}{,} \PYG{l+m+mi}{1} \PYG{c+c1}{; cl number reset to 1, ready to read the other side.}
+	\PYG{n+nf}{add} \PYG{n+nb}{dh}\PYG{p}{,} \PYG{l+m+mi}{1} \PYG{c+c1}{; the other side of floppy.}
+	\PYG{n+nf}{cmp} \PYG{n+nb}{dh}\PYG{p}{,} \PYG{l+m+mi}{2} \PYG{c+c1}{; only two sides of floppy.}
+	\PYG{n+nf}{jb} \PYG{n+nv}{readloop} \PYG{c+c1}{; if dh \PYGZlt{} 2, read 18 sectors of the other sides}
+	\PYG{c+c1}{; of floppy.}
+	\PYG{n+nf}{mov} \PYG{n+nb}{dh}\PYG{p}{,} \PYG{l+m+mi}{0} \PYG{c+c1}{; after finished read the other side, reset head to 0.}
+	\PYG{n+nf}{add} \PYG{n+nb}{ch}\PYG{p}{,} \PYG{l+m+mi}{1} \PYG{c+c1}{; two sides of a cylinder readed, add 1 to ch.}
+	\PYG{n+nf}{cmp} \PYG{n+nb}{ch}\PYG{p}{,} \PYG{n+nv}{CYLS} \PYG{c+c1}{; read 10 cylinders.}
+	\PYG{n+nf}{jb} \PYG{n+nv}{readloop}
+	\PYG{n+nf}{jmp} \PYG{n+nv}{correct} \PYG{c+c1}{; if 10 cylinders readed, show correct message.}
+\PYG{n+nl}{fin:}
+	\PYG{n+nf}{hlt} \PYG{c+c1}{; halt the cpu.}
+	\PYG{n+nf}{jmp} \PYG{n+nv}{fin}
+
+
+\PYG{n+nl}{error:}
+	\PYG{n+nf}{mov} \PYG{n+nb}{si}\PYG{p}{,} \PYG{n+nv}{msg}
+
+
+\PYG{n+nl}{correct:}
+	\PYG{n+nf}{mov} \PYG{n+nb}{si}\PYG{p}{,} \PYG{n+nv}{msg\PYGZus{}corr}
+
+
+\PYG{n+nl}{putloop:}
+	\PYG{n+nf}{mov} \PYG{n+nb}{al}\PYG{p}{,} \PYG{p}{[}\PYG{n+nb}{si}\PYG{p}{]}
+	\PYG{n+nf}{add} \PYG{n+nb}{si}\PYG{p}{,} \PYG{l+m+mi}{1}
+	\PYG{n+nf}{cmp} \PYG{n+nb}{al}\PYG{p}{,} \PYG{l+m+mi}{0}
+	\PYG{n+nf}{mov} \PYG{p}{[}\PYG{l+m+mh}{0x0ff0}\PYG{p}{],} \PYG{n+nb}{ch}
+	\PYG{n+nf}{je} \PYG{l+m+mh}{0xc200}
+	\PYG{n+nf}{mov} \PYG{n+nb}{ah}\PYG{p}{,} \PYG{l+m+mh}{0x0e}
+	\PYG{n+nf}{mov} \PYG{n+nb}{bx}\PYG{p}{,} \PYG{l+m+mi}{15}
+	\PYG{n+nf}{int} \PYG{l+m+mh}{0x10}
+	\PYG{n+nf}{jmp} \PYG{n+nv}{putloop}
+
+
+\PYG{n+nl}{msg\PYGZus{}corr:}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0a}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0d}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0a}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0d}
+\PYG{k+kd}{db} \PYG{l+s}{\PYGZdq{}OK: IPL loaded\PYGZdq{}}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0a}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0d}
+\PYG{k+kd}{db} \PYG{l+m+mi}{0}
+\PYG{n+nl}{msg:}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0a}
+\PYG{k+kd}{db} \PYG{l+s}{\PYGZdq{}IPL load error\PYGZdq{}}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x0a}
+\PYG{k+kd}{db} \PYG{l+m+mi}{0}
+\PYG{k+kd}{resb} \PYG{l+m+mh}{0x7dfe}\PYG{o}{\PYGZhy{}}\PYG{k+kc}{\PYGZdl{}}
+\PYG{k+kd}{db} \PYG{l+m+mh}{0x55}\PYG{p}{,} \PYG{l+m+mh}{0xaa} \PYG{c+c1}{; the sector end with 0x55 0xaa, the sector is}
+	\PYG{c+c1}{;boot sector.}
+\end{Verbatim}
