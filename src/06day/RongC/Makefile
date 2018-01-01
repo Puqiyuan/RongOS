@@ -30,8 +30,8 @@ hankaku.obj: hankaku.bin
 
 bootpack.bim: bootpack.obj naskfunc.obj hankaku.obj graphic.obj dsctbl.obj 
 	wine $(obj2bim) @../z_tools/haribote/haribote.rul out:bootpack.bim stack:3136k \
-	map:bootpack.map bootpack.obj naskfunc.obj hankaku.obj graphic.obj \
-	dsctbl.obj
+    map:bootpack.map bootpack.obj naskfunc.obj hankaku.obj graphic.obj \
+    dsctbl.obj
 
 bootpack.rong: bootpack.bim
 	wine $(bim2hrb) bootpack.bim bootpack.rong 0
@@ -41,7 +41,7 @@ Rongbote.sys: asmhead.bin bootpack.rong
 
 Rongbote.img: ipl10.bin Rongbote.sys
 	wine $(edimg) imgin:../z_tools/fdimg0at.tek wbinimg src:ipl10.bin \
-	len:512 from:0 to:0 copy from:Rongbote.sys to:@: imgout:Rongbote.img
+    len:512 from:0 to:0 copy from:Rongbote.sys to:@: imgout:Rongbote.img
 
 %.gas: %.c
 	wine $(cc1) -o $*.gas $*.c

@@ -101,7 +101,7 @@ Please reference
 \item[Editor:] GNU Emacs 25.2.2
 \item[Run time VM:] QEMU emulator 2.8.1
 \item[Assembler:]Nask.
-\item[Compiler:] \fxnote{compiler?}
+\item[Compiler:] CC1(Based on gcc)
 \item[Debugger:] \fxnote{debugger?}
 \end{description}
 
@@ -111,7 +111,8 @@ Please reference
 Some tools used to develop RongOS, see
 tools\footnote{\url{https://github.com/Puqiyuan/RongOS/tree/master/Tools}}.
 Note that these tools are exe format based on Windows system. In these tools, nask.exe is
-used for compiling assembly program and cc1 is a compiler.
+used for compiling assembly program and cc1 is a compiler, gas2nask.exe convert gas
+program to nask program, and obj2bim links all object files to bim format.
 
 
 \subsection{Platform Setup}
