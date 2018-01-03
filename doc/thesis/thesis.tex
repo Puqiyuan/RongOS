@@ -85,10 +85,9 @@ the bottom of the software stack, in the operating system.
 The world needs broad operating system research. Dependability, security, system
 configuration, system extension, and multi-processor programming
 illustrate areas were contemporary operating systems have failed to meet the software
-challenges of the modern computing environment.
+challenges of the modern computing environment\fxerror{\textbackslash{}cite\{hunt2005broad\}}.
 
-Please reference
-\footnote{\url{https://www.usenix.org/legacy/events/hotos05/final_papers_backup/hunt/hunt_html/}}.
+\fxnote*{use citation instead, see \texttt{thesis.bib}}{Please reference.}
 
 
 \section{Preliminary Works}
@@ -100,7 +99,7 @@ Please reference
 \item[OS platform:] Debian 9, Linux kernel 4.12.0-1-amd64
 \item[Editor:] GNU Emacs 25.2.2
 \item[Run time VM:] QEMU emulator 2.8.1
-\item[Assembler:]Nask.
+\item[Assembler:] Nask
 \item[Compiler:] CC1(Based on gcc)
 \item[Debugger:] \fxnote{debugger?}
 \end{description}
@@ -108,27 +107,40 @@ Please reference
 \subsection{Tools}
 \label{sec:tools}
 
-Some tools used to develop RongOS, see
-tools\footnote{\url{https://github.com/Puqiyuan/RongOS/tree/master/Tools}}.
-Note that these tools are exe format based on Windows system. In these tools, nask.exe is
-used for compiling assembly program and cc1 is a compiler, gas2nask.exe convert gas
-program to nask program, and obj2bim links all object files to bim format.
+Some tools were used to develop RongOS, \xout{see tools}\fxerror{need some descriptions about
+  the tools}\footnote{\url{https://github.com/Puqiyuan/RongOS/tree/master/Tools}}. Note
+that these tools are Windows executables \fxerror{(so what?)}\xout{exe format based on
+  Windows system}. Among these tools, the most important ones are:
 
+\begin{description}
+\item[nask.exe] the assembler, a modified version of NASM
+\item[cc1] the C compiler
+\end{description}
 
 \subsection{Platform Setup}
 \label{sec:install}
 
-Debian System: there is a small
-tutorial\footnote{\url{http://cs2.swfc.edu.cn/~wx672/lecture_notes/linux/install.html}}. This tutorial is a sample one for set up development environment,
-the main thing is operating system --- Debian.
+The development platform (mainly the Debian system) was setup by following the
+\emph{Debian Installation
+  tutorial}\footnote{\url{http://cs2.swfc.edu.cn/~wx672/lecture_notes/linux/install.html}}. The
+main steps were:
+\begin{enumerate}
+\item Installing the base system;
+\item Installing necessary software tools, such as emacs, web browser, qemu, wine, etc.;
+\item Cloning configuration files by following the tutorial;
+\item Some more miscellaneous tweaks to satisfy my personal needs.
+\end{enumerate}
+
+\xout{Debian System: there is a small tutorial. This tutorial is a sample one for set up
+  development environment, the main thing is operating system --- Debian.}
 
 \subsubsection{Qemu}
 \label{sec:qemu}
 
-QEMU is a generic and open source machine emulator and virtualizer. In this development
-process, QEMU used to test running result.
+QEMU is a generic and open source machine emulator and virtualizer.\fxerror{need citation}
+In this project, QEMU was used as the test bed.\xout{ to test the running result.}
 
-Install QEMU, for my x86\_64 architecture: 
+Installing QEMU for my x86\_64 architecture is as easy as the following command: 
 \begin{verbatim}
      $ sudo apt-get install qemu-system-x86_64
 \end{verbatim}
@@ -138,9 +150,10 @@ Install QEMU, for my x86\_64 architecture:
 
 Wine (originally an acronym for "Wine Is Not an Emulator") is a compatibility layer
 capable of running Windows applications on several POSIX-compliant operating systems, such
-as Linux, macOS, and  BSD.
+as Linux, macOS, and BSD.\fxerror{need citation}
 
-Note that the tools are exe format, so on Debian system, Wine need to be install:
+Because the tools I used in this project are in Windows exe format, so on Debian system,
+Wine need to be installed:
 \begin{verbatim}
      $ sudo apt-get update
      $ sudo apt-get install wine
@@ -149,11 +162,10 @@ Note that the tools are exe format, so on Debian system, Wine need to be install
 \subsubsection{Debian i386 support}
 \label{sec:debian-i386-support}
 
-On 64-bit systems you should enable a 32-bit architecture for multiarch. This is needed
+On 64-bit systems you need to enable multiarch support 
 for running 32-bit Windows applications (many modern apps are
-still 32-bit), but also for large parts of the Windows subsystem itself, our development
-tools are 32-bit Windows applications, so add this
-architecture:
+still 32-bit, also for large parts of the Windows subsystem itself), our development
+tools are 32-bit Windows applications, so add this architecture:
 
 \begin{verbatim}
      $ sudo dpkg --add-architecture i386
@@ -181,7 +193,9 @@ offset by infrequent use.
 On traditional architectures, an instruction includes an opcode that specifies the
 operation to perform, such as add contents of memory to register—and zero or more operand
 specifiers, which may specify registers, memory locations, or literal
-data.  Please reference \footnote{\url{https://en.wikipedia.org/wiki/Instruction_set_architecture}}.
+data\fxerror{\textbackslash{}cite\{...\}}.
+
+\xout{Please reference} \fxerror{use citation rather than footnote}%\footnote{\url{https://en.wikipedia.org/wiki/Instruction_set_architecture}}.
 
 The simple RongOS is based on x86 architecture, the following instructions are common
 for RongOS:
@@ -212,7 +226,7 @@ for RongOS:
 \section{x86 Registers}
 \label{sec:register}
 
-In computer architecture, a processor register is a quickly accessible location available
+In computer architecture, a processor register is a quick accessible location available
 to a computer's central processing unit (CPU). Registers usually consist of a small amount
 of fast storage, although some registers have specific hardware functions, and may be
 read-only or write-only.  Almost all computers, whether load/store architecture or not,
@@ -220,14 +234,14 @@ load data from a larger memory into registers where it is used for arithmetic op
 and is manipulated or tested by machine instructions. Manipulated data is then often
 stored back to main memory, either by the same instruction or by a subsequent one. Modern
 processors use either static or dynamic RAM as main memory, with the latter usually
-accessed via one or more cache levels.
+accessed via one or more cache levels.\fxerror{need citation}
 
 Processor registers are normally at the top of the memory hierarchy, and provide the
 fastest way to access data. The term normally refers only to the group of registers that
 are directly encoded as part of an instruction, as defined by the instruction
 set. Registers are normally measured by the number of bits they can hold, for example, an
-``8-bit register'' or a ``32-bit register''. For x86 architecture, these registers existing:
-
+``8-bit register'' or a ``32-bit register''. For x86 architecture, the following registers
+exist:
 
 \begin{multicols}{3}
   \begin{description}
@@ -256,20 +270,23 @@ set. Registers are normally measured by the number of bits they can hold, for ex
   \end{description}
 \end{multicols}
 
-In these registers, bx, bp, si and di can be used to specify the address of memory. But
-ax, cx, dx and sp can not.  When mov instruction using, the number of bit of operation
-number should be same. 16 bits registers: ax, cx, dx, bx, sp, bp, si, di, es, cs, ss, ds
-and fs. 8 bits registers: al, cl, dl, bl, ah, ch, dh and bh. Actually, all these 8 bits
-registers are part of corresponding 16 bits registers, low 8 bits or high 8 bits.
+Among these registers, \fxnote*{better be \textbackslash{}texttt\{bx, bp, si\}}{bx, bp, si}
+and di can be used to specify the address of memory. But ax, cx, dx and sp can not.  When
+mov instruction is used\xout{using}, \fxerror*{don't understand.}{the number of bits of
+  operation number should be the same}. 16-bit registers: ax, cx, dx, bx, sp, bp, si, di,
+es, cs, ss, ds and fs. 8-bit registers: al, cl, dl, bl, ah, ch, dh and bh. Actually, all
+these 8-bit registers are part of corresponding 16-bit registers, low 8 bits or high 8
+bits.\fxnote{perhaps you can add a picture to illustrate your understanding.}
 
 \section{Interrupt Call}
 \label{sec:interrupted-call}
+
 BIOS interrupt calls perform hardware control or I/O functions requested by a program,
-return system information to the program, or do both. A key element of the purpose of BIOS
-calls is abstraction-the BIOS calls perform generally defined functions, and the specific
-details of how those functions are executed on the particular hardware of the system are
-encapsulated in the BIOS and hidden from the program. The following interrupt calls are
-common for RongOS:
+return system information to the program, or do both\fxerror{need citation}. A key element
+of the purpose of BIOS calls is abstraction. The BIOS calls perform generally defined
+functions, and the specific details of how those functions are executed on the particular
+hardware of the system are encapsulated in the BIOS and hidden from the program. The
+interrupt calls are commonly used in RongOS are listed in Table~\ref{tbl:intcall}.
 
 \begin{table}[!ht]
   \centering\tabulinesep=2mm
@@ -294,17 +311,17 @@ common for RongOS:
     FLAGS.CF=1\par{}
     error, ah=error number\par{}& disk services \\ \tabucline-
   \end{tabu}
-  \caption{RongOS interrupt calls}\label{tab:intcall}
+  \caption{RongOS interrupt calls}\label{tbl:intcall}
 \end{table}
 
 \section{Memory Map}
 \label{sec:memory-map}
 
 In the boot process, a memory map is passed on from the firmware in order to instruct an
-operating system kernel about memory layout. It contains the information regarding the
-size of total memory, any reserved regions and may also provide other details specific to
-the architecture. For load  RongOS to memory, the memory lay out
-should be clarify:
+operating system kernel about memory layout\fxerror{need citation}. It contains the
+information regarding the size of total memory, any reserved regions and may also provide
+other details specific to the architecture. For loading RongOS to memory, the memory layout
+should be clarified as in Table~\ref{tbl:memlayout}.
 
 \begin{table}[!ht]
   \centering\tabulinesep=2mm
@@ -334,17 +351,16 @@ should be clarify:
     c8000 --- cbfff & 819200 --- 835583 & 16K & IDE hard drive \\
     \tabucline-
     cc000 --- cffff & 835584 --- 851967 & 16K & optional adaper \\
-    
     \tabucline-
   \end{tabu}
+  \caption{RongOS Memory Layout}\label{tbl:memlayout}
 \end{table}
 
 \section{Floppy Disk}
 \label{sec:floppy-disk}
 
-There are many ways to boot an operating system, from hard disk, USB, floppy disk,etc.
-The structure of floppy disk is simple and for this simple operating
-system, it's enough.
+There are many ways to boot an operating system, from hard disk, USB, floppy disk, etc.
+The structure of floppy disk is simple and for this simple operating system, it's enough.
 
 Fig.~\ref{fig:flpy1.png} shows the inside of a floppy disk:
 \begin{figure}[!ht]
@@ -357,15 +373,15 @@ Fig.~\ref{fig:flpy1.png} shows the inside of a floppy disk:
 A floppy disk, also called a floppy, diskette, or just disk, is a type of disk storage
 composed of a disk of thin and flexible magnetic storage medium, sealed in a rectangular
 plastic enclosure lined with fabric that removes dust particles. Floppy disks are read and
-written by a floppy disk drive (FDD).
+written by a floppy disk drive (FDD).\fxerror{need citation}
 
-For $3.5$ inch HD floppy,  There are $80$ cylinders from the outermost to
-the core on each side, numbering $0$, $1$, ..., $79$. The head can assign be $0$ or $1$,
+For 3.5 inch HD floppy,  There are 80 cylinders from the outermost to
+the core on each side, numbering 0, 1, \ldots, 79. The head can assign be 0 or 1,
 representing two sides of floppy. When specify head number and cylinder number, forming a
 ring, named track in jargon. The track is large so we divide it to 18 small parts, named
-sector. A sector can store $512$ byte. So the capacity of a floppy is:
+sector. A sector can store 512 byte. So the capacity of a floppy is:
 
-$$18 \times 80 \times 2 \times 512 = 1474560 Byte = 1440 KB$$
+\[18 \times 80 \times 2 \times 512 = 1474560 Byte = 1440 KB\]
 
 
 \chapter{Design}
@@ -386,6 +402,7 @@ $$18 \times 80 \times 2 \times 512 = 1474560 Byte = 1440 KB$$
 \label{sec:flowch-boot-load}
 
 Fig.~\ref{fig:flowchart-of-boot-loader} shows how the boot loader works.
+
 \begin{figure}[!ht]
   \centering
   % \includegraphics[width=1\textwidth]{../figs/FlowchartTex/1/flowcharte.pdf}
@@ -394,8 +411,9 @@ Fig.~\ref{fig:flowchart-of-boot-loader} shows how the boot loader works.
   \label{fig:flowchart-of-boot-loader}
 \end{figure}
 
-The boot loader is implemented in Intel assembly. \textcolor{red}{It works as following:}
+The boot loader is implemented in Intel assembly. It works as following:
 
+\fxerror{use \textbackslash{}texttt\{0x10,ax,al,...\}, rather than \$0x10,ax,al,...\$}
 \begin{enumerate}
 \item \textbf{Display boot information:} Firstly, the boot sector display some boot information,
   when $al=0$, the null character of boot information hit. Interrupt $0x10$ is used for
@@ -492,22 +510,22 @@ see that the boot loader loaded 10 cylinders from floppy successfully.
 \label{sec:dis-boo-inf}
 
 \inputminted[firstline=55, lastline=65,
-  linenos=true]{nasm}{../../src/06day/RongC/ipl10.nas}
+  linenos=true]{nasm}{../../src/06day/RongC/ipl10.asm}
 
 \subsection{Read the second sector}
 \label{sec:rea-sec-sec}
   
-\inputminted[firstline=87,lastline=106,linenos=true]{nasm}{../../src/06day/RongC/ipl10.nas}
+\inputminted[firstline=87,lastline=106,linenos=true]{nasm}{../../src/06day/RongC/ipl10.asm}
 
 \subsection{Read two sides of a track}
 \label{sec:rea-two-sid}
 
-\inputminted[firstline=108,lastline=132,linenos=true]{nasm}{../../src/06day/RongC/ipl10.nas}
+\inputminted[firstline=108,lastline=132,linenos=true]{nasm}{../../src/06day/RongC/ipl10.asm}
 
 \subsection{The next cylinder}
 \label{sec:the-nex-cyl}
 
-\inputminted[firstline=134,lastline=137,linenos=true]{nasm}{../../src/06day/RongC/ipl10.nas}
+\inputminted[firstline=134,lastline=137,linenos=true]{nasm}{../../src/06day/RongC/ipl10.asm}
 
 \end{document} % 结束。不要动下面几行！
 
