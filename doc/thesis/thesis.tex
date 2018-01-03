@@ -175,6 +175,11 @@ tools are 32-bit Windows applications, so add this architecture:
 \chapter{Leading Knowledge}
 \label{cha:leading-knowledge}
 
+\section{Programmable Interrupt Controller}
+\label{sec:progr-interr-contr}
+
+\fxerror{Programmable interrupt controller}
+
 \section{C Language Basis}
 \label{sec:c-language-basis}
 \fxerror{C language basis}
@@ -230,6 +235,10 @@ for RongOS:
 \item[sti:] set interrupt flag, set it to 1.
 \item[pushfd:] push flags double-word
 \item[popfd:] pop flags double-word
+\item[lgdt:] load content from specified memory to initialize GDT(global descriptor table)
+  register.
+\item[lidt:] load content from specified memory to initialize IDT(interrupt descriptor
+  table) register.
 \end{description}
 
 \section{x86 Registers}
