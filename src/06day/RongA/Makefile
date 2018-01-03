@@ -65,9 +65,9 @@ install: Rongbote.img
 	sudo dd if=Rongbote.img of=/dev/sdb bs=512 count=2880
 	sudo sync
 
-reboot: install
-	make clean
-	reboot
+#reboot: install
+#	make clean
+#	reboot
 
 clean:
 	rm *.bin *.lst *.map *.obj *.gas *.ros *.img *.sys *.bim -f
