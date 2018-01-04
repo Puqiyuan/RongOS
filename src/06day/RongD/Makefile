@@ -1,4 +1,4 @@
-OBJS_BOOTPACK = bootpack.obj naskfunc.obj hankaku.obj graphic.obj dsctbl.obj
+OBJS_BOOTPACK = bootpack.obj naskfunc.obj hankaku.obj graphic.obj dsctbl.obj int.obj
 
 TOOLPATH = ../z_tools/
 INCPATH = ../z_tools/haribote/
@@ -28,10 +28,9 @@ hankaku.bin: hankaku.txt
 hankaku.obj: hankaku.bin
 	wine $(bin2obj) hankaku.bin hankaku.obj _hankaku
 
-bootpack.bim: bootpack.obj naskfunc.obj hankaku.obj graphic.obj dsctbl.obj 
+bootpack.bim: $(OBJS_BOOTPACK)
 	wine $(obj2bim) @../z_tools/haribote/haribote.rul out:bootpack.bim stack:3136k \
-    map:bootpack.map bootpack.obj naskfunc.obj hankaku.obj graphic.obj \
-    dsctbl.obj
+    map:bootpack.map $(OBJS_BOOTPACK)
 
 bootpack.ros: bootpack.bim
 	wine $(bim2hrb) bootpack.bim bootpack.ros 0
