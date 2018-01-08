@@ -14,6 +14,8 @@
     "sec:wine"
     "sec:debian-i386-support"
     "cha:leading-knowledge"
+    "cha:leading-knowledge-1"
+    "sec:data-structure"
     "sec:progr-interr-contr"
     "sec:c-language-basis"
     "sec:segment-descriptor"

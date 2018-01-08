@@ -22,9 +22,9 @@
   统软件，这些服务包括进程管理，内存管理，文件系统，网络通信，安全机制等。操作系统的设计与
   实现则是软件工业的基础。为此，在国务院提出的《中国制造2025》中专门强调了操作系统的开
   发\cite{china_2025}。但长期以来，操作系统核心开发技术都掌握在外国人手中，技术受制，对于我
-  们的软件工业来说很不利。本项目从零开始设计开发个简单的操作系统，包括boot loader，中断，内
-  存管理，图形接口，多任务，以及在这个系统上的几个小应用等。尽管这个系统很简单，但它为自主
-  开发操作系统做了尝试。}
+  们的软件工业来说很不利。本项目从零开始设计开发一个简单的操作系统，包括boot loader，中断，
+  内存管理，图形接口，多任务等功能模块，以及能运行在这个系统之上的几个小应用程序。尽管这
+  个系统很简单，但它是自主开发操作系统的一次尝试。}
 
 \Keywords{操作系统，进程，内存，中断，boot loader}
 
@@ -36,21 +36,23 @@
 
 \enTitle{RongOS --- A simple OS implementation}
 
-\enAuthor{Qiyuan Pu}
+\enAuthor{Qiyuan PU}
 
-\enAbstract{Operating system manages the resources of hardware and software, it lies
-  in the core of the system software and provides services (interfaces) to upper
-  applications. These services include process management, memory management, file system,
-  network communication, security mechanism and more. Operating system development is the
-  foundation and core of software industry. Therefore, \emph{Made in China
-    2025} emphasizes the development of operating system that put forward by The State
-  Council of China. For a long time, however, the OS kernel development technology is mastered
-  by foreigner, due to technical limitations it is detrimental to our software industry. So this project will design and develop a simple operating system, including
-  boot loader, interrupt, memory management, graphic interface, multitasking, and some
-  little applications based on this system. In spite of the simplicity of this system,
-  it's a small trying for autonomous development operating system.}
+\enAbstract{Operating system manages the hardware and software resources in a running
+  computer system. It is the core of any modern software system and provides services
+  (interfaces) to upper layer applications. The services it provides include process
+  management, memory management, file system, network communication, security mechanism
+  and more. Operating system development is the foundation and core of software
+  industry. Therefore, \emph{Made in China 2025} emphasizes the development of operating
+  system that put forward by The State Council of China. For long time, however, the OS
+  kernel development technology is dominated by foreigners. This technical limitation is
+  detrimental to the development of our software industry. In this project, we presents a
+  simple operating system which includes a boot loader, interrupt services, memory
+  management functions, a graphic interface, and multi-process management functions. Also,
+  some trivial user-level applications are provided for system testing purpose. This
+  simple toy OS is an experimental trial for developing an operating system from scratch.}
 
-\enKeywords{operating system, boot loader, process, interrupt, memory management}
+\enKeywords{operating system, boot loader, interrupt, process management, memory management}
 
 %%% 下面六行不要动！
 \makepreliminarypages% 封面
@@ -58,34 +60,33 @@
 \tableofcontents     % 目录
 \listoffigures       % 插图目录
 \listoftables        % 表格目录
-\listoffixmes
+\listoffixmes{}
 
-\mainmatter
+\mainmatter{}
 
 \chapter{Introduction}
 
 \section{Background}
-\label{sec:background}
 
 Contemporary software systems are beset by problems that create challenges and
 opportunities for broad new OS research. There are five areas could improve user
 experience including dependability, security, system configuration, system extension, and
 multiprocessor programming.
 
-The products of forty years of OS research are sitting in everyone's desktop
-computer, cell phone, car, etc., and it is not a pretty picture.
-Modern software systems are broadly speaking complex, insecure, unpredictable, prone to
-failure, hard to use, and difficult to maintain. Part of the difficult is that good
-software is hard to write, but in the past decade, this problem and more specific
-shortcomings in systems have been greatly exacerbated by increased networking and embedded
-systems, which placed new demands that existing architectures struggled to meet. These
-problems will not have simple solutions, but the changes must be pervasive, starting at
-the bottom of the software stack, in the operating system.
+The products of forty years of OS research are sitting in everyone's desktop computer,
+cell phone, car, etc., and it is not a pretty picture.  Modern software systems are
+broadly speaking complex, insecure, unpredictable, prone to failure, hard to use, and
+difficult to maintain. Part of the difficult is that good software is hard to write, but
+in the past decade, this problem and more specific shortcomings in systems have been
+greatly exacerbated by increased networking and embedded systems, which placed new demands
+that existing architectures struggled to meet. These problems will not have simple
+solutions, but the changes must be pervasive, starting at the bottom of the software
+stack, in the operating system.
 
 The world needs broad operating system research. Dependability, security, system
-configuration, system extension, and multi-processor programming
-illustrate areas were contemporary operating systems have failed to meet the software
-challenges of the modern computing environment\fxerror{\textbackslash{}cite\{hunt2005broad\}}.
+configuration, system extension, and multi-processor programming illustrate areas were
+contemporary operating systems have failed to meet the software challenges of the modern
+computing environment\fxerror{\textbackslash{}cite\{hunt2005broad\}}.
 
 \fxnote*{use citation instead, see \texttt{thesis.bib}}{Please reference.}
 
@@ -93,7 +94,6 @@ challenges of the modern computing environment\fxerror{\textbackslash{}cite\{hun
 \section{Preliminary Works}
 
 \subsection{Development Environment}
-\label{sec:devel-envir}
 
 \begin{description}
 \item[OS platform:] Debian 9, Linux kernel 4.12.0-1-amd64
@@ -105,52 +105,47 @@ challenges of the modern computing environment\fxerror{\textbackslash{}cite\{hun
 \end{description}
 
 \subsection{Tools}
-\label{sec:tools}
 
-Some tools were used to develop RongOS, \xout{see tools}\fxerror{need some descriptions about
-  the tools}\footnote{\url{https://github.com/Puqiyuan/RongOS/tree/master/Tools}}. Note
-that these tools are Windows executables \fxerror{(so what?)}\xout{exe format based on
-  Windows system}. Among these tools, the most important ones are:
+Some tools were used to develop RongOS, \xout{see tools}\fxerror{need some descriptions
+  about the
+  tools}\footnote{\url{https://github.com/Puqiyuan/RongOS/tree/master/Tools}}. Note that
+these tools are Windows executables \fxerror{(so what?)}. Among these tools, the most
+important ones are:
 
 \begin{description}
-\item[nask.exe] the assembler, a modified version of NASM
-\item[cc1] the C compiler
+\item[nask.exe:] the assembler, a modified version of NASM\cite{30_os}
+\item[cc1:] the C compiler
 \end{description}
 
 \subsection{Platform Setup}
-\label{sec:install}
 
-The development platform (mainly the Debian system) was setup by following the
+The development platform (mainly the Debian system) was set up by following the
 \emph{Debian Installation
   tutorial}\footnote{\url{http://cs2.swfc.edu.cn/~wx672/lecture_notes/linux/install.html}}. The
-main steps were:
+main steps include:
 \begin{enumerate}
-\item Installing the base system;
+\item Installing the base Debian system;
 \item Installing necessary software tools, such as emacs, web browser, qemu, wine, etc.;
-\item Cloning configuration files by following the tutorial;
-\item Some more miscellaneous tweaks to satisfy my personal needs.
+\item Cloning configuration files by following the tutorial mentioned above;
+\item Some more fine tweaks to satisfy my personal needs.
 \end{enumerate}
 
-\xout{Debian System: there is a small tutorial. This tutorial is a sample one for set up
-  development environment, the main thing is operating system --- Debian.}
-
 \subsubsection{Qemu}
-\label{sec:qemu}
 
-QEMU is a generic and open source machine emulator and virtualizer.\fxerror{need citation}
-In this project, QEMU was used as the test bed.\xout{ to test the running result.}
+QEMU is a generic and open source machine emulator and virtualizer.\fxerror{need citation
+  (wikipedia)} In this project, QEMU was used as the test bed.
 
-Installing QEMU for my x86\_64 architecture is as easy as the following command: 
+Installing QEMU for my x86\_64 architecture can be easily done by executing the following
+command:
 \begin{verbatim}
      $ sudo apt-get install qemu-system-x86_64
 \end{verbatim}
 
 \subsubsection{Wine}
-\label{sec:wine}
 
-Wine (originally an acronym for "Wine Is Not an Emulator") is a compatibility layer
+Wine (originally an acronym for ``Wine Is Not an Emulator'') is a compatibility layer
 capable of running Windows applications on several POSIX-compliant operating systems, such
-as Linux, macOS, and BSD.\fxerror{need citation}
+as Linux, macOS, and BSD.\fxerror{need citation (wikipedia)}
 
 Because the tools I used in this project are in Windows exe format, so on Debian system,
 Wine need to be installed:
@@ -160,12 +155,11 @@ Wine need to be installed:
 \end{verbatim}
 
 \subsubsection{Debian i386 support}
-\label{sec:debian-i386-support}
 
-On 64-bit systems you need to enable multiarch support 
-for running 32-bit Windows applications (many modern apps are
-still 32-bit, also for large parts of the Windows subsystem itself), our development
-tools are 32-bit Windows applications, so add this architecture:
+On 64-bit systems you need to enable multi-arch support for running 32-bit Windows
+applications (many modern apps are still 32-bit, also for large parts of the Windows
+subsystem itself). Our development tools were 32-bit Windows applications, so we needed to
+have i386 support for our 64-bit Linux system.
 
 \begin{verbatim}
      $ sudo dpkg --add-architecture i386
@@ -173,24 +167,14 @@ tools are 32-bit Windows applications, so add this architecture:
 \end{verbatim}
 
 \chapter{Leading Knowledge}
-\label{cha:leading-knowledge}
 
 \section{Programmable Interrupt Controller}
-\label{sec:progr-interr-contr}
 
-\fxerror{Programmable interrupt controller}
+\section{C Language Basic}
 
-\section{C Language Basis}
-\label{sec:c-language-basis}
-\fxerror{C language basis}
-
-\section{Segment and Descriptor}
-\label{sec:segment-descriptor}
-\fxerror{segment and}
-
+\section{Segments and Descriptors}
 
 \section{Instruction Set}
-\label{sec:instruction-set}
 
 An instruction set architecture (ISA) is an abstract model of a computer. It is also
 referred to as architecture or computer architecture. An ISA defines everything a machine
@@ -207,16 +191,14 @@ offset by infrequent use.
 On traditional architectures, an instruction includes an opcode that specifies the
 operation to perform, such as add contents of memory to register—and zero or more operand
 specifiers, which may specify registers, memory locations, or literal
-data\fxerror{\textbackslash{}cite\{...\}}.
+data\fxerror{cite wikipedia}.
 
-\xout{Please reference} \fxerror{use citation rather than footnote}%\footnote{\url{https://en.wikipedia.org/wiki/Instruction_set_architecture}}.
-
-The simple RongOS is based on x86 architecture, the following instructions are common
-for RongOS:
+This simple RongOS is based on x86 architecture, the following instructions are commonly
+used in programming RongOS:%
 
 \begin{description}
 \item[db:] the abbreviation of define byte, write a byte, also 8 bits to file.
-\item[resb:] the abbreviation of reserve byte, reserved bytes and filling 0x00 in these reserved space.
+\item[resb:] the abbreviation of reserve byte, reserved bytes and filling \texttt{0x00} in these reserved space.
 \item[dw:] the abbreviation of define word, write two bytes, also 16 bits to file.
 \item[dd:] the abbreviation of define double-word, write four bytes, also 32 bits to file.
 \item[org:] load the program to specified address.
@@ -233,16 +215,15 @@ for RongOS:
 \item[out:] send signal to device.
 \item[cli:] clear interrupt flag, set it to 0.
 \item[sti:] set interrupt flag, set it to 1.
-\item[pushfd:] push flags double-word
-\item[popfd:] pop flags double-word
-\item[lgdt:] load content from specified memory to initialize GDT(global descriptor table)
+\item[pushfd:] push flags double-word.
+\item[popfd:] pop flags double-word.
+\item[lgdt:] load content from specified memory to initialize GDT (global descriptor table)
   register.
-\item[lidt:] load content from specified memory to initialize IDT(interrupt descriptor
+\item[lidt:] load content from specified memory to initialize IDT (interrupt descriptor
   table) register.
 \end{description}
 
 \section{x86 Registers}
-\label{sec:register}
 
 In computer architecture, a processor register is a quick accessible location available
 to a computer's central processing unit (CPU). Registers usually consist of a small amount
@@ -284,27 +265,41 @@ exist:
   \item[ss:] stack segment
   \item[ds:] data segment
   \item[fs:] no name
-    % \item[gs:] no name
+  \item[gs:] no name
   \end{description}
 \end{multicols}
 
-Among these registers, \fxnote*{better be \textbackslash{}texttt\{bx, bp, si\}}{bx, bp, si}
-and di can be used to specify the address of memory. But ax, cx, dx and sp can not.  When
-mov instruction is used\xout{using}, \fxerror*{don't understand.}{the number of bits of
-  operation number should be the same}. 16-bit registers: ax, cx, dx, bx, sp, bp, si, di,
-es, cs, ss, ds and fs. 8-bit registers: al, cl, dl, bl, ah, ch, dh and bh. Actually, all
-these 8-bit registers are part of corresponding 16-bit registers, low 8 bits or high 8
-bits.\fxnote{perhaps you can add a picture to illustrate your understanding.}
+\fxnote{better use \textbackslash{}texttt\{\} for all the special words (ax, bx, ...)}
+Among these registers, \texttt{bx}, \texttt{bp}, \texttt{si} and \texttt{di} can be used
+to specify the address of memory. But ax, cx, dx and sp can not.  \fxerror*{don't
+  understand.}{When mov instruction is used, the number of bits of operation number should
+  be the same}.
+\begin{description}
+\item[16-bit registers:] ax, cx, dx, bx, sp, bp, si, di, es, cs, ss, ds and fs.
+\item[8-bit registers] al, cl, dl, bl, ah, ch, dh and bh.
+\end{description}
+Actually, all these 8-bit registers are part of corresponding 16-bit registers, low 8 bits
+or high 8 bits.\fxnote{perhaps you can add a picture to illustrate your understanding. For
+example:}
+
+\begin{verbatim}
+   +--------+--------+        +--------+--------+
+ax |   ah   |   al   |     bx |   bh   |   bl   |
+   +--------+--------+        +--------+--------+
+
+   +--------+--------+        +--------+--------+
+cx |   ch   |   cl   |     dx |   dh   |   dl   |
+   +--------+--------+        +--------+--------+
+\end{verbatim}
 
 \section{Interrupt Call}
-\label{sec:interrupted-call}
 
 BIOS interrupt calls perform hardware control or I/O functions requested by a program,
-return system information to the program, or do both\fxerror{need citation}. A key element
-of the purpose of BIOS calls is abstraction. The BIOS calls perform generally defined
-functions, and the specific details of how those functions are executed on the particular
-hardware of the system are encapsulated in the BIOS and hidden from the program. The
-interrupt calls are commonly used in RongOS are listed in Table~\ref{tbl:intcall}.
+return system information to the program, or do both. A key element of the purpose of BIOS
+calls is abstraction. The BIOS calls perform generally defined functions, and the specific
+details of how those functions are executed on the particular hardware of the system are
+encapsulated in the BIOS and hidden from the program\fxerror{need citation}. The interrupt
+calls are commonly used in RongOS are listed in Table~\ref{tbl:intcall}.
 
 \begin{table}[!ht]
   \centering\tabulinesep=2mm
@@ -333,18 +328,17 @@ interrupt calls are commonly used in RongOS are listed in Table~\ref{tbl:intcall
 \end{table}
 
 \section{Memory Map}
-\label{sec:memory-map}
 
 In the boot process, a memory map is passed on from the firmware in order to instruct an
-operating system kernel about memory layout\fxerror{need citation}. It contains the
-information regarding the size of total memory, any reserved regions and may also provide
-other details specific to the architecture. For loading RongOS to memory, the memory layout
+operating system kernel about memory layout. It contains the information regarding the
+size of total memory, any reserved regions and may also provide other details specific to
+the architecture\fxerror{need citation}. For loading RongOS to memory, the memory layout
 should be clarified as in Table~\ref{tbl:memlayout}.
 
 \begin{table}[!ht]
   \centering\tabulinesep=2mm
   \begin{tabu}{|c|c|c|c|} \tabucline-
-    Range(in hexadecimal) & Range(in decimal) & Size(in bytes) & Usage \\
+    Range (in hexadecimal) & Range (in decimal) & Size (in bytes) & Usage \\
     \tabucline-
     0000 --- 03ff & 0000 --- 1023 & 1024 &  interrupt vector table \\
     \tabucline-
@@ -375,7 +369,6 @@ should be clarified as in Table~\ref{tbl:memlayout}.
 \end{table}
 
 \section{Floppy Disk}
-\label{sec:floppy-disk}
 
 There are many ways to boot an operating system, from hard disk, USB, floppy disk, etc.
 The structure of floppy disk is simple and for this simple operating system, it's enough.
@@ -405,19 +398,15 @@ sector. A sector can store 512 byte. So the capacity of a floppy is:
 \chapter{Design}
 
 \section{Top Level Design}
-\label{sec:top-level-design}
 
 
 \subsection{32-bit Mode and Import C Codes}
-\label{sec:32-bit-mode}
-
 
 \chapter{Implementation}
 
 \section{Boot Loader}
 
 \subsection{Flowchart of Boot Loader}
-\label{sec:flowch-boot-load}
 
 Fig.~\ref{fig:flowchart-of-boot-loader} shows how the boot loader works.
 
@@ -431,37 +420,46 @@ Fig.~\ref{fig:flowchart-of-boot-loader} shows how the boot loader works.
 
 The boot loader is implemented in Intel assembly. It works as following:
 
-\fxerror{use \textbackslash{}texttt\{0x10,ax,al,...\}, rather than \$0x10,ax,al,...\$}
+\fxnote{better use \textbackslash{}texttt\{0x10, ax, al, ...\}, rather than \$0x10, ax,
+  al, ...\$}
 \begin{enumerate}
-\item \textbf{Display boot information:} Firstly, the boot sector display some boot information,
-  when $al=0$, the null character of boot information hit. Interrupt $0x10$ is used for
-  show a character. Appendix ~\ref{sec:dis-boo-inf} is the code to perform this function.
-\item \textbf{Read the second sector:} Then jump to load C0-H0-S2, $ax$ register saved the address
-  where beginning puts the sectors from floppy. And preparing parameters for interrupt
-  $0x13$ in registers. The $0x13$ interrupt used for read sector from floppy to
-  memory. Appendix ~\ref{sec:rea-sec-sec} is the code to perform this function.
-\item \textbf{Read two sides of a track:} If there is a carry, representing some thing wrong when
-  read floppy, so reset the registers and try again read floppy, until five times
-  trying. Register $si$ is a counter. If no carry, jump to next segmentation, as one
-  sector read to memory already, the address space should increase 512 byte. Then sector
-  number($cl$ register) added 1 and compare it to 18, if it's smaller than 18, jump to
-  $readloop$, read the next sector. If the value of $cl$ register bigger or equal to than
-  18, meaning that one track 18 sector in this side of floppy read already, then reversed
-  the head, add 1 to $dh$ register. If the value of $dh$ register after adding larger than
-  or equal to 2, it's saying the original head is 1, one track of two sides read
-  already. Otherwise the value of $dh$ register smaller than 2, read this side indicating
-  by $dh$ register, jump to $readloop$ segmentation. Appendix ~\ref{sec:rea-two-sid} is
-  the code to perform this function.
+\item \textbf{Display boot information:} Firstly, the code in boot sector (See
+  Appendix~\ref{sec:dis-boo-inf}) outputs some boot information. When \texttt{al=0}, the
+  null character of boot information hit. Interrupt $0x10$ is used for showing a
+  character.
+\item \textbf{Read the second sector:} Then jump to load C0-H0-S2, $ax$ register saved the
+  address where beginning puts the sectors from floppy. And preparing parameters for
+  interrupt $0x13$ in registers. The $0x13$ interrupt used for read sector from floppy to
+  memory. (See Appendix~\ref{sec:rea-sec-sec}).
+\item \textbf{Read two sides of a track:} \fxnote{perhaps you should use pseudo-code to
+    illustrate these steps.}
+  
+  If there is a carry indicating some thing went wrong while reading the floppy disk,
+  reset the registers and try reading it again. The read process aborts after five
+  unsuccessful read.
+
+  Register $si$ is a counter. If no carry (success), jump to next segment, as one sector
+  has been read into memory already. The address should increase 512 byte. Then sector
+  number ($cl$ register) is added by 1 and compare it to 18, if it's smaller than 18, jump
+  to $readloop$, read the next sector.
+
+  If the value of $cl$ register bigger or equal to than 18, meaning that one track 18
+  sector in this side of floppy read already, then reversed the head, add 1 to $dh$
+  register.
+
+  If the value of $dh$ register after adding larger than or equal to 2, it's saying the
+  original head is 1, one track of two sides read already. Otherwise the value of $dh$
+  register smaller than 2, read this side indicating by $dh$ register, jump to $readloop$
+  segmentation. Appendix~\ref{sec:rea-two-sid} is the code to perform this function.
 \item \textbf{The next cylinder:} So the next step is moving a cylinder, add 1 to register
   $ch$. Otherwise the value of $dh$ register smaller than 2, read this side indicating by
   $dh$ register, jump to $readloop$ segmentation. After $ch$ register add 1, if it's
   smaller than 10, jump to $readloop$, otherwise end loading floppy to memory process, for
-  we only load ten cylinders of floppy. Appendix ~\ref{sec:the-nex-cyl} is the code to
+  we only load ten cylinders of floppy. Appendix~\ref{sec:the-nex-cyl} is the code to
   perform this function.
 \end{enumerate}
 
 \subsection{Running Result}
-\label{sec:running-result}
 
 Fig.~\ref{fig:iplRes} shows the running results of boot loader. From this picture we
 see that the boot loader loaded 10 cylinders from floppy successfully. 
@@ -470,10 +468,8 @@ see that the boot loader loaded 10 cylinders from floppy successfully.
   \centering
   % \includegraphics[width=1.1\textwidth]{iplRes.png}
   \fxerror{need a better pic.}
-  \caption{Running Result of Boot Loader}
-  \label{fig:iplRes}
+  \caption{Running Result of Boot Loader}\label{fig:iplRes}  
 \end{figure}
-
 
 
 \section{32-bit Mode and Import C Codes}
