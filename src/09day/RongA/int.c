@@ -24,34 +24,6 @@ void init_pic(void)
 	return;
 }
 
-#define PORT_KEYDAT 0x0060
-
-struct FIFO8 keyfifo;
-
-void inthandler21(int *esp)
-{
-	unsigned char data;
-	io_out8(PIC0_OCW2, 0x61);
-	
-	data = io_in8(PORT_KEYDAT);
-	fifo8_put(&keyfifo, data);
-	
-	return;
-}
-
-struct FIFO8 mousefifo;
-
-void inthandler2c(int *esp) // interruption from PS/2 mouse
-{
-	unsigned char data;
-	io_out8(PIC1_OCW2, 0x64); // notify PIC1 of IRQ-12 reception completion.
-	io_out8(PIC0_OCW2, 0x62); // notify PIC0 of IRQ-02 reception completion.
-	data = io_in8(PORT_KEYDAT);
-	fifo8_put(&mousefifo, data);
-	return;
-}
-
-
 void inthandler27(int *esp)
 {
 	io_out8(PIC0_OCW2, 0x67);
