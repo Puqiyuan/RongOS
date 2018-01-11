@@ -16,6 +16,7 @@
     "cha:leading-knowledge"
     "cha:leading-knowledge-1"
     "sec:mouse"
+    "sec:leap-road-32"
     "sec:data-structure"
     "sec:progr-interr-contr"
     "sec:c-language-basis"
