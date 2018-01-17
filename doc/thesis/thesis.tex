@@ -1,6 +1,37 @@
 \documentclass{swfcthesis}
 
-\setlength{\arrayrulewidth}{0.5mm}
+\renewcommand{\acknowledgmentspage}{% Acknowledgments page  
+  \phantomsection%
+  \addcontentsline{toc}{chapter}{Acknowledgments}
+  \chapter*{Acknowledgments}
+
+  I would like to thank my supervisor Mr. WANG Xiaolin for his continuous support of my
+  four years undergraduate study. I am extremly thankful to him for sharing expertise, and
+  sincere and valuable guidance and encouragement extended to me.
+  
+  \fxerror{You translate the following in English.}
+  
+  我最想感谢的是我的女友，她容忍我在完成这个设计时
+  的很多个夜晚不陪她，给我支持，鼓励我，不抱怨。所以我愿意把这个简单操作系统命名为RongOS,
+  蓉便是她名字的最后一个字。谢谢你，我最亲爱的。}
+
+\renewcommand{\advisorinfopage}{% Advisor info page
+  \phantomsection%
+  \addcontentsline{toc}{chapter}{Supervisor}
+  \chapter*{Supervisor}
+  Xiaolin WANG (Mr.), 49 years old, got his MSc degree at University of Greenwich in
+  UK\@. Currently he's been working as a lecturer at the School of Big Data and
+  Intelligence Engineering, Southwest Forestry University in China, teaching Linux,
+  Operating Systems, and Computer Networking.
+  \clearpage}
+
+\renewcommand{\contentsname}{Contents}
+\renewcommand{\listfigurename}{List of Figures}
+\renewcommand{\listtablename}{List of Tables}
+\renewcommand{\figurename}{Fig.}
+\renewcommand{\tablename}{Table}
+\renewcommand{\listingscaption}{Code} % used by minted
+\renewcommand{\listoflistingscaption}{List of Codes}
 
 \addbibresource{thesis.bib}
 
@@ -10,9 +41,6 @@
 \Author{蒲启元}
 \Advisor{王晓林}
 \AdvisorTitle{讲师}
-\AdvisorInfo{王晓林，男，49岁，硕士，讲师，毕业于英国格林尼治大学，分布式系统专业，现
-  任西南林业大学计信学院教师，执教Linux、操作系统、网络技术等方面的课程，有丰富的Linux教学
-  和系统管理经验。}
 \Month{六}
 \Year{二〇一八}
 
@@ -27,12 +55,6 @@
   个系统很简单，但它是自主开发操作系统的一次尝试。}
 
 \Keywords{操作系统，进程，内存，中断，boot loader}
-
-\Acknowledgments{首先我想感谢我的老师，王晓林。大学期间，他给了我很多指导，包括专业方面和上
-  大学的意义等。很多时候，他对学生的要求看起来都是不近情理的，但正是通过这个“痛苦”的过程，
-  我锻炼了坚强的意志，和战胜困难的信心。谢谢你，王老师。我最想感谢的是我的女友，她容忍我在
-  完成这个设计时的很多个夜晚不陪她，给我支持，鼓励我，不抱怨。所以我愿意把这个简单操作系统
-  命名为RongOS, 蓉便是她名字的最后一个字。谢谢你，我最亲爱的。}
 
 \enTitle{RongOS --- A simple OS implementation}
 
@@ -86,9 +108,7 @@ stack, in the operating system.
 The world needs broad operating system research. Dependability, security, system
 configuration, system extension, and multi-processor programming illustrate areas were
 contemporary operating systems have failed to meet the software challenges of the modern
-computing environment\fxerror{\textbackslash{}cite\{hunt2005broad\}}.
-
-\fxnote*{use citation instead, see \texttt{thesis.bib}}{Please reference.}
+computing environment\cite{hunt2005broad}.
 
 
 \section{Preliminary Works}
@@ -101,7 +121,7 @@ computing environment\fxerror{\textbackslash{}cite\{hunt2005broad\}}.
 \item[Run time VM:] QEMU emulator 2.8.1
 \item[Assembler:] Nask
 \item[Compiler:] CC1(Based on gcc)
-\item[Debugger:] \fxnote{debugger?}
+\item[Debugger:] GNU gdb 7.12
 \end{description}
 
 \subsection{Tools}
@@ -132,8 +152,8 @@ main steps include:
 
 \subsubsection{Qemu}
 
-QEMU is a generic and open source machine emulator and virtualizer.\fxerror{need citation
-  (wikipedia)} In this project, QEMU was used as the test bed.
+QEMU is a generic and open source machine emulator and virtualizer\cite{wiki:qemu}. In
+this project, QEMU was used as the test bed.
 
 Installing QEMU for my x86\_64 architecture can be easily done by executing the following
 command:
@@ -145,10 +165,10 @@ command:
 
 Wine (originally an acronym for ``Wine Is Not an Emulator'') is a compatibility layer
 capable of running Windows applications on several POSIX-compliant operating systems, such
-as Linux, macOS, and BSD.\fxerror{need citation (wikipedia)}
+as Linux, macOS, and BSD\cite{wiki:wine}.
 
-Because the tools I used in this project are in Windows exe format, so on Debian system,
-Wine need to be installed:
+Because the tools I used in this project are in Windows executable format, so on Debian system,
+Wine is needed to be installed:
 \begin{verbatim}
      $ sudo apt-get update
      $ sudo apt-get install wine
@@ -167,7 +187,6 @@ have i386 support for our 64-bit Linux system.
 \end{verbatim}
 
 \chapter{Leading Knowledge}
-
 \label{cha:leading-knowledge-1}
 
 \section{Mouse}
@@ -176,11 +195,8 @@ have i386 support for our 64-bit Linux system.
 \section{The Leap --- Road to the 32 Bit Mode}
 \label{sec:leap-road-32}
 
-
-
 \section{Data Structure}
 \label{sec:data-structure}
-\fxerror{Data Structure}
 
 \section{Programmable Interrupt Controller}
 
@@ -205,7 +221,7 @@ offset by infrequent use.
 On traditional architectures, an instruction includes an opcode that specifies the
 operation to perform, such as add contents of memory to register—and zero or more operand
 specifiers, which may specify registers, memory locations, or literal
-data\fxerror{cite wikipedia}.
+data\cite{wiki:isa}.
 
 This simple RongOS is based on x86 architecture, the following instructions are commonly
 used in programming RongOS:%
@@ -247,7 +263,7 @@ load data from a larger memory into registers where it is used for arithmetic op
 and is manipulated or tested by machine instructions. Manipulated data is then often
 stored back to main memory, either by the same instruction or by a subsequent one. Modern
 processors use either static or dynamic RAM as main memory, with the latter usually
-accessed via one or more cache levels.\fxerror{need citation}
+accessed via one or more cache levels\cite{wiki:registers}.
 
 Processor registers are normally at the top of the memory hierarchy, and provide the
 fastest way to access data. The term normally refers only to the group of registers that
@@ -283,14 +299,13 @@ exist:
   \end{description}
 \end{multicols}
 
-\fxnote{better use \textbackslash{}texttt\{\} for all the special words (ax, bx, ...)}
-Among these registers, \texttt{bx}, \texttt{bp}, \texttt{si} and \texttt{di} can be used
-to specify the address of memory. But ax, cx, dx and sp can not.  \fxerror*{don't
+Among these registers, \texttt{bx, bp, si} and \texttt{di} can be used to specify the
+address of memory. But \texttt{ax, cx, dx} and \texttt{sp} can not.  \fxerror*{don't
   understand.}{When mov instruction is used, the number of bits of operation number should
   be the same}.
 \begin{description}
-\item[16-bit registers:] ax, cx, dx, bx, sp, bp, si, di, es, cs, ss, ds and fs.
-\item[8-bit registers] al, cl, dl, bl, ah, ch, dh and bh.
+\item[16-bit registers:] \texttt{ax, cx, dx, bx, sp, bp, si, di, es, cs, ss, ds}, and \texttt{fs}.
+\item[8-bit registers] \texttt{al, cl, dl, bl, ah, ch, dh}, and \texttt{bh}.
 \end{description}
 Actually, all these 8-bit registers are part of corresponding 16-bit registers, low 8 bits
 or high 8 bits.\fxnote{perhaps you can add a picture to illustrate your understanding. For
@@ -312,13 +327,13 @@ BIOS interrupt calls perform hardware control or I/O functions requested by a pr
 return system information to the program, or do both. A key element of the purpose of BIOS
 calls is abstraction. The BIOS calls perform generally defined functions, and the specific
 details of how those functions are executed on the particular hardware of the system are
-encapsulated in the BIOS and hidden from the program\fxerror{need citation}. The interrupt
+encapsulated in the BIOS and hidden from the program\cite{wiki:bios-int}. The interrupt
 calls are commonly used in RongOS are listed in Table~\ref{tbl:intcall}.
 
 \begin{table}[!ht]
   \centering\tabulinesep=2mm
-  \begin{tabu}{|X[c,m,-1]|X[l,m]|X[-1,l,m]|X[-1,c,m]|}
-    \tabucline-
+  \begin{tabu}{X[l,m,-1]X[l,m]X[-1,l,m]X[-1,l,m]}
+    \tabucline-\rowfont\bfseries
     Interrupt\par{}Number & Register Parameter & Return Value & Function\\ \tabucline-
     0x10 &
     ah=0x0e(write character in tty mode)\par{}
@@ -351,33 +366,26 @@ should be clarified as in Table~\ref{tbl:memlayout}.
 
 \begin{table}[!ht]
   \centering\tabulinesep=2mm
-  \begin{tabu}{|c|c|c|c|} \tabucline-
-    Range (in hexadecimal) & Range (in decimal) & Size (in bytes) & Usage \\
-    \tabucline-
-    0000 --- 03ff & 0000 --- 1023 & 1024 &  interrupt vector table \\
-    \tabucline-
-    0400 --- 04ff & 1024 --- 1279 & 256 & BIOS data area \\
-    \tabucline-
-    0500 --- 051f & 1280 --- 1311 & 32 & Reserved \\
-    \tabucline-
-    0520 --- 7bff & 1312 --- 31743 & 30432 & conventional memory  \\
-    \tabucline-
-    7c00 --- 7dff & 31744 --- 32255 & 512 & master boot record \\
-    \tabucline-
-    7e00 --- 9ffff & 32256 --- 655359 & 623104 & conventional memory \\
-    \tabucline-
-    a0000 --- affff & 655360 --- 720895 & 64K & VGA graphics RAM \\
-    \tabucline-
-    b0000 --- b7fff & 720896 --- 753663 & 32K & monochrome text mode \\
-    \tabucline-
-    b8000 --- bffff & 753664 --- 786431 & 32K & color text mode \\
-    \tabucline-
-    c0000 --- c7fff & 786432 --- 819199 & 32K & VGA video ROM \\
-    \tabucline-
-    c8000 --- cbfff & 819200 --- 835583 & 16K & IDE hard drive \\
-    \tabucline-
-    cc000 --- cffff & 835584 --- 851967 & 16K & optional adaper \\
-    \tabucline-
+  \begin{tabu}{%
+      >{\texttt\bgroup}r<{\egroup}@{\,--\,}>{\texttt\bgroup}l<{\egroup}%
+      >{\texttt\bgroup}r<{\egroup}@{\,--\,}>{\texttt\bgroup}l<{\egroup}%
+      >{\texttt\bgroup}l<{\egroup}l}%
+    \tabucline-\rowfont\bfseries%
+    \multicolumn{2}{l}{Range (in hexadecimal)} &%
+    \multicolumn{2}{l}{Range (in decimal)} &%
+    \multicolumn{1}{l}{Size (in bytes)} & Usage \\ \tabucline-
+    0000 & 03ff & 0000 & 1023 & 1024 &  interrupt vector table \\ 
+    0400 & 04ff & 1024 & 1279 & 256 & BIOS data area \\ 
+    0500 & 051f & 1280 & 1311 & 32 & Reserved \\ 
+    0520 & 7bff & 1312 & 31743 & 30432 & conventional memory \\ 
+    7c00 & 7dff & 31744 & 32255 & 512 & master boot record \\ 
+    7e00 & 9ffff & 32256 & 655359 & 623104 & conventional memory \\ 
+    a0000 & affff & 655360 & 720895 & 64K & VGA graphics RAM \\ 
+    b0000 & b7fff & 720896 & 753663 & 32K & monochrome text mode \\ 
+    b8000 & bffff & 753664 & 786431 & 32K & color text mode \\ 
+    c0000 & c7fff & 786432 & 819199 & 32K & VGA video ROM \\ 
+    c8000 & cbfff & 819200 & 835583 & 16K & IDE hard drive \\ 
+    cc000 & cffff & 835584 & 851967 & 16K & optional adapter \\ \tabucline-
   \end{tabu}
   \caption{RongOS Memory Layout}\label{tbl:memlayout}
 \end{table}
@@ -398,7 +406,7 @@ Fig.~\ref{fig:flpy1.png} shows the inside of a floppy disk:
 A floppy disk, also called a floppy, diskette, or just disk, is a type of disk storage
 composed of a disk of thin and flexible magnetic storage medium, sealed in a rectangular
 plastic enclosure lined with fabric that removes dust particles. Floppy disks are read and
-written by a floppy disk drive (FDD).\fxerror{need citation}
+written by a floppy disk drive (FDD)\cite{wiki:floppy}.
 
 For 3.5 inch HD floppy,  There are 80 cylinders from the outermost to
 the core on each side, numbering 0, 1, \ldots, 79. The head can assign be 0 or 1,
@@ -428,23 +436,20 @@ Fig.~\ref{fig:flowchart-of-boot-loader} shows how the boot loader works.
   \centering
   % \includegraphics[width=1\textwidth]{../figs/FlowchartTex/1/flowcharte.pdf}
   \fxerror{need a better chart}
-  \caption{Flowchart of Boot Loader}
-  \label{fig:flowchart-of-boot-loader}
+  \caption{Flowchart of Boot Loader}\label{fig:flowchart-of-boot-loader}  
 \end{figure}
 
 The boot loader is implemented in Intel assembly. It works as following:
 
-\fxnote{better use \textbackslash{}texttt\{0x10, ax, al, ...\}, rather than \$0x10, ax,
-  al, ...\$}
 \begin{enumerate}
 \item \textbf{Display boot information:} Firstly, the code in boot sector (See
   Appendix~\ref{sec:dis-boo-inf}) outputs some boot information. When \texttt{al=0}, the
-  null character of boot information hit. Interrupt $0x10$ is used for showing a
+  null character of boot information hit. Interrupt \texttt{0x10} is used for showing a
   character.
-\item \textbf{Read the second sector:} Then jump to load C0-H0-S2, $ax$ register saved the
-  address where beginning puts the sectors from floppy. And preparing parameters for
-  interrupt $0x13$ in registers. The $0x13$ interrupt used for read sector from floppy to
-  memory. (See Appendix~\ref{sec:rea-sec-sec}).
+\item \textbf{Read the second sector:} Then jump to load C0-H0-S2, \texttt{ax} register
+  saved the address where beginning puts the sectors from floppy. And preparing parameters
+  for interrupt \texttt{0x13} in registers. The \texttt{0x13} interrupt used for read
+  sector from floppy to memory. (See Appendix~\ref{sec:rea-sec-sec}).
 \item \textbf{Read two sides of a track:} \fxnote{perhaps you should use pseudo-code to
     illustrate these steps.}
   
@@ -452,25 +457,26 @@ The boot loader is implemented in Intel assembly. It works as following:
   reset the registers and try reading it again. The read process aborts after five
   unsuccessful read.
 
-  Register $si$ is a counter. If no carry (success), jump to next segment, as one sector
-  has been read into memory already. The address should increase 512 byte. Then sector
-  number ($cl$ register) is added by 1 and compare it to 18, if it's smaller than 18, jump
-  to $readloop$, read the next sector.
+  Register \texttt{si} is a counter. If no carry (success), jump to next segment, as one
+  sector has been read into memory already. The address should increase 512 byte. Then
+  sector number (\texttt{cl} register) is added by 1 and compare it to 18, if it's smaller
+  than 18, jump to \texttt{readloop}, read the next sector.
 
-  If the value of $cl$ register bigger or equal to than 18, meaning that one track 18
-  sector in this side of floppy read already, then reversed the head, add 1 to $dh$
-  register.
+  If the value of \texttt{cl} register bigger or equal to than 18, meaning that one track
+  18 sector in this side of floppy read already, then reversed the head, add 1 to
+  \texttt{dh} register.
 
-  If the value of $dh$ register after adding larger than or equal to 2, it's saying the
-  original head is 1, one track of two sides read already. Otherwise the value of $dh$
-  register smaller than 2, read this side indicating by $dh$ register, jump to $readloop$
-  segmentation. Appendix~\ref{sec:rea-two-sid} is the code to perform this function.
-\item \textbf{The next cylinder:} So the next step is moving a cylinder, add 1 to register
-  $ch$. Otherwise the value of $dh$ register smaller than 2, read this side indicating by
-  $dh$ register, jump to $readloop$ segmentation. After $ch$ register add 1, if it's
-  smaller than 10, jump to $readloop$, otherwise end loading floppy to memory process, for
-  we only load ten cylinders of floppy. Appendix~\ref{sec:the-nex-cyl} is the code to
+  If the value of \texttt{dh} register after adding larger than or equal to 2, it's saying
+  the original head is 1, one track of two sides read already. Otherwise the value of
+  \texttt{dh} register smaller than 2, read this side indicating by \texttt{dh} register,
+  jump to \texttt{readloop} segmentation. Appendix~\ref{sec:rea-two-sid} is the code to
   perform this function.
+\item \textbf{The next cylinder:} So the next step is moving a cylinder, add 1 to register
+  \texttt{ch}. Otherwise the value of \texttt{dh} register smaller than 2, read this side
+  indicating by \texttt{dh} register, jump to \texttt{readloop} segmentation. After
+  \texttt{ch} register add 1, if it's smaller than 10, jump to \texttt{readloop},
+  otherwise end loading floppy to memory process, for we only load ten cylinders of
+  floppy. Appendix~\ref{sec:the-nex-cyl} is the code to perform this function.
 \end{enumerate}
 
 \subsection{Running Result}
@@ -523,8 +529,8 @@ see that the boot loader loaded 10 cylinders from floppy successfully.
 %%% 正文部分到此结束。下面是『参考文献』、『指导教师简介』、『鸣谢』、『附录』
 
 %% 不要动下面四行！
-\Appendix{}
-\printbibliography[heading={bibintoc},title={参考文献}] % 输出参考文献
+\appendix{}
+\printbibliography[heading={bibintoc},title={Bibliography}] % 输出参考文献
 \advisorinfopage{}                 % 输出指导教师简介
 \acknowledgmentspage{}             % 输出鸣谢
 
