@@ -28,5 +28,4 @@ void inthandler27(int *esp)
 {
 	io_out8(PIC0_OCW2, 0x67);
 	return;
-
 }
