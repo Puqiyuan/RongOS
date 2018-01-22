@@ -117,7 +117,7 @@ unsigned int memtest(unsigned int start, unsigned int end)
 
 	if (flg486 != 0)
 		{
-			cr0 = load_cr0;
+			cr0 = load_cr0();
 			cr0 |= CR0_CACHE_DISABLE; // caching prohibited
 			store_cr0(cr0);
 		}
@@ -130,35 +130,6 @@ unsigned int memtest(unsigned int start, unsigned int end)
 			cr0 &= ~CR0_CACHE_DISABLE; // cache permission
 
 			store_cr0(cr0);
-		}
-
-	return i;
-}
-
-
-unsigned int memtest_sub(unsigned int start, unsigned int end)
-{
-	unsigned int i, *p, old, pat0 = 0xaa55aa55, pat1 = 0x55aa55aa;
-
-	for (i = start; i <= end; i += 0x1000)
-		{
-			p = (unsigned int *)(i + 0xffc);
-			old = *p; // remember the value before tampering
-			*p = pat0;
-			*p ^= 0xffffffff; // try to flip it.
-
-			if (*p != pat1) // was it the inversion result
-				{
-				not_memory:
-					*p = old;
-					break;
-				}
-
-			*p ^= 0xffffffff; // try to flip it again
-			if (*p != pat0) // 
-				goto not_memory;
-
-			*p = old; // restore the old value
 		}
 
 	return i;
