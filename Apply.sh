@@ -1,6 +1,5 @@
 #!/bin/bash
 dir=~/Bash-Script-Program/*
-
 for file in $dir
 do
 	if [[ $file == *.patch ]]; then
