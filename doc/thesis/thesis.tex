@@ -122,6 +122,7 @@ computing environment\cite{hunt2005broad}.
 \item[Assembler:] Nask
 \item[Compiler:] CC1(Based on gcc)
 \item[Debugger:] GNU gdb 7.12
+\item[Version Control:] git 2.15
 \end{description}
 
 \subsection{Tools}
@@ -169,6 +170,7 @@ as Linux, macOS, and BSD\cite{wiki:wine}.
 
 Because the tools I used in this project are in Windows executable format, so on Debian system,
 Wine is needed to be installed:
+
 \begin{verbatim}
      $ sudo apt-get update
      $ sudo apt-get install wine
@@ -233,8 +235,7 @@ offset by infrequent use.
 
 On traditional architectures, an instruction includes an opcode that specifies the
 operation to perform, such as add contents of memory to register—and zero or more operand
-specifiers, which may specify registers, memory locations, or literal
-data\cite{wiki:isa}.
+specifiers, which may specify registers, memory locations, or literal data\cite{wiki:isa}.
 
 This simple RongOS is based on x86 architecture, the following instructions are commonly
 used in programming RongOS:%
@@ -427,7 +428,7 @@ representing two sides of floppy. When specify head number and cylinder number, 
 ring, named track in jargon. The track is large so we divide it to 18 small parts, named
 sector. A sector can store 512 byte. So the capacity of a floppy is:
 
-\[18 \times 80 \times 2 \times 512 = 1474560 Byte = 1440 KB\]
+\[18 \times 80 \times 2 \times 512 = 1474560\,Byte = 1440\,KiB\]
 
 
 \chapter{Design}
@@ -537,7 +538,38 @@ see that the boot loader loaded 10 cylinders from floppy successfully.
 
 \section{Some Applications}
 
-\chapter{Prospects And Shortages}
+\chapter{Conclusions}%{Prospects And Shortages}
+
+\footnotetext{\url{https://thesistips.wordpress.com/2012/03/25/how-to-write-your-introduction-abstract-and-summary/}}
+
+\paragraph{What goes in your ``Conclusions'' chapter?}
+
+{\fontspec[Scale=.8]{Purisa} The purpose of this chapter is to provide a summary of the
+  whole thesis or report.  In this context, it is similar to the Abstract, except that the
+  Abstract puts roughly equal weight on all thesis/report chapters, whereas the
+  Conclusions chapter focuses primarily on the findings, conclusions and/or
+  recommendations of the project.
+
+  There are a couple of rules – one rigid, one common sense, for this chapter:
+  \begin{itemize}
+  \item All material presented in this chapter must have appeared already in the report;
+    no new material can be introduced in this chapter. (rigid rule of technical writing)
+  \item Usually, you would not present any new figures or tables in this chapter. (rule of thumb)
+  \end{itemize}
+
+  Generally, for most technical reports and Masters theses, the Conclusions chapter would
+  be~3 to 5 pages long (double spaced).  It would generally be longer in a large PhD
+  thesis. Typically you would have a paragraph or two for each chapter or major
+  subsection.  Aim to include the following (typical) content.
+  \begin{enumerate}
+  \item Re-introduce the project and the need for the work – though more briefly than in
+    the intro;
+  \item Re-iterate the purpose and specific objectives of your project.
+  \item Re-cap the approach taken – similar to the road map in the intro; however, in this
+    case, you are re-capping the data, methodology and results as you go.
+  \item Summarize the major findings and recommendations of your work.
+  \item Make recommendations for future research.
+  \end{enumerate}}
 
 %%% 正文部分到此结束。下面是『参考文献』、『指导教师简介』、『鸣谢』、『附录』
 
