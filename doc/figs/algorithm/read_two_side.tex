@@ -1,0 +1,75 @@
+\documentclass{standalone}
+\usepackage[linesnumbered]{algorithm2e}
+
+\begin{document}
+\begin{algorithm}[H]
+  \SetAlgoLined
+  \SetKwFunction{readloop}{readloop}\SetKwFunction{retry}{retry}\SetKwFunction{next}{next}
+  \KwResult{Read two sides of one track}
+
+  ENTRANCE: call \readloop{}\;
+  \SetKwProg{myproc}{Procedure}{}{}
+  \myproc{\readloop{}}
+  {
+    clear the times of failed to 0, $si \leftarrow 0$\;
+    call \retry{}\;
+  }
+
+  \SetKwProg{myproc}{Procedure}{}{}
+  \myproc{\retry{}}
+  {
+    register parameter preparing\;
+    read a sector\;
+
+    \eIf{no carry}
+    {
+      call \next{}\;
+    }
+    {
+      add 1 to si, $si \leftarrow si + 1$\;
+      compare si with 5\;
+      
+      \eIf{si >= 5}
+      {
+        goto error, FINISHED\;
+      }
+      {
+        reset registers and call \retry{} to read again\;
+      }
+    }
+  }
+
+  \SetKwProg{myproc}{Procedure}{}{}
+  \myproc{\next{}}
+  {
+    memory address moved back 0x200\;
+    add 1 to cl, preparing for reading the next sector, $cl \leftarrow cl + 1$\;
+
+    \eIf{cl <= 18}
+    {
+      call \readloop{} to read this sector\;
+    }
+    {
+      cl > 18, it means that one side of this track is read already\;
+      add 1 to dh, $dh \leftarrow dh + 1$, reverse the head pointer\;
+    
+    
+      \eIf{dh < 2}
+      {
+        it means the 1 side has not read yet, call \readloop{}\;
+      }
+      {
+        both sides have finished reading, FINSHED\;
+      }
+    }
+  }
+  
+ \caption{read two sides of one track}
+\end{algorithm}
+\end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

@@ -1,5 +1,6 @@
 \documentclass{swfcthesis}
 
+
 \renewcommand{\acknowledgmentspage}{% Acknowledgments page  
   \phantomsection%
   \addcontentsline{toc}{chapter}{Acknowledgments}
@@ -127,11 +128,9 @@ computing environment\cite{hunt2005broad}.
 
 \subsection{Tools}
 
-Some tools were used to develop RongOS, \xout{see tools}\fxerror{need some descriptions
-  about the
-  tools}\footnote{\url{https://github.com/Puqiyuan/RongOS/tree/master/Tools}}. Note that
-these tools are Windows executables \fxerror{(so what?)}. Among these tools, the most
-important ones are:
+Some tools were used to develop RongOS, See \emph{tools}\footnote{\url{https://github.com/Puqiyuan/RongOS/tree/master/z_tools}}. Note that
+these tools are Windows executable. Please install wine if you want to run these tools on
+Linux. In these tools, the most important ones are:
 
 \begin{description}
 \item[nask.exe:] the assembler, a modified version of NASM\cite{30_os}
@@ -314,9 +313,10 @@ exist:
 \end{multicols}
 
 Among these registers, \texttt{bx, bp, si} and \texttt{di} can be used to specify the
-address of memory. But \texttt{ax, cx, dx} and \texttt{sp} can not.  \fxerror*{don't
-  understand.}{When mov instruction is used, the number of bits of operation number should
-  be the same}.
+address of memory. But \texttt{ax, cx, dx} and \texttt{sp} can not. When \emph{mov}
+instruction is used, the number of bits of source number should be the same with
+destination operand.
+
 \begin{description}
 \item[16-bit registers:] \texttt{ax, cx, dx, bx, sp, bp, si, di, es, cs, ss, ds}, and \texttt{fs}.
 \item[8-bit registers] \texttt{al, cl, dl, bl, ah, ch, dh}, and \texttt{bh}.
@@ -373,8 +373,11 @@ calls are commonly used in RongOS are listed in Table~\ref{tbl:intcall}.
 In the boot process, a memory map is passed on from the firmware in order to instruct an
 operating system kernel about memory layout. It contains the information regarding the
 size of total memory, any reserved regions and may also provide other details specific to
-the architecture\fxerror{need citation}. For loading RongOS to memory, the memory layout
-should be clarified as in Table~\ref{tbl:memlayout}.
+the
+architecture\footnote{http://hypervsir.blogspot.com/2014/09/approach-to-retrieving-bios-memory-map.html}. For
+loading RongOS to memory, the memory layout should be clarified as in
+Table~\ref{tbl:memlayout}.
+
 
 \begin{table}[!ht]
   \centering\tabulinesep=2mm
@@ -483,6 +486,16 @@ The boot loader is implemented in Intel assembly. It works as following:
   \texttt{dh} register smaller than 2, read this side indicating by \texttt{dh} register,
   jump to \texttt{readloop} segmentation. Appendix~\ref{sec:rea-two-sid} is the code to
   perform this function.
+
+  There is a pseudo code about this process:
+  \begin{figure}[!ht]
+    \centering
+    \includegraphics[width=.7\textwidth]{../figs/algorithm/read_two_side.pdf}
+    \label{fig:read_two_sides}
+  \end{figure}
+
+  
+  
 \item \textbf{The next cylinder:} So the next step is moving a cylinder, add 1 to register
   \texttt{ch}. Otherwise the value of \texttt{dh} register smaller than 2, read this side
   indicating by \texttt{dh} register, jump to \texttt{readloop} segmentation. After
