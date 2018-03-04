@@ -37,7 +37,7 @@
 
 \begin{document}
 
-\Title{RongOS --- 简单操作系统的实现}
+\Title{RongOS --- 一个简单操作系统的设计与实现}
 \Author{蒲启元}
 \Advisor{王晓林}
 \AdvisorTitle{讲师}
@@ -321,19 +321,17 @@ address of memory. But \texttt{ax, cx, dx} and \texttt{sp} can not.  \fxerror*{d
 \item[16-bit registers:] \texttt{ax, cx, dx, bx, sp, bp, si, di, es, cs, ss, ds}, and \texttt{fs}.
 \item[8-bit registers] \texttt{al, cl, dl, bl, ah, ch, dh}, and \texttt{bh}.
 \end{description}
-Actually, all these 8-bit registers are part of corresponding 16-bit registers, low 8 bits
-or high 8 bits.\fxnote{perhaps you can add a picture to illustrate your understanding. For
-example:}
+Actually, as shown in Fig.~\ref{fig:regs}, all these 8-bit registers are parts of
+corresponding 16-bit registers.
 
-\begin{verbatim}
-   +--------+--------+        +--------+--------+
-ax |   ah   |   al   |     bx |   bh   |   bl   |
-   +--------+--------+        +--------+--------+
-
-   +--------+--------+        +--------+--------+
-cx |   ch   |   cl   |     dx |   dh   |   dl   |
-   +--------+--------+        +--------+--------+
-\end{verbatim}
+\begin{figure}[!htbp]
+  \centering
+  \begin{center}
+    \includegraphics[width=.4\textwidth]{registers}
+  \end{center}
+  \caption{x86 registers}
+  \label{fig:regs}
+\end{figure}
 
 \section{Interrupt Call}
 
@@ -407,13 +405,13 @@ should be clarified as in Table~\ref{tbl:memlayout}.
 \section{Floppy Disk}
 
 There are many ways to boot an operating system, from hard disk, USB, floppy disk, etc.
-The structure of floppy disk is simple and for this simple operating system, it's enough.
+The structure of floppy disk is simple and for this simple operating system it's enough.
 
 Fig.~\ref{fig:flpy1.png} shows the inside of a floppy disk:
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=.5\textwidth]{../figs/bootLoader/flpy1.png}
-  \caption{Floppy Disk Structure}
+  \caption{Floppy disk structure}
   \label{fig:flpy1.png}
 \end{figure}
 
@@ -442,7 +440,7 @@ sector. A sector can store 512 byte. So the capacity of a floppy is:
 
 \section{Boot Loader}
 
-\subsection{Flowchart of Boot Loader}
+\subsection{Workflow of Boot Loader}
 
 Fig.~\ref{fig:flowchart-of-boot-loader} shows how the boot loader works.
 
@@ -450,7 +448,7 @@ Fig.~\ref{fig:flowchart-of-boot-loader} shows how the boot loader works.
   \centering
   % \includegraphics[width=1\textwidth]{../figs/FlowchartTex/1/flowcharte.pdf}
   \fxerror{need a better chart}
-  \caption{Flowchart of Boot Loader}\label{fig:flowchart-of-boot-loader}  
+  \caption{Flowchart of boot loader}\label{fig:flowchart-of-boot-loader}  
 \end{figure}
 
 The boot loader is implemented in Intel assembly. It works as following:
@@ -502,7 +500,7 @@ see that the boot loader loaded 10 cylinders from floppy successfully.
   \centering
   % \includegraphics[width=1.1\textwidth]{iplRes.png}
   \fxerror{need a better pic.}
-  \caption{Running Result of Boot Loader}\label{fig:iplRes}  
+  \caption{Running result of boot loader}\label{fig:iplRes}  
 \end{figure}
 
 
