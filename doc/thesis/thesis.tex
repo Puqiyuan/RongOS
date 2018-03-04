@@ -14,7 +14,14 @@
   
   我最想感谢的是我的女友，她容忍我在完成这个设计时
   的很多个夜晚不陪她，给我支持，鼓励我，不抱怨。所以我愿意把这个简单操作系统命名为RongOS,
-  蓉便是她名字的最后一个字。谢谢你，我最亲爱的。}
+  蓉便是她名字的最后一个字。谢谢你，我最亲爱的。
+
+  我的特别感谢要送给一家伟大的公司——Google，我觉得我有必要在我的毕业论文里这个很正式的地方
+  感谢你。任何时候你都给了我很大的帮助，通过你学习到的知识和其它能力必将对我以后的人生产生
+  深远的影响，每次搜索时我都是怀着感激的心情，因为我知道你一定会给我我想要的结果。 没有你，
+  这篇论文不可能完成，谢谢你。
+  
+}
 
 \renewcommand{\advisorinfopage}{% Advisor info page
   \phantomsection%
@@ -465,8 +472,7 @@ The boot loader is implemented in Intel assembly. It works as following:
   saved the address where beginning puts the sectors from floppy. And preparing parameters
   for interrupt \texttt{0x13} in registers. The \texttt{0x13} interrupt used for read
   sector from floppy to memory. (See Appendix~\ref{sec:rea-sec-sec}).
-\item \textbf{Read two sides of a track:} \fxnote{perhaps you should use pseudo-code to
-    illustrate these steps.}
+\item \textbf{Read two sides of a track:}
   
   If there is a carry indicating some thing went wrong while reading the floppy disk,
   reset the registers and try reading it again. The read process aborts after five
