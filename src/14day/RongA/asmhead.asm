@@ -9,12 +9,12 @@ SCRNY equ 0x0ff6 ; resolution Y
 VRAM equ 0x0ff8 ; graphic buffer start address.
 
 org 0xc200 ; where will this program load?
-	mov al,0x13 ; VGA graphics, 320 * 200 * 8 bit color.
-	mov ah,0x00
+	mov bx,0x4101 ; VGA graphics, 320 * 200 * 8 bit color.
+	mov ah,0x4f02
 	int 0x10
 	mov BYTE [VMODE],8 ; record mode graphics(C language)
-	mov WORD [SCRNX],320 
-	mov WORD [SCRNY],200
+	mov WORD [SCRNX],640
+	mov WORD [SCRNY],480
 	mov DWORD [VRAM],0x000a0000
 
 ; have the BIOS tell the status of the keyboard.
