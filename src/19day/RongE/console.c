@@ -14,6 +14,7 @@ void console_task(struct SHEET *sheet, unsigned int memtotal)
 	int x, y;
 	struct FILEINFO *finfo = (struct FILEINFO *) (ADR_DISKIMG + 0x002600);
 	int *fat = (int*) memman_alloc_4k(memman, 4 * 2880);
+	struct SEGMENT_DESCRIPTOR *gdt = (struct SEGMENT_DESCRIPTOR *) ADR_GDT;
 	
 	fifo32_init(&task -> fifo, 128, fifobuf, task);
 	timer = timer_alloc();
@@ -244,6 +245,56 @@ void console_task(struct SHEET *sheet, unsigned int memtotal)
 													putfonts8_asc_sht(sheet, 8, cursor_y, COL8_FFFFFF, COL8_000000, "File not found.", 15);
 													cursor_y = cons_newline(cursor_y, sheet);
 													
+												}
+											cursor_y = cons_newline(cursor_y, sheet);
+										}
+									else if (strcmp(cmdline, "hlt") == 0)
+										{
+											// launch hlt.ros application
+											for (y = 0; y < 11; y++)
+												{
+													s[y] = ' ';
+												}
+											s[0] = 'H';
+											s[1] = 'L';
+											s[2] = 'T';
+											s[8] = 'R';
+											s[9] = 'O';
+											s[10] = 'S';
+											for (x = 0; x < 224; )
+												{
+													if (finfo[x].name[0] == 0x00)
+														{
+															break;
+														}
+													if ((finfo[x].type & 0x18)== 0)
+														{
+															for (y = 0; y < 11; y++)
+																{
+																	if (finfo[x].name[y] != s[y])
+																		{
+																			goto hlt_next_file;
+																		}
+																}
+															break; // file found
+														}
+												hlt_next_file:
+													x++;
+												}
+											if (x < 224 && finfo[x].name[0] != 0x00)
+												{
+													// when a file is found
+													p = (char *) memman_alloc_4k(memman, finfo[x].size);
+													file_loadfile(finfo[x].clustno, finfo[x].size, p, fat, (char *) (ADR_DISKIMG + 0x003e00));
+													set_segmdesc(gdt + 1003, finfo[x].size - 1, (int) p, AR_CODE32_ER);
+													farjmp(0, 1003 * 8);
+													memman_free_4k(memman, (int) p, finfo[x].size);
+												}
+											else
+												{
+													// if the file can not be found
+													putfonts8_asc_sht(sheet, 8, cursor_y, COL8_FFFFFF, COL8_000000, "File not found.", 15);
+													cursor_y = cons_newline(cursor_y, sheet);
 												}
 											cursor_y = cons_newline(cursor_y, sheet);
 										}

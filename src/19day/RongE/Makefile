@@ -35,15 +35,19 @@ bootpack.bim: $(OBJS_BOOTPACK)
 bootpack.ros: bootpack.bim
 	wine $(bim2hrb) bootpack.bim bootpack.ros 0
 
+hlt.ros: hlt.asm
+	wine $(nask) hlt.asm hlt.ros hlt.lst
+
 Rongbote.sys: asmhead.bin bootpack.ros
 	cat asmhead.bin bootpack.ros > Rongbote.sys
 
-Rongbote.img: ipl10.bin Rongbote.sys
+Rongbote.img: ipl10.bin Rongbote.sys hlt.ros
 	wine $(edimg) imgin:../z_tools/fdimg0at.tek wbinimg src:ipl10.bin \
     len:512 from:0 to:0 \
 	copy from:Rongbote.sys to:@: \
 	copy from:ipl10.asm to:@: \
 	copy from:Makefile to:@: \
+	copy from:hlt.ros to:@: \
 	imgout:Rongbote.img
 
 %.gas: %.c
