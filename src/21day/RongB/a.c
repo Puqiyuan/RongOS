@@ -1,4 +1,4 @@
-void apt_putchar(int c);
+void api_putchar(int c);
 
 void HariMain(void)
 {
