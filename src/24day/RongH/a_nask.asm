@@ -192,7 +192,7 @@ _api_getkey: ; int api_getkey(int mode)
 		ret
 
 _api_alloctimer: ; int api_alloctimer(void)
-		mov edx, 15
+		mov edx, 16
 		int 0x40
 		ret
 
