@@ -7,7 +7,7 @@ default:
 	make full
 	make -r Rongbote.img
 
-Rongbote.img: ./kernel/ipl10.bin ./kernel/Rongbote.sys ./app/a/a.ros ./app/hello3/hello3.ros ./app/hello4/hello4.ros ./app/winhello/winhello.ros ./app/winhelo2/winhelo2.ros ./app/winhelo3/winhelo3.ros ./app/star1/star1.ros ./app/stars/stars.ros ./app/stars2/stars2.ros ./app/lines/lines.ros ./app/walk/walk.ros ./app/sundial/sundial.ros ./app/noodle/noodle.ros ./app/beepdown/beepdown.ros ./app/color/color.ros ./app/color2/color2.ros
+Rongbote.img: ./kernel/ipl10.bin ./kernel/Rongbote.sys ./app/a/a.ros ./app/hello3/hello3.ros ./app/hello4/hello4.ros ./app/winhello/winhello.ros ./app/winhelo2/winhelo2.ros ./app/winhelo3/winhelo3.ros ./app/star1/star1.ros ./app/stars/stars.ros ./app/stars2/stars2.ros ./app/lines/lines.ros ./app/walk/walk.ros ./app/sundial/sundial.ros ./app/noodle/noodle.ros ./app/beepdown/beepdown.ros ./app/color/color.ros ./app/color2/color2.ros ./app/prime/prime.ros ./app/prime2/prime2.ros
 	wine $(edimg) imgin:./z_tools/fdimg0at.tek wbinimg src:kernel/ipl10.bin \
     len:512 from:0 to:0 \
 	copy from:./kernel/Rongbote.sys to:@: \
@@ -29,6 +29,8 @@ Rongbote.img: ./kernel/ipl10.bin ./kernel/Rongbote.sys ./app/a/a.ros ./app/hello
 	copy from:./app/beepdown/beepdown.ros to:@: \
 	copy from:./app/color/color.ros to:@: \
 	copy from:./app/color2/color2.ros to:@: \
+	copy from:./app/prime/prime.ros to:@: \
+	copy from:./app/prime2/prime2.ros to:@: \
 	imgout:Rongbote.img
 
 vrun:
@@ -66,6 +68,8 @@ full:
 	make -C ./app/color
 	make -C ./app/color2
 	make -C ./app/sundial
+	make -C ./app/prime
+	make -C ./app/prime2
 	make Rongbote.img
 
 vrun_full:
@@ -99,6 +103,8 @@ clean_full:
 	make -C ./app/color clean
 	make -C ./app/color2 clean
 	make -C ./app/sundial clean
+	make -C ./app/prime clean
+	make -C ./app/prime2 clean
 
 src_only_full:
 	make -C kernel src_only
@@ -119,6 +125,8 @@ src_only_full:
 	make -C ./app/beepdown src_only
 	make -C ./app/color src_only
 	make -C ./app/color2 src_only
+	make -C ./app/prime src_only
+	make -C ./app/prime2 src_only
 	rm Rongbote.img -f
 
 refersh:

@@ -1,5 +1,5 @@
 APP      = winhello
-STACK    = 1k
+STACK    = 8k
 MALLOC   = 0k
 
 include ../Makefile

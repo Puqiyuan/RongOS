@@ -3,6 +3,7 @@
 [OPTIMIZE 1]
 [OPTION 1]
 [BITS 32]
+	EXTERN	__alloca
 	EXTERN	_api_openwin
 	EXTERN	_api_boxfilwin
 	EXTERN	_api_putstrwin
@@ -18,13 +19,16 @@ LC1:
 	GLOBAL	_HariMain
 _HariMain:
 	PUSH	EBP
+	MOV	EAX,7504
 	MOV	EBP,ESP
 	PUSH	EBX
+	CALL	__alloca
 	PUSH	LC0
 	PUSH	-1
+	LEA	EAX,DWORD [-7508+EBP]
 	PUSH	50
 	PUSH	150
-	PUSH	_buf
+	PUSH	EAX
 	CALL	_api_openwin
 	PUSH	3
 	PUSH	43
@@ -49,11 +53,7 @@ L2:
 	POP	EDX
 	CMP	EAX,10
 	JNE	L2
+	CALL	_api_end
 	MOV	EBX,DWORD [-4+EBP]
 	LEAVE
-	JMP	_api_end
-	GLOBAL	_buf
-[SECTION .data]
-	ALIGNB	16
-_buf:
-	RESB	7500
+	RET
