@@ -1,9 +1,0 @@
-make -r img
-make[1]: Entering directory '/home/pqy7172/RongOS/src/03day/RongA'
-make -r Rongbote.img
-make[2]: Entering directory '/home/pqy7172/RongOS/src/03day/RongA'
-wine ../../../z_tools/nask.exe ipl.asm ipl.bin ipl.lst
-wine ../../../z_tools/edimg.exe imgin:../../../z_tools/fdimg0at.tek wbinimg src:ipl.bin \
-len:512 from:0 to:0 imgout:Rongbote.img
-make[2]: Leaving directory '/home/pqy7172/RongOS/src/03day/RongA'
-make[1]: Leaving directory '/home/pqy7172/RongOS/src/03day/RongA'

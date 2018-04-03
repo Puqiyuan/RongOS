@@ -1,0 +1,109 @@
+	.file	"sundial.c"
+	.data
+LC0:
+	.ascii "sundial\0"
+LC1:
+	.ascii "%02d:%03d:%02d:%02d:%02d\0"
+	.text
+	.balign 2
+.globl _HariMain
+	.def	_HariMain;	.scl	2;	.type	32;	.endef
+_HariMain:
+	pushl	%ebp
+	movl	%esp, %ebp
+	pushl	%edi
+	pushl	%esi
+	xorl	%edi, %edi
+	pushl	%ebx
+	xorl	%esi, %esi
+	subl	$36, %esp
+	movl	$0, -40(%ebp)
+	movl	$0, -44(%ebp)
+	movl	$0, -48(%ebp)
+	call	_api_initmalloc
+	pushl	$7500
+	call	_api_malloc
+	pushl	$LC0
+	pushl	$-1
+	pushl	$50
+	pushl	$160
+	pushl	%eax
+	call	_api_openwin
+	movl	%eax, -32(%ebp)
+	call	_api_alloctimer
+	pushl	$128
+	pushl	%eax
+	movl	%eax, -36(%ebp)
+	call	_api_inittimer
+	addl	$32, %esp
+L2:
+	pushl	-40(%ebp)
+	pushl	-44(%ebp)
+	pushl	%edi
+	leal	-28(%ebp), %ebx
+	pushl	%esi
+	pushl	-48(%ebp)
+	pushl	$LC1
+	pushl	%ebx
+	call	_sprintf
+	pushl	$13
+	pushl	$43
+	pushl	$150
+	pushl	$27
+	pushl	$28
+	pushl	-32(%ebp)
+	call	_api_boxfilwin
+	addl	$52, %esp
+	pushl	%ebx
+	pushl	$22
+	pushl	$3
+	pushl	$27
+	pushl	$28
+	pushl	-32(%ebp)
+	call	_api_putstrwin
+	pushl	$100
+	pushl	-36(%ebp)
+	call	_api_settimer
+	addl	$32, %esp
+	pushl	$1
+	call	_api_getkey
+	popl	%edx
+	addl	$-128, %eax
+	jne	L3
+	incl	-40(%ebp)
+	cmpl	$60, -40(%ebp)
+	jne	L2
+	incl	-44(%ebp)
+	movl	$0, -40(%ebp)
+	cmpl	$60, -44(%ebp)
+	jne	L2
+	incl	%edi
+	movl	$0, -44(%ebp)
+	cmpl	$24, %edi
+	jne	L2
+	incl	%esi
+	xorl	%edi, %edi
+	cmpl	$365, %esi
+	jne	L2
+	xorl	%esi, %esi
+	incl	-48(%ebp)
+	jmp	L2
+L3:
+	call	_api_end
+	leal	-12(%ebp), %esp
+	popl	%ebx
+	popl	%esi
+	popl	%edi
+	popl	%ebp
+	ret
+	.def	_api_end;	.scl	2;	.type	32;	.endef
+	.def	_api_getkey;	.scl	2;	.type	32;	.endef
+	.def	_api_settimer;	.scl	2;	.type	32;	.endef
+	.def	_api_putstrwin;	.scl	2;	.type	32;	.endef
+	.def	_api_boxfilwin;	.scl	2;	.type	32;	.endef
+	.def	_sprintf;	.scl	2;	.type	32;	.endef
+	.def	_api_inittimer;	.scl	2;	.type	32;	.endef
+	.def	_api_alloctimer;	.scl	2;	.type	32;	.endef
+	.def	_api_openwin;	.scl	2;	.type	32;	.endef
+	.def	_api_malloc;	.scl	2;	.type	32;	.endef
+	.def	_api_initmalloc;	.scl	2;	.type	32;	.endef
