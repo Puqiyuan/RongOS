@@ -1,0 +1,42 @@
+	.file	"catipl.c"
+	.data
+LC0:
+	.ascii "ipl10.asm\0"
+	.text
+	.balign 2
+.globl _HariMain
+	.def	_HariMain;	.scl	2;	.type	32;	.endef
+_HariMain:
+	pushl	%ebp
+	movl	%esp, %ebp
+	pushl	%ebx
+	pushl	%ecx
+	pushl	$LC0
+	call	_api_fopen
+	popl	%edx
+	movl	%eax, %ebx
+	testl	%eax, %eax
+	jne	L3
+L2:
+	call	_api_end
+	movl	-4(%ebp), %ebx
+	leave
+	ret
+L3:
+	pushl	%ebx
+	leal	-5(%ebp), %eax
+	pushl	$1
+	pushl	%eax
+	call	_api_fread
+	addl	$12, %esp
+	testl	%eax, %eax
+	je	L2
+	movsbl	-5(%ebp),%eax
+	pushl	%eax
+	call	_api_putchar
+	popl	%eax
+	jmp	L3
+	.def	_api_end;	.scl	2;	.type	32;	.endef
+	.def	_api_putchar;	.scl	2;	.type	32;	.endef
+	.def	_api_fread;	.scl	2;	.type	32;	.endef
+	.def	_api_fopen;	.scl	2;	.type	32;	.endef

@@ -237,6 +237,8 @@ struct TASK
 	struct SEGMENT_DESCRIPTOR ldt[2];
 	struct CONSOLE *cons;
 	int ds_base, cons_stack;
+	struct FILEHANDLE *fhandle;
+	int *fat;
 };
 
 struct TASKLEVEL
@@ -277,7 +279,13 @@ struct CONSOLE
 	int cur_x, cur_y, cur_c;
 	struct TIMER *timer;
 };
-void console_task(struct SHEET *sheet, unsigned int memtotal);
+struct FILEHANDLE
+{
+	char *buf;
+	int size;
+	int pos;
+};
+void console_task(struct SHEET *sheet, int memtotal);
 void cons_putchar(struct CONSOLE *cons, int chr, char move);
 void cons_newline(struct CONSOLE *cons);
 void cons_putstr0(struct CONSOLE *cons, char *s);
