@@ -7,7 +7,7 @@ default:
 	make full
 	make -r Rongbote.img
 
-Rongbote.img: ./kernel/ipl10.bin ./kernel/Rongbote.sys ./app/a/a.ros ./app/hello3/hello3.ros ./app/hello4/hello4.ros ./app/winhello/winhello.ros ./app/winhelo2/winhelo2.ros ./app/winhelo3/winhelo3.ros ./app/star1/star1.ros ./app/stars/stars.ros ./app/stars2/stars2.ros ./app/lines/lines.ros ./app/walk/walk.ros ./app/sundial/sundial.ros ./app/noodle/noodle.ros ./app/beepdown/beepdown.ros ./app/color/color.ros ./app/color2/color2.ros ./app/prime/prime.ros ./app/prime2/prime2.ros ./app/catipl/catipl.ros
+Rongbote.img: ./kernel/ipl10.bin ./kernel/Rongbote.sys ./app/a/a.ros ./app/hello3/hello3.ros ./app/hello4/hello4.ros ./app/winhello/winhello.ros ./app/winhelo2/winhelo2.ros ./app/winhelo3/winhelo3.ros ./app/star1/star1.ros ./app/stars/stars.ros ./app/stars2/stars2.ros ./app/lines/lines.ros ./app/walk/walk.ros ./app/sundial/sundial.ros ./app/noodle/noodle.ros ./app/beepdown/beepdown.ros ./app/color/color.ros ./app/color2/color2.ros ./app/prime/prime.ros ./app/prime2/prime2.ros ./app/catipl/catipl.ros ./app/cat/cat.ros
 	wine $(edimg) imgin:./z_tools/fdimg0at.tek wbinimg src:kernel/ipl10.bin \
     len:512 from:0 to:0 \
 	copy from:./kernel/Rongbote.sys to:@: \
@@ -32,6 +32,7 @@ Rongbote.img: ./kernel/ipl10.bin ./kernel/Rongbote.sys ./app/a/a.ros ./app/hello
 	copy from:./app/prime/prime.ros to:@: \
 	copy from:./app/prime2/prime2.ros to:@: \
 	copy from:./app/catipl/catipl.ros to:@: \
+	copy from:./app/cat/cat.ros to:@: \
 	imgout:Rongbote.img
 
 vrun:
@@ -72,6 +73,7 @@ full:
 	make -C ./app/prime
 	make -C ./app/prime2
 	make -C ./app/catipl
+	make -C ./app/cat
 	make Rongbote.img
 
 vrun_full:
@@ -108,6 +110,7 @@ clean_full:
 	make -C ./app/prime clean
 	make -C ./app/prime2 clean
 	make -C ./app/catipl clean
+	make -C ./app/cat clean
 
 src_only_full:
 	make -C kernel src_only
@@ -131,6 +134,7 @@ src_only_full:
 	make -C ./app/prime src_only
 	make -C ./app/prime2 src_only
 	make -C ./app/catipl src_only
+	make -C ./app/cat src_only
 	rm Rongbote.img -f
 
 refersh:

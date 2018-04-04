@@ -17,6 +17,7 @@ void console_task(struct SHEET *sheet, int memtotal)
 	cons.cur_y	= 28;
 	cons.cur_c	= -1;
 	task->cons = &cons;
+	task->cmdline = cmdline;
 
 	if (cons.sht != 0)
 		{
@@ -254,10 +255,6 @@ void cons_runcmd(char *cmdline, struct CONSOLE *cons, int *fat, unsigned int mem
 		{
 			cmd_ls(cons);
 		}
-	else if (strncmp(cmdline, "cat ", 4) == 0 && cons->sht != 0)
-		{
-			cmd_cat(cons, fat, cmdline);
-		}
 	else if (strcmp(cmdline, "exit") == 0)
 		{
 			cmd_exit(cons, fat);
@@ -333,32 +330,6 @@ void cmd_ls(struct CONSOLE *cons)
 							cons_newline(cons);
 						}
 				}
-		}
-	cons_newline(cons);
-	return;
-}
-
-void cmd_cat(struct CONSOLE *cons, int *fat, char *cmdline)
-{
-	struct MEMMAN *memman = (struct MEMMAN *) MEMMAN_ADDR;
-	struct FILEINFO *finfo = file_search(cmdline + 4, (struct FILEINFO *) (ADR_DISKIMG + 0x002600), 224);
-	char *p;
-	int i;
-	if (finfo != 0)
-		{
-			// when a file is found
-			p = (char *) memman_alloc_4k(memman, finfo->size);
-			file_loadfile(finfo->clustno, finfo->size, p, fat, (char *) (ADR_DISKIMG + 0x003e00));
-			for (i = 0; i < finfo->size; i++)
-				{
-					cons_putchar(cons, p[i], 1);
-				}
-			memman_free_4k(memman, (int) p, finfo->size);
-		}
-	else
-		{
-			// if the file can not be found
-			cons_putstr0(cons, "File not found.\n");
 		}
 	cons_newline(cons);
 	return;
@@ -774,6 +745,24 @@ int* ros_api(int edi, int esi, int ebp, int esp, int ebx, int edx, int ecx, int 
 						}
 					*((char *) ebx + ds_base + i) = fh->buf[fh->pos];
 					fh->pos++;
+				}
+			reg[7] = i;
+		}
+	else if (edx == 26)
+		{
+			i = 0;
+			for (;;)
+				{
+					*((char *) ebx + ds_base + i) = task->cmdline[i];
+					if (task->cmdline[i] == 0)
+						{
+							break;
+						}
+					if (i >= ecx)
+						{
+							break;
+						}
+					i++;
 				}
 			reg[7] = i;
 		}
