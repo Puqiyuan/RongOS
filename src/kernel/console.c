@@ -12,6 +12,7 @@ void console_task(struct SHEET *sheet, int memtotal)
 	struct CONSOLE cons;
 	struct FILEHANDLE fhandle[8];
 	char cmdline[30];
+	unsigned char *chinese = (char *) *((int *) 0x0fe8);
 	cons.sht	= sheet;
 	cons.cur_x	= 8;
 	cons.cur_y	= 28;
@@ -32,6 +33,16 @@ void console_task(struct SHEET *sheet, int memtotal)
 		}
 	task->fhandle = fhandle;
 	task->fat = fat;
+
+	if (chinese[4096] != 0xff) // chines.fnt loaded?
+		{
+			task->langmode = 1; // chinese mode
+		}
+	else
+		{
+			task->langmode = 0; // english mode
+		}
+	task->langbyte1 = 0;
 
 	// prompt display
 	cons_putchar(&cons, '$', 1);
@@ -192,6 +203,7 @@ void cons_newline(struct CONSOLE *cons)
 {
 	int x, y;
 	struct SHEET *sheet = cons->sht;
+	struct TASK *task = task_now();
 	if (cons->cur_y < 28 + 112)
 		{
 			cons->cur_y += 16; // to the next line
@@ -219,6 +231,10 @@ void cons_newline(struct CONSOLE *cons)
 				}
 		}
 	cons->cur_x = 8;
+	if (task->langmode == 1 && task->langbyte1 != 0)
+		{
+			cons->cur_x = 16;
+		}
 	return;
 }
 
@@ -266,6 +282,10 @@ void cons_runcmd(char *cmdline, struct CONSOLE *cons, int *fat, unsigned int mem
 	else if (strncmp(cmdline, "ncst ", 5) == 0)
 		{
 			cmd_ncst(cons, cmdline, memtotal);
+		}
+	else if (strncmp(cmdline, "langmode ", 9) == 0)
+		{
+			cmd_langmode(cons, cmdline);
 		}
 	else if (cmdline[0] != 0)
 		{
@@ -395,6 +415,22 @@ void cmd_ncst(struct CONSOLE *cons, char *cmdline, int memtotal)
 	return;
 }
 
+void cmd_langmode(struct CONSOLE *cons, char *cmdline)
+{
+	struct TASK *task = task_now();
+	unsigned char mode = cmdline[9] - '0';
+	if (mode <= 1)
+		{
+			task->langmode = mode;
+		}
+	else
+		{
+			cons_putstr0(cons, "mode number error.\n");
+		}
+	cons_newline(cons);
+	return;
+}
+
 int cmd_app(struct CONSOLE *cons, int *fat, char *cmdline)
 {
 	struct MEMMAN *memman = (struct MEMMAN *) MEMMAN_ADDR;
@@ -467,6 +503,7 @@ int cmd_app(struct CONSOLE *cons, int *fat, char *cmdline)
 						}
 					timer_cancelall(&task->fifo);
 					memman_free_4k(memman, (int) q, segsiz);
+					task->langbyte1 = 0;
 				}
 			else
 				{
@@ -765,6 +802,10 @@ int* ros_api(int edi, int esi, int ebp, int esp, int ebx, int edx, int ecx, int 
 					i++;
 				}
 			reg[7] = i;
+		}
+	else if (edx == 27)
+		{
+			reg[7] = task->langmode;
 		}
 	return 0 ;
 }

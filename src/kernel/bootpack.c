@@ -47,6 +47,10 @@ void HariMain(void)
 	int key_shift = 0, key_leds = (binfo->leds >> 4) & 7, keycmd_wait = -1;
 	int j, x, y, mmx = -1, mmy = -1, mmx2 = 0;
 	struct SHEET *sht = 0, *key_win, *sht2;
+	int *fat;
+	unsigned char *chinese;
+	struct FILEINFO *finfo;
+	extern char hankaku[4096];
 	
 	init_gdtidt();
 	init_pic();
@@ -72,6 +76,7 @@ void HariMain(void)
 	fifo.task = task_a;
 	task_run(task_a, 1, 2);
 	*((int *) 0x0fe4) = (int) shtctl;
+	task_a->langmode = 0;
 
 	//sht_back
 	sht_back = sheet_alloc(shtctl);
@@ -101,6 +106,28 @@ void HariMain(void)
 	fifo32_put(&keycmd, KEYCMD_LED);
 	fifo32_put(&keycmd, key_leds);
 
+	// chinese.fnt load
+	chinese = (unsigned char *) memman_alloc_4k(memman, 169536);
+	fat = (int*) memman_alloc_4k(memman, 4 * 2880);
+	file_readfat(fat, (unsigned char *) (ADR_DISKIMG + 0x000200));
+	finfo = file_search("chinese.fnt", (struct FILEINFO *) (ADR_DISKIMG + 0x002600), 224);
+	if (finfo != 0)
+		{
+			file_loadfile(finfo->clustno, finfo->size, chinese, fat, (char *) (ADR_DISKIMG + 0x003e00));
+		}
+	else
+		{
+			for (i = 0; i < 16 * 256; i++)
+				{
+					chinese[i] = hankaku[i]; // no font
+				}
+			for (i = 16 * 256; i < 169536; i++)
+				{
+					chinese[i] = 0xff;
+				}
+		}
+	*(int *) 0x0fe8 = (int) chinese;
+	memman_free_4k(memman, (int) fat, 4 * 2880);
 	for (;;)
 		{
 			if (fifo32_status(&keycmd) > 0 && keycmd_wait < 0)

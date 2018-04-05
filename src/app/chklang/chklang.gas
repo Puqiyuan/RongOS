@@ -1,0 +1,28 @@
+	.file	"chklang.c"
+	.data
+LC0:
+	.ascii "English ASCII mode\12\0"
+LC1:
+	.ascii "Chinese GB2312 mode\12\0"
+	.text
+	.balign 2
+.globl _HariMain
+	.def	_HariMain;	.scl	2;	.type	32;	.endef
+_HariMain:
+	pushl	%ebp
+	movl	%esp, %ebp
+	call	_api_getlang
+	testl	%eax, %eax
+	jne	L2
+	pushl	$LC0
+L4:
+	call	_api_putstr0
+	popl	%eax
+	leave
+	jmp	_api_end
+L2:
+	pushl	$LC1
+	jmp	L4
+	.def	_api_end;	.scl	2;	.type	32;	.endef
+	.def	_api_putstr0;	.scl	2;	.type	32;	.endef
+	.def	_api_getlang;	.scl	2;	.type	32;	.endef
