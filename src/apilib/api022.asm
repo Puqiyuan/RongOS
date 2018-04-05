@@ -7,7 +7,7 @@
 
 		[section .text]
 
-_api_flose: ; void api_fclose(int fhandle)
+_api_fclose: ; void api_fclose(int fhandle)
 		mov edx, 22
 		mov eax, [esp + 4]
 		int 0x40
