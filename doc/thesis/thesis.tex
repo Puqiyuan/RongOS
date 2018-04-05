@@ -9,18 +9,18 @@
   I would like to thank my supervisor Mr. WANG Xiaolin for his continuous support of my
   four years undergraduate study. I am extremly thankful to him for sharing expertise, and
   sincere and valuable guidance and encouragement extended to me.
+    
+  What I most want to thank is my girlfriend. She tolerated me when I finished this
+  graduation project many nights did not accompany her, gave me support, encouraged me,
+  and did not complain. So I would like to name this simple operating system as RongOS. Rong
+  is the last word of her name. Thank you, my dearest.
   
-  \fxerror{You translate the following in English.}
-  
-  我最想感谢的是我的女友，她容忍我在完成这个设计时
-  的很多个夜晚不陪她，给我支持，鼓励我，不抱怨。所以我愿意把这个简单操作系统命名为RongOS,
-  蓉便是她名字的最后一个字。谢谢你，我最亲爱的。
-
-  我的特别感谢要送给一家伟大的公司——Google，我觉得我有必要在我的毕业论文里这个很正式的地方
-  感谢你。任何时候你都给了我很大的帮助，通过你学习到的知识和其它能力必将对我以后的人生产生
-  深远的影响，每次搜索时我都是怀着感激的心情，因为我知道你一定会给我我想要的结果。 没有你，
-  这篇论文不可能完成，谢谢你。
-  
+  My special thanks to a great company - Google, I think I need to thank you in this very
+  formal place in my graduation thesis. Every time you gave me a lot of help, the
+  knowledge and other abilities I learned from you will have a profound impact on my
+  future life. I am grateful for every search, because I know you will give me the results
+  I want. Without you, this paper cannot be completed. Thank you.
+    
 }
 
 \renewcommand{\advisorinfopage}{% Advisor info page
@@ -442,24 +442,31 @@ sector. A sector can store 512 byte. So the capacity of a floppy is:
 \chapter{Design}
 
 \section{Top Level Design}
+All applications use the functions provided by the operating system kernel through API
+calls. Doing so protects the operating system. As shown below:
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=.2\textwidth]{topDes.pdf}
+  \caption{Top-level design}
+  \label{fig:top-level}
+\end{figure}
 
 
-\subsection{32-bit Mode and Import C Codes}
+\section{Kernel}
+\label{sec:kernel}
+
+\section{API}
+\label{sec:api}
+
+\section{APPs}
+\label{sec:apps-1}
+
+
 
 \chapter{Implementation}
 
-\section{Boot Loader}
-
-\subsection{Workflow of Boot Loader}
-
-Fig.~\ref{fig:flowchart-of-boot-loader} shows how the boot loader works.
-
-\begin{figure}[!ht]
-  \centering
-  % \includegraphics[width=1\textwidth]{../figs/FlowchartTex/1/flowcharte.pdf}
-  \fxerror{need a better chart}
-  \caption{Flowchart of boot loader}\label{fig:flowchart-of-boot-loader}  
-\end{figure}
+\section{Kernel}
+\subsection{Boot Loader}
 
 The boot loader is implemented in Intel assembly. It works as following:
 
@@ -510,50 +517,15 @@ The boot loader is implemented in Intel assembly. It works as following:
   floppy. Appendix~\ref{sec:the-nex-cyl} is the code to perform this function.
 \end{enumerate}
 
-\subsection{Running Result}
-
-Fig.~\ref{fig:iplRes} shows the running results of boot loader. From this picture we
-see that the boot loader loaded 10 cylinders from floppy successfully. 
-
-\begin{figure}[!ht]
-  \centering
-  % \includegraphics[width=1.1\textwidth]{iplRes.png}
-  \fxerror{need a better pic.}
-  \caption{Running result of boot loader}\label{fig:iplRes}  
-\end{figure}
-
-
-\section{32-bit Mode and Import C Codes}
-
-
-\section{Screen Display and Text}
-
-\section{Control Mouse}
-
-
-\section{Memory Management}
-
-\section{Making Window }
-
-\section{Timer}
-
-\section{Multitasking}
-
-\section{Command Line Window}
-
 \section{API}
+\label{sec:API}
 
-\section{OS Protection}
 
-\section{Graphics Processing}
+\section{APPs}
+\label{sec:apps}
 
-\section{Window Operation}
 
-\section{Application Protection}
 
-\section{File Operation}
-
-\section{Some Applications}
 
 \chapter{Conclusions}%{Prospects And Shortages}
 
@@ -606,22 +578,22 @@ see that the boot loader loaded 10 cylinders from floppy successfully.
 \label{sec:dis-boo-inf}
 
 \inputminted[firstline=55, lastline=65,
-  linenos=true]{nasm}{../../src/06day/RongC/ipl10.asm}
+linenos=true]{nasm}{../../src/kernel/ipl10.asm}
 
 \subsection{Read the second sector}
 \label{sec:rea-sec-sec}
   
-\inputminted[firstline=87,lastline=106,linenos=true]{nasm}{../../src/06day/RongC/ipl10.asm}
+\inputminted[firstline=87,lastline=106,linenos=true]{nasm}{../../src/kernel/ipl10.asm}
 
 \subsection{Read two sides of a track}
 \label{sec:rea-two-sid}
 
-\inputminted[firstline=108,lastline=132,linenos=true]{nasm}{../../src/06day/RongC/ipl10.asm}
+\inputminted[firstline=108,lastline=132,linenos=true]{nasm}{../../src/kernel/ipl10.asm}
 
 \subsection{The next cylinder}
 \label{sec:the-nex-cyl}
 
-\inputminted[firstline=134,lastline=137,linenos=true]{nasm}{../../src/06day/RongC/ipl10.asm}
+\inputminted[firstline=134,lastline=137,linenos=true]{nasm}{../../src/kernel/ipl10.asm}
 
 \end{document} % 结束。不要动下面几行！
 

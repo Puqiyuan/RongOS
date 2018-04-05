@@ -1,0 +1,22 @@
+\input{printable}
+
+\begin{document}
+\begin{tikzpicture} [node distance=1cm, thick]
+  \node (kernel) [startstop] {Kernel};
+  \node (api) [oval, below=of kernel] {API};
+  \node (APPs) [process, below=of api] {APPs};
+
+  \draw[arrow] (APPs) -- node[auto] {Call} (api);
+  \draw[arrow] (api) -- node[auto] {Call} (kernel);
+    
+\end{tikzpicture}
+
+
+\end{document}
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
