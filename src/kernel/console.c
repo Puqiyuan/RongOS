@@ -469,7 +469,7 @@ int cmd_app(struct CONSOLE *cons, int *fat, char *cmdline)
 			// when a file is found
 			p = (char *) memman_alloc_4k(memman, finfo->size);
 			file_loadfile(finfo->clustno, finfo->size, p, fat, (char *) (ADR_DISKIMG + 0x003e00));
-			if (finfo->size >= 36 && strncmp(p + 4, "Rong", 4) == 0 && *p == 0x00)
+			if (finfo->size >= 36 && (strncmp(p + 4, "Rong", 4) == 0  || strncmp(p + 4, "Hari", 4) == 0)&& *p == 0x00)
 				{
 					segsiz	= *((int *) (p + 0x0000));
 					esp		= *((int *) (p + 0x000c));

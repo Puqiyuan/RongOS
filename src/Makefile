@@ -7,7 +7,7 @@ default:
 	make full
 	make -r Rongbote.img
 
-Rongbote.img: ./kernel/ipl10.bin ./kernel/Rongbote.sys ./app/a/a.ros ./app/hello3/hello3.ros ./app/hello4/hello4.ros ./app/winhello/winhello.ros ./app/winhelo2/winhelo2.ros ./app/winhelo3/winhelo3.ros ./app/star1/star1.ros ./app/stars/stars.ros ./app/stars2/stars2.ros ./app/lines/lines.ros ./app/walk/walk.ros ./app/sundial/sundial.ros ./app/noodle/noodle.ros ./app/beepdown/beepdown.ros ./app/color/color.ros ./app/color2/color2.ros ./app/prime/prime.ros ./app/prime2/prime2.ros ./app/catipl/catipl.ros ./app/cat/cat.ros ./app/chklang/chklang.ros ./app/bball/bball.ros ./app/invader/invader.ros ./app/calc/calc.ros ./app/tview/tview.ros
+Rongbote.img: ./kernel/ipl10.bin ./kernel/Rongbote.sys ./app/a/a.ros ./app/hello3/hello3.ros ./app/hello4/hello4.ros ./app/winhello/winhello.ros ./app/winhelo2/winhelo2.ros ./app/winhelo3/winhelo3.ros ./app/star1/star1.ros ./app/stars/stars.ros ./app/stars2/stars2.ros ./app/lines/lines.ros ./app/walk/walk.ros ./app/sundial/sundial.ros ./app/noodle/noodle.ros ./app/beepdown/beepdown.ros ./app/color/color.ros ./app/color2/color2.ros ./app/prime/prime.ros ./app/prime2/prime2.ros ./app/catipl/catipl.ros ./app/cat/cat.ros ./app/chklang/chklang.ros ./app/bball/bball.ros ./app/invader/invader.ros ./app/calc/calc.ros ./app/tview/tview.ros ./app/mplayer/mplayer.ros
 	wine $(edimg) imgin:./z_tools/fdimg0at.tek wbinimg src:kernel/ipl10.bin \
     len:512 from:0 to:0 \
 	copy from:./kernel/Rongbote.sys to:@: \
@@ -40,6 +40,17 @@ Rongbote.img: ./kernel/ipl10.bin ./kernel/Rongbote.sys ./app/a/a.ros ./app/hello
 	copy from:./app/invader/invader.ros to:@: \
 	copy from:./app/calc/calc.ros to:@: \
 	copy from:./app/tview/tview.ros to:@: \
+	copy from:./app/mplayer/mplayer.ros to:@: \
+	copy from:./app/mplayer/xing.mml to:@: \
+	copy from:./app/mplayer/daigo.mml to:@: \
+	copy from:./app/mplayer/daiku.mml to:@: \
+	copy from:./app/mplayer/fujisan.mml to:@: \
+	copy from:./app/bin/qiv/qiv.ros to:@: \
+	copy from:./app/bin/qiv/me3.jpg to:@: \
+	copy from:./app/bin/qiv/me4.jpg to:@: \
+	copy from:./app/bin/qiv/night.bmp to:@: \
+	copy from:./app/bin/qiv/thanks.jpg to:@: \
+	copy from:./app/bin/qiv/school.jpg to:@: \
 	imgout:Rongbote.img
 
 vrun:
@@ -86,6 +97,7 @@ full:
 	make -C ./app/invader
 	make -C ./app/calc
 	make -C ./app/tview
+	make -C ./app/mplayer
 	make Rongbote.img
 
 vrun_full:
@@ -127,6 +139,7 @@ clean_full:
 	make -C ./app/bball clean
 	make -C ./app/invader clean
 	make -C ./app/calc clean
+	make -C ./app/mplayer clean
 src_only_full:
 	make -C kernel src_only
 	make -C apilib src_only
@@ -155,6 +168,7 @@ src_only_full:
 	make -C ./app/invader src_only
 	make -C ./app/calc src_only
 	make -C ./app/tview src_only
+	make -C ./app/mplayer src_only
 	rm Rongbote.img -f
 
 refersh:
