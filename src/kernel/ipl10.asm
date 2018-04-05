@@ -10,7 +10,7 @@
 	; total 10 * 2 * 18 * 512 = 184320Byte = 180KB.
 	; begin with 0x8200, end with 0x34fff in memory.
 	
-	CYLS equ 10 ; read 10 cylinders, 
+	CYLS equ 20 ; read 10 cylinders, 
 	
 org 0x7c00 ; load the program to address 0x7c00.
 	jmp entry
