@@ -466,7 +466,7 @@ sector. A sector can store 512 byte. So the capacity of a floppy is:
 
 \section{Top Level Design}
 All applications use the functions provided by the operating system kernel through API
-calls. Doing so protects the operating system. As shown below:
+calls. Doing so protects the operating system. As picture ~\ref{fig:top-level} shown:
 \begin{figure}[!htbp]
   \centering
   \includegraphics[width=.2\textwidth]{topDes.pdf}
@@ -477,6 +477,15 @@ calls. Doing so protects the operating system. As shown below:
 
 \section{Kernel}
 \label{sec:kernel}
+The picture ~\ref{fig:kernel} shows how the various modules in
+the kernel are related.
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=1\textwidth]{kernel}
+  \caption{modules in kernel}
+  \label{fig:kernel}
+\end{figure}
+
 
 \section{API}
 \label{sec:api}

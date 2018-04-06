@@ -1,0 +1,69 @@
+\input{printable}
+
+
+\begin{document}
+\begin{tikzpicture} [node distance=0.5cm, thick]
+  \node (graph) [startstop, minimum width=0.5cm] {graph};
+  \node (window) [startstop, right=of graph, minimum width=0.5cm] {window};
+  \node (sheet) [startstop, right=of window, minimum width=0.5cm] {sheet};
+  \node (memory) [startstop, right=of sheet, minimum width=0.5cm] {memory};
+  \node (task) [startstop, right=of memory, minimum width=0.5cm] {task};
+  \node (timer) [startstop, right=of task, minimum width=0.5cm] {timer};
+  \node (fifo) [startstop, right=of timer, minimum width=0.5cm] {fifo};
+  \node (file) [startstop, above=of task, minimum width=0.5cm] {file};
+  \node (dsctbl) [startstop, above=of memory, minimum width=0.5cm] {dsctbl};
+  \node (console) [oval, above=of dsctbl, minimum width=0.5cm] {console};
+  \node (bootpack) [process, below=of sheet, minimum width=0.5cm] {bootpack};
+  \node (asmhead) [process, below=of task, minimum width=0.5cm] {asmhead};
+  \node (ipl) [process, below=of fifo, minimum width=0.5cm] {ipl};
+  \node (keyboard) [startstop, below=of bootpack, minimum width=0.5cm] {keyboard};
+  \node (PIC) [startstop, left=of keyboard, minimum width=0.5cm] {PIC};
+  \node (mouse) [startstop, right=of keyboard, minimum width=0.5cm] {mouse};
+  \node (naskfunc) [process, left=of graph, minimum width=0.5cm, yshift=0.5cm] {naskfunc};
+
+
+  \draw[arrow, line width=1mm] (ipl) -- node[above]{jmp 2c00}node[below]{Rongbote}
+  (asmhead);
+  \draw[arrow, line width = 1mm] (asmhead) -- node[above]{jmp 2800}node[below]{bootpack}
+  (bootpack);
+  
+  \draw[arrow] (naskfunc) |- (console);
+  \draw[arrow] (naskfunc) |- (bootpack);
+  \draw[arrow] (naskfunc) -- ($(graph.west) + (-0.1em, 1.35em)$);
+  \draw (-0.6,1.4) -- (10.3,1.4);
+  \draw (-0.6, 1.4) -- (-0.6, -0.4);
+  \draw (-0.6, -0.4) -- (10.3, -0.4);
+  \draw (10.3, 1.4) -- (10.3, -0.4);
+  \draw[dotArrow] ($(bootpack.south) + (-0.2em, 0)$) -- ($(keyboard.north) + (-0.2em,
+  0.2em)$);
+  \draw[arrow] ($(keyboard.north) + (0.2em, 0.2em)$) -- ($(bootpack.south) + (0.2em, 0)$);
+
+  \draw[dotArrow] ($(bootpack.north) + (-0.2em, 0)$) -- ($(sheet.south) + (-0.2em,
+  -0.4em)$);
+  \draw[arrow] ($(sheet.south) + (0.2em, -0.4em)$) -- ($(bootpack.north) + (0.2em, 0)$);
+  
+
+  \draw[arrow] (graph) -- (window);
+  \draw[arrow] (sheet) -- (window);
+  \draw[arrow] (memory) -- (sheet);
+  \draw[arrow] (task) -- (timer);
+  \draw[arrow] (fifo) -- (timer);
+  \draw[arrow] ($(dsctbl.north) + (0, 0.3em)$) to (console.south);
+  \draw ($(PIC.north) + (-1.5em, 0.2em)$) to ($(mouse.north) + (2em, 0.2em)$);
+  \draw ($(PIC.north) + (-1.5em, 0.2em)$) to ($(PIC.south) + (-1.5em, -0.2em)$);
+  \draw ($(PIC.south) + (-1.5em, -0.2em)$) to ($(mouse.south) + (2em, -0.2em)$);
+  \draw ($(mouse.south) + (2em, -0.2em)$) to ($(mouse.north) + (2em, 0.2em)$);
+
+
+  
+  
+\end{tikzpicture}
+\end{document}
+
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
