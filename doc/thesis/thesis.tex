@@ -224,6 +224,29 @@ have i386 support for our 64-bit Linux system.
 \section{C Language Basic}
 
 \section{Segments and Descriptors}
+The so-called segmentation is to divide a total of 4 GB of memory into many blocks in its
+own way. The start address of each block is treated as 0.
+
+In this way, in order to represent a segment, the following information is required:
+\begin{itemize}
+\item The size of the segment
+\item Where is the starting address of the segment
+\item Segment management properties
+\end{itemize}
+
+All this information is represented by 8 bytes(64 bits). But the register used to specify
+the segment is only 16 bits. Therefore, the segment selector is stored in the segment
+register, and the segment management information(the above three information) is
+referenced by the segment selector. Although the segment register has 16 bits, only high 13
+bits are available due to the CPU design. Therefore, the segment selector is in the range
+of 0 to 8191. In total, there are 8192 segments, and a total of 8192 × 8 = 65536(64KB) bytes are
+required to store the management information of these segments. This 64-byte message is
+called GDT. Obviously, the CPU does not have such a large storage capacity. So store this
+information somewhere in memory. A special register in the CPU is GDTR(global descriptor
+table register). This register is used to reference the GDT address in memory and record
+how many valid segments are set.
+
+
 
 \section{Instruction Set}
 
