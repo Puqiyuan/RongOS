@@ -1,0 +1,22 @@
+\begin{tikzpicture}
+\begin{umlpackage}{p}
+\begin{umlpackage}{sp1}
+\umlclass[template=T]{A}{
+  n : uint \\ t : float
+  }{}
+\umlclass[y=-3]{B}{
+  d : double
+  }{
+  \umlvirt{setB(b : B) : void} \\ getB() : B
+}
+\end{umlpackage}
+\begin{umlpackage}[x=10,y=-6]{sp2}
+\umlinterface{C}{
+  n : uint \\ s : string
+  }{}
+\end{umlpackage}
+\umlclass[x=2,y=-10]{D}{
+  n : uint
+  }{}
+\end{umlpackage}
+\end{tikzpicture}

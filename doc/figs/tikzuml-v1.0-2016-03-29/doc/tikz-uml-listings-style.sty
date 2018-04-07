@@ -1,0 +1,126 @@
+% Definition of the tuml language style for use with listings package
+
+\lstdefinelanguage{tuml}[AlLaTeX]{TeX}{
+  morekeywords={[2]% commands
+    %t%
+    tikzumlset, tikzstyle,
+    %u%
+    umlclass, umlsimpleclass, umlemptyclass, umlinterface, umlenum, umltypedef, umlstruct, umlsimpleinterface,
+    umlactor, umlusecase, umlnote, umlNarynode, umlassocclass, 
+    umlrelation, umlHVrelation, umlVHrelation, umlHVHrelation, umlVHVrelation, umlCNrelation,
+    umlinherit, umlHVinherit, umlVHinherit, umlHVHinherit, umlVHVinherit, umlCNinherit,
+    umldep, umlHVdep, umlVHdep, umlHVHdep, umlVHVdep, umlCNdep,
+    umlassoc, umlHVassoc, umlVHassoc, umlHVHassoc, umlVHVassoc, umlCNassoc,
+    umluniassoc, umlHVuniassoc, umlVHuniassoc, umlHVHuniassoc, umlVHVuniassoc, umlCNuniassoc,
+    umlaggreg, umlHVaggreg, umlVHaggreg, umlHVHaggreg, umlVHVaggreg, umlCNaggreg,
+    umluniaggreg, umlHVuniaggreg, umlVHuniaggreg, umlHVHuniaggreg, umlVHVuniaggreg, umlCNuniaggreg,
+    umlcompo, umlHVcompo, umlVHcompo, umlHVHcompo, umlVHVcompo, umlCNcompo,
+    umlunicompo, umlHVunicompo, umlVHunicompo, umlHVHunicompo, umlVHVunicompo, umlCNunicompo,
+    umlreal, umlHVreal, umlVHreal, umlHVHreal, umlVHVreal, umlCNreal,
+    umlimport, umlHVimport, umlVHimport, umlHVHimport, umlVHVimport, umlCNimport,
+    umlnest, umlHVnest, umlVHnest, umlHVHnest, umlVHVnest, umlCNnest,
+    umlfriend, umlHVfriend, umlVHfriend, umlHVHfriend, umlVHVfriend, umlCNfriend,
+    umlinclude, umlHVinclude, umlVHinclude, umlHVHinclude, umlVHVinclude, umlCNinclude,
+    umlextend, umlHVextend, umlVHextend, umlHVHextend, umlVHVextend, umlCNextend,
+    umlimpl, umlHVimpl, umlVHimpl, umlHVHimpl, umlVHVimpl, umlCNimpl,
+    umltrans, umlHVtrans, umlVHtrans, umlHVHtrans, umlVHVtrans, umlCNtrans,
+    umlassemblyconnector, umlHVassemblyconnector, umlVHassemblyconnector, umlHVHassemblyconnector, umlVHVassemblyconnector, umlCNassemblyconnector,
+    umldelegateconnector, umlHVdelegateconnector, umlVHdelegateconnector, umlHVHdelegateconnector, umlVHVdelegateconnector, umlCNdelegateconnector,
+    umlstateinitial, umlstatefinal, umlstatedecision, umlstateenter, umlstateexit, umlstateend, umlstatehistory, umlstatedeephistory, umlstatejoin, umlbasicstate,
+    umlobject, umlmulti, umlentity, umlboundary, umlcontrol, umldatabase, umlcreatecall, umlfpart,
+    umlbasiccomponent, umlprovidedinterface, umlrequiredinterface, umlport,
+    umlstatic, umlvirt,
+    umlsdnode, umlpoint,
+  },%
+  morekeywords={[3]% environments
+    umlpackage, umlstate, umlfragment, umlsystem, umlcomponent, umlseqdiag, umlcall, umlcallself,
+  }
+}
+
+\lstdefinestyle{main}{
+  basicstyle=\footnotesize\normalfont,%
+  xleftmargin=0.5cm,%
+  frame=shadowbox, framerule=0pt, rulesep=1pt,%
+        backgroundcolor=\color{black!5!white},%
+        rulesepcolor=\color{black!25!white},%
+  escapechar=@,%
+  breaklines=true,%
+  breakatwhitespace=true,%
+  breakautoindent=true,%
+  resetmargins=true,%
+  keywordstyle={[2]\color{tumlcolor!75!black}\bf},%
+  keywordstyle={[3]\color{tumlcolor!25!black}\bf},%
+  stringstyle=\color{red!50!black},%
+  commentstyle=\color{green!50!black}\itshape,%
+  moredelim=[s][\color{tumlcolor!50!black}]{\[}{\]},%
+  showstringspaces=false,%
+  aboveskip=\medskipamount,%
+  belowskip=\medskipamount,%
+}
+
+\lstdefinestyle{mainnocolor}{
+  basicstyle=\footnotesize\normalfont,%
+  xleftmargin=0.5cm,%
+  frame=shadowbox, framerule=0pt, rulesep=1pt,%
+        backgroundcolor=\color{black!5!white},%
+        rulesepcolor=\color{black!25!white},%
+  escapechar=@,%
+  breaklines=true,%
+  breakatwhitespace=true,%
+  breakautoindent=true,%
+  resetmargins=true,%
+  keywordstyle={[2]\bf},%
+  keywordstyle={[3]\bf},%
+  stringstyle=\color{red!50!black},%
+  commentstyle=\color{green!50!black}\itshape,%
+  moredelim=[s][\it]{\[}{\]},%
+  showstringspaces=false,%
+  aboveskip=\medskipamount,%
+  belowskip=\medskipamount,%
+}
+
+\lstdefinestyle{web}{
+  basicstyle=\footnotesize\ttfamily,%
+  identifierstyle=\sffamily,%
+  xleftmargin=0.5cm,%
+  frame=shadowbox, framerule=0pt, rulesep=1pt,%
+        backgroundcolor=\color{black!5!white},%
+        rulesepcolor=\color{black!25!white},%
+  escapechar=@,%
+  breaklines=true,%
+  breakatwhitespace=true,%
+  breakautoindent=true,%
+  resetmargins=true,%
+  keywordstyle=\rmfamily\bfseries,%
+  keywordstyle={[2]\sffamily\color{tumlcolor!75!black}\bfseries},%
+  keywordstyle={[3]\sffamily\color{tumlcolor!25!black}\itshape},%
+  stringstyle=\rmfamily\color{red!50!black},%
+  commentstyle=\rmfamily\color{green!50!black}\itshape,%
+  moredelim=[s][\color{tumlcolor!50!black}\scshape]{\[}{\]},%
+  showstringspaces=false,%
+  aboveskip=\medskipamount,%
+  belowskip=\medskipamount,%
+}
+
+\lstdefinestyle{webnocolor}{
+  basicstyle=\footnotesize\ttfamily,%
+  identifierstyle=\sffamily,%
+  xleftmargin=0.5cm,%
+  frame=shadowbox, framerule=0pt, rulesep=1pt,%
+        backgroundcolor=\color{black!5!white},%
+        rulesepcolor=\color{black!25!white},%
+  escapechar=@,%
+  breaklines=true,%
+  breakatwhitespace=true,%
+  breakautoindent=true,%
+  resetmargins=true,%
+  keywordstyle=\rmfamily\bfseries,%
+  keywordstyle={[2]\sffamily\bfseries},%
+  keywordstyle={[3]\sffamily\itshape},%
+  stringstyle=\rmfamily\color{red!50!black},%
+  commentstyle=\rmfamily\color{green!50!black}\itshape,%
+  moredelim=[s][\it]{\[}{\]},%
+  showstringspaces=false,%
+  aboveskip=\medskipamount,%
+  belowskip=\medskipamount,%
+}

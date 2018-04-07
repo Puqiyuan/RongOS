@@ -1,0 +1,9 @@
+\begin{tikzpicture}
+\umlbasicstate[name=state]{I am a state}
+\umltrans[recursive=-20|20|4cm, name=assoc, recursive direction=right to right]{state}{state}
+\draw (assoc-1) node[fill=black, circle, inner sep=0.1cm] {} node[below=0.2cm] {relname-1};
+\draw (assoc-2) node[fill=black, circle, inner sep=0.1cm] {} node[right=0.2cm] {relname-2};
+\draw (assoc-3) node[fill=black, circle, inner sep=0.1cm] {} node[right=0.2cm] {relname-3};
+\draw (assoc-4) node[fill=black, circle, inner sep=0.1cm] {} node[right=0.2cm] {relname-4};
+\draw (assoc-5) node[fill=black, circle, inner sep=0.1cm] {} node[above=0.2cm] {relname-5};
+\end{tikzpicture}

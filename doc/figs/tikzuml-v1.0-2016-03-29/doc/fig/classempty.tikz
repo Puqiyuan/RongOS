@@ -1,0 +1,3 @@
+\begin{tikzpicture}
+\umlemptyclass{namespace::class-name}
+\end{tikzpicture}

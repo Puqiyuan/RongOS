@@ -1,0 +1,6 @@
+\begin{tikzpicture}
+\umlemptyclass{A1}
+\umlemptyclass[right=3cm of A1]{A2}
+\umluniaggreg[anchors=10 and 170]{A1}{A2}
+\umluniaggreg[anchors=-10 and -170, very thick]{A1}{A2}
+\end{tikzpicture}

@@ -1,0 +1,115 @@
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc} % police encodee en UTF-8 %
+\usepackage[english]{babel} % police fr %
+\usepackage{geometry}
+\usepackage{graphicx} % pour inclusion d'images %
+\usepackage{pgf} % pour dessiner %
+\usepackage{tikz} % pour dessiner %
+\usepackage{xcolor} % definition des couleurs %	
+\usepackage[plainpages=false,pdfpagelabels,bookmarksnumbered,breaklinks=true]{hyperref} % pour les references %
+\usepackage{amsmath} % pour les formules de maths %
+\usepackage{latexsym} % pour les symboles maths %
+\usepackage{amssymb} % pour les symboles maths %
+\usepackage{xspace}
+\usepackage{aeguill} % pour les guillemets et accents francais %
+\usepackage{float}
+\usepackage{listings} % pour les listings de code %
+\usepackage{helvet} % police helvetica %
+\usepackage{manfnt}
+\usepackage{../tikz-uml} % pour les diagrammes de classe
+
+\definecolor{tumlcolor}{RGB}{255,127,0}%
+
+
+% package option management
+\pgfkeys{/tumldoc/.cd, mode/.initial=pdf}
+
+\ProcessPgfOptions{/tumldoc}%
+
+\pgfkeys{/tumldoc/.cd, mode/.get=\tumlMode}
+
+\ifthenelse{\equal{\tumlMode}{pdf}}{%
+\usetikzlibrary{positioning}
+}{}%
+
+\ifthenelse{\equal{\tumlMode}{web}}{%
+  \newcommand{\inputTikZ}[1]{%
+    \includegraphics{#1.png}%
+  }%
+}{%
+  \newcommand{\inputTikZ}[1]{%
+    \input{fig/#1.tikz}%
+  }%
+}%
+
+\hypersetup{%
+  pdftitle={TikZ-UML},%
+  pdfauthor={N. Kielbasiewicz},%
+  pdfpagemode=UseOutlines,%
+  linkbordercolor=0 0 0,%
+  linkcolor=black,%
+  citecolor=black,%
+  colorlinks=true%
+}%
+
+\geometry{a4paper, top=2.5cm, bottom=2.5cm, left=1.8cm, right=1.8cm}
+%\itemsep -0.15cm
+\parindent=0pt
+
+\sloppy
+\hyphenpenalty 10000000
+
+
+%\pagestyle{fancy} % on va mettre en tete et pied de page %
+% \cfoot{\thepage}
+
+%\fancypagestyle{plain}{%
+%  \fancyhf{}
+%  \fancyfoot{}
+%  \renewcommand\headrulewidth{0pt}
+%  \renewcommand\footrulewidth{0pt}
+%}
+
+%\fancyhead[RE,LO]{\leftmark}
+%\fancyhead[RO,LE]{\thepage}
+%\fancyfoot{}
+
+\def\figureautorefname{figure}%
+\def\tableautorefname{tableau}%
+\def\partautorefname{partie}%
+\def\chapterautorefname{chapitre}%
+\def\appendixautorefname{annexe}%
+\def\sectionautorefname{section}%
+\def\subsectionautorefname{sous-section}%
+\def\subsubsectionautorefname{paragraphe}%
+
+\newcommand{\clearemptydoublepage}{\newpage{\pagestyle{empty}\cleardoublepage}}
+
+\newenvironment{remark}{\begin{itshape}\textdbend}{\end{itshape}}
+\newenvironment{remark2}{\begin{itshape}\textdbend\textdbend}{\end{itshape}}
+\newenvironment{remark3}{\begin{itshape}\textdbend\textdbend\textdbend}{\end{itshape}}
+
+% redefinitions necessaires si inclusion du package marvosym
+%\renewcommand{\Rightarrow}{\reflectbox{$\Leftarrow$}}
+%\renewcommand{\Longrightarrow}{\reflectbox{$\Longleftarrow$}}
+
+\newcommand{\tuml}{{\sc TikZ-UML} \xspace}
+\newcommand{\TikZ}{{\sc TikZ} \xspace}
+
+
+\ifthenelse{\equal{\tumlMode}{web}}{%
+  \renewcommand{\textdbend}{\includegraphics{textdbend.png}}
+}{}%
+
+\usepackage{tikz-uml-listings-style}
+
+\ifthenelse{\equal{\tumlMode}{web}}{%
+  \lstset{language=tuml,%
+  style=web,%
+  }%
+}{%
+  \lstset{language=tuml,%
+  style=main,%
+  }%
+}%

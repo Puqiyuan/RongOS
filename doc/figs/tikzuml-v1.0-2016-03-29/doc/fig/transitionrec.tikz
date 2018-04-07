@@ -1,0 +1,5 @@
+\begin{tikzpicture}
+\umlbasicstate[name=state]{I am a state}
+\umltrans[recursive=-10|10|2cm, arg=a, pos=1.5, recursive direction=right to right]{state}{state}
+\umltrans[recursive=-170|-110|2cm, arg=b, pos=2, recursive direction=left to bottom]{state}{state}
+\end{tikzpicture}

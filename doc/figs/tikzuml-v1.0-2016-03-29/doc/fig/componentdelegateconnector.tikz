@@ -1,0 +1,13 @@
+\begin{tikzpicture}
+\begin{umlcomponent}{A}
+\umlbasiccomponent{B}
+\umlbasiccomponent[y=-3]{C}
+
+\umlprovidedinterface[interface=Bpi, distance=2cm, padding=2cm]{B}
+\umlprovidedinterface[interface=Cpi, distance=2cm, padding=2cm]{C}
+\end{umlcomponent}
+
+\umldelegateconnector{A-west-port}{B-west-interface}
+\umlHVHdelegateconnector[pos stereo=1.5]{A-west-port}{C-west-interface}
+\umlport{A}{west}
+\end{tikzpicture}

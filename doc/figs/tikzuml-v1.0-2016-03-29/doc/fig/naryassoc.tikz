@@ -1,0 +1,9 @@
+\begin{tikzpicture}
+\umlemptyclass{A}
+\umlemptyclass[x=6]{B}
+\umlemptyclass[x=3, y=3]{C}
+\umlNarynode[x=3, name=naryassoc, below]{label}
+\umlassoc[attr1=a|*]{A}{naryassoc}
+\umlassoc[mult1=0..1]{B}{naryassoc}
+\umlassoc[mult=*]{naryassoc}{C}
+\end{tikzpicture}

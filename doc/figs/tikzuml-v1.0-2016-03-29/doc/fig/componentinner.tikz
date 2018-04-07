@@ -1,0 +1,12 @@
+\begin{tikzpicture}
+\begin{umlpackage}{p}
+\begin{umlcomponent}{A}
+\begin{umlcomponent}{B}
+\umlemptyclass{D}
+\end{umlcomponent}
+\begin{umlcomponent}[x=4,y=-2]{C}
+
+\end{umlcomponent}
+\end{umlcomponent}
+\end{umlpackage}
+\end{tikzpicture}

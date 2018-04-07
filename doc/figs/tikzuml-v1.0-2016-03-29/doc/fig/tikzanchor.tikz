@@ -1,0 +1,12 @@
+\begin{tikzpicture}
+\node[name=s,shape=rectangle, draw=black!30, line width=0.5cm, fill=yellow!30, inner sep=1.5cm] {\color{yellow!30} \Huge Rectangle};
+\node[name=t,shape=rectangle, draw=black!30, line width=0.5cm, fill=yellow!30, inner sep=1.5cm] at (8,0) {\color{yellow!30} \Huge O};
+\foreach \anchor/\placement in {north/below left, west/right, center/above left, east/right, south/above, 10/right, 20/right, 30/right, 40/above, 50/above, 60/above, 70/above, 80/above, -30/right, -60/below, -70/below, -80/below, -100/below, -110/below, -120/below}{
+  	\draw[shift=(s.\anchor)] plot[mark=x] coordinates{(0,0)} node[\placement] {\scriptsize\texttt{\anchor}};
+  	\draw[shift=(t.\anchor)] plot[mark=x] coordinates{(0,0)} node[\placement] {\scriptsize\texttt{\anchor}};
+  	\draw[help lines] (s.center) -- (s.\anchor);
+  	\draw[help lines] (t.center) -- (t.\anchor);
+}
+\draw[black!50] (s.center) +(1,0) arc (0:-30:1cm) (1,-0.3) node[right] {$-30^o$};
+\draw[black!50] (t.center) +(1,0) arc (0:-30:1cm) (9,-0.3) node[right] {$-30^o$};
+\end{tikzpicture}

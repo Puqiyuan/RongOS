@@ -1,0 +1,5 @@
+\begin{tikzpicture}
+\umlactor{user}
+\umlactor[y=-3]{subuser}
+\umlactor[x=14, y=-1.5]{admin}
+\end{tikzpicture}

@@ -1,0 +1,5 @@
+\begin{tikzpicture}
+\begin{umlstate}[x=0, y=0, name=state]{state}
+
+\end{umlstate}
+\end{tikzpicture}

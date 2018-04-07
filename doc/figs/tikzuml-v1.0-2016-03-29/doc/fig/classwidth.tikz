@@ -1,0 +1,4 @@
+\begin{tikzpicture}
+\umlemptyclass[width=15ex]{class15}
+\umlemptyclass[y=-2, width=30ex]{class30}
+\end{tikzpicture}

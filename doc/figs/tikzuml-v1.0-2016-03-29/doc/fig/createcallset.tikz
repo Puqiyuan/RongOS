@@ -1,0 +1,6 @@
+\begin{tikzpicture}
+\begin{umlseqdiag}
+\umlactor[class=A]{a}
+\umlcreatecall[class=B, draw obj=green!70!black, fill obj=green!20, draw=blue!70]{a}{b}
+\end{umlseqdiag}
+\end{tikzpicture}

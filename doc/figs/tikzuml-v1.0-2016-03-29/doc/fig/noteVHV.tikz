@@ -1,0 +1,6 @@
+\begin{tikzpicture}
+\umlemptyclass{A}
+\umlemptyclass[x=4]{B}
+\umluniassoc[arg=bb, mult=1, pos=0.95, align=right, name=uniassoc]{A}{B}
+\umlnote[y=-3, geometry=|-|, anchor1=70, arm=0.5cm]{uniassoc-1}{Je suis une note attachee a la relation uniassoc}
+\end{tikzpicture}

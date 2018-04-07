@@ -1,0 +1,19 @@
+\begin{tikzpicture}
+\begin{umlseqdiag}
+\umlactor{A}
+\umlactor{B}
+\umlobject{C}
+\begin{umlcall}{A}{C}
+\begin{umlcall}{C}{A}
+\end{umlcall}
+\begin{umlcall}{B}{C}
+\begin{umlcall}{C}{B}
+\end{umlcall}
+\begin{umlcall}[return=1]{B}{C}
+\end{umlcall}
+\end{umlcall}
+\begin{umlcall}[dt=20, return=1]{A}{C}
+\end{umlcall}
+\end{umlcall}
+\end{umlseqdiag}
+\end{tikzpicture}

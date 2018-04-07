@@ -1,0 +1,5 @@
+\begin{tikzpicture}
+\umlbasicstate{A}
+\umlbasicstate[x=-2, y=-2, anchor=north]{B}
+\umlbasicstate[x=2, y=-2, anchor=north]{C}
+\end{tikzpicture}

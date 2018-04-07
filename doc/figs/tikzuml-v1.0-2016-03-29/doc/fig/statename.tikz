@@ -1,0 +1,15 @@
+\begin{tikzpicture}
+\begin{umlstate}[name=state]{state}
+\begin{umlstate}[name=substate]{substate}
+\umlstateinitial[name=initial]
+\umlstatefinal[x=1, name=final]
+\umlstatejoin[x=2, name=join]
+\end{umlstate}
+\umlstatedecision[x=4, name=decision]
+\umlstateenter[y=-2, name=enter]
+\umlstateexit[x=1, y=-2, name=exit]
+\umlstateend[x=2, y=-2, name=end]
+\umlstatehistory[x=3, y=-2, name=hist]
+\umlstatedeephistory[x=4, y=-2, name=deephist]
+\end{umlstate}
+\end{tikzpicture}

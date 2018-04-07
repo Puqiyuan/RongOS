@@ -1,0 +1,6 @@
+\begin{tikzpicture}
+\umlstateinitial[name=initial]
+\umlstatefinal[x=4, y=-2, name=final]
+\umlHVtrans[arg=transition1, pos=0.5]{initial}{final}
+\umlHVHtrans[arm1=-2cm, arg=transition2, pos=1.5]{initial}{final}
+\end{tikzpicture}

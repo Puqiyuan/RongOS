@@ -1,0 +1,11 @@
+\begin{tikzpicture}
+\begin{umlseqdiag}
+\umlactor[no ddots]{user}
+\umlobject[class=A]{a}
+\umlobject[class=B]{b}
+\begin{umlcall}{a}{b}
+\end{umlcall}
+\umlsdnode[dt=10]{user}
+\umlsdnode[dt=4]{a}
+\end{umlseqdiag}
+\end{tikzpicture}

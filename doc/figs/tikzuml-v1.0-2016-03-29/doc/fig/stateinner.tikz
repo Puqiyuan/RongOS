@@ -1,0 +1,10 @@
+\begin{tikzpicture}
+\begin{umlstate}[name=state]{I am a state}
+\begin{umlstate}[name=substate1]{I am a substate 1}
+
+\end{umlstate}
+\begin{umlstate}[x=3, y=-3, name=substate2]{I am a substate 2}
+
+\end{umlstate}
+\end{umlstate}
+\end{tikzpicture}

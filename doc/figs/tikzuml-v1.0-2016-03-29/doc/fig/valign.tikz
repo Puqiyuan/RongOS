@@ -1,0 +1,7 @@
+\begin{tikzpicture}
+\umlsimpleclass{A}
+\umlemptyclass[x=-2, y=-3]{B}
+\umlclass[x=2, y=-3]{C}{i : int \\ r : double}{}
+\umlVHVinherit{B}{A}
+\umlVHVinherit{C}{A}
+\end{tikzpicture}

@@ -1,0 +1,8 @@
+\begin{tikzpicture}
+\begin{umlseqdiag}
+\umlobject[class=A]{a}
+\umlobject[class=B]{b}
+\begin{umlcall}[op={call(i,k)}, return=2]{a}{b}
+\end{umlcall}
+\end{umlseqdiag}
+\end{tikzpicture}

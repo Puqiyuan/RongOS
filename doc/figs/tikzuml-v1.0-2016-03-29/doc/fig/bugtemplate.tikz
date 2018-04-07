@@ -1,0 +1,5 @@
+\begin{tikzpicture}
+\umlemptyclass[template=T]{A}
+\umlemptyclass[x=4,y=2]{B}
+\umluniaggreg{A}{B}
+\end{tikzpicture}

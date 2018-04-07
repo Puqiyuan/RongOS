@@ -1,0 +1,7 @@
+\begin{tikzpicture}
+\umlsimpleclass{A}
+\umlemptyclass[below left=2cm and 2cm of A, anchor=north]{B}
+\umlclass[right=4cm of B.north, anchor=north]{C}{i : int \\ r : double}{}
+\umlVHVinherit[arm2=-1.2cm]{B}{A}
+\umlVHVinherit[arm2=-1.2cm]{C}{A}
+\end{tikzpicture}

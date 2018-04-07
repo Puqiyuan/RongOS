@@ -1,0 +1,8 @@
+\begin{tikzpicture}
+\begin{umlseqdiag}
+\umlactor[class=A]{a}
+\umldatabase[class=B, fill=blue!20]{b}
+\umlmulti[class=C]{c}
+\umlobject[class=D]{d}
+\end{umlseqdiag}
+\end{tikzpicture}

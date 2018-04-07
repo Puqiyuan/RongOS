@@ -1,0 +1,12 @@
+\begin{tikzpicture}
+\umlusecase[x=4]{use case1}
+\umlusecase[x=4, y=-2]{use case2}
+\umlusecase[x=4, y=-4]{use case3}
+\umlusecase[x=8, y=-2, width=1.5cm]{use case4 on 2 lines}
+\umlusecase[x=10, fill=green!20]{use case5}
+\umlusecase[x=10, y=-4]{use case6}
+
+\umlactor{user}
+\umlactor[y=-3]{subuser}
+\umlactor[x=14, y=-1.5]{admin}
+\end{tikzpicture}

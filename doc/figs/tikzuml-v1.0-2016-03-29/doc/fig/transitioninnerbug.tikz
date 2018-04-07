@@ -1,0 +1,8 @@
+\begin{tikzpicture}
+\begin{umlstate}[name=state]{state}
+\umlbasicstate[name=state1]{sub state1}
+\umlbasicstate[x=4, name=state2]{sub state2}
+\end{umlstate}
+
+\umlVHVtrans[arm1=-2cm]{state1}{state2}
+\end{tikzpicture}

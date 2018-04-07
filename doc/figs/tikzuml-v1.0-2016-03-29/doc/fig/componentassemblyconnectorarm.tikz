@@ -1,0 +1,7 @@
+\begin{tikzpicture}
+\umlbasiccomponent{A}
+\umlbasiccomponent[x=4, y=-3]{B}
+\umlHVHassemblyconnector[interface=AB1, arm1=6cm, last arm]{A}{B}
+\umlHVHassemblyconnector[interface=AB2]{A}{B}
+\umlVHassemblyconnector[interface=AB3, first arm]{A}{B}
+\end{tikzpicture}

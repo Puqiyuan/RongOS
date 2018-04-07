@@ -1,0 +1,6 @@
+\begin{tikzpicture}
+\umlemptyclass{A1}
+\umlassoc[arg=x, mult=1, pos=0.6, recursive=-90|-140|2cm]{A1}{A1}
+\umlassoc[arg=y, mult=1..*, pos=0.6, recursive=-90|-140|4cm]{A1}{A1}
+\umlassoc[arg=z, mult=0..*, pos=0.8, recursive=-90|0|2cm]{A1}{A1}
+\end{tikzpicture}

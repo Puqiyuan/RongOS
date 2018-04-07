@@ -1,0 +1,8 @@
+\begin{tikzpicture}
+\umlemptyclass{A1}
+\umlemptyclass[x=4, y=1]{A2}
+\umlemptyclass[x=6, y=3]{A3}
+
+\umlHVHdep[weight=0.375]{A1}{A2}
+\umlHVHdep[weight=0.25]{A1}{A3}
+\end{tikzpicture}

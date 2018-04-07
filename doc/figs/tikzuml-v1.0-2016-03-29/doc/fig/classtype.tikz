@@ -1,0 +1,3 @@
+\begin{tikzpicture}
+\umlemptyclass[type=interface]{class-name}
+\end{tikzpicture}

@@ -1,0 +1,10 @@
+\begin{tikzpicture}
+\begin{umlseqdiag}
+\umlobject[class=A]{a}
+\umlobject[class=B]{b}
+\begin{umlcall}[type=synchron]{a}{b}
+\end{umlcall}
+\begin{umlcall}[type=asynchron]{a}{b}
+\end{umlcall}
+\end{umlseqdiag}
+\end{tikzpicture}

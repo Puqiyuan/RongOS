@@ -1,0 +1,10 @@
+\begin{tikzpicture}
+\begin{umlseqdiag}
+\umlobject[class=A]{a}
+\umlcreatecall[class=B]{a}{b}
+\begin{umlfragment}[type=alt, label=i>5, inner xsep=2]
+\begin{umlcall}[op={call(i,k)}, dt=7, return=2]{a}{b}
+\end{umlcall}
+\end{umlfragment}
+\end{umlseqdiag}
+\end{tikzpicture}

@@ -1,0 +1,6 @@
+\tikzumlset{font=\tiny}
+\begin{tikzpicture}
+\umlactor{normal user}
+\umlactor[x=2, scale=0.5, below=0.1cm]{small user}
+\umlactor[x=4, scale=2]{big user}
+\end{tikzpicture}

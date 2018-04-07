@@ -1,0 +1,5 @@
+\begin{tikzpicture}
+\umlemptyclass{A1}
+\umlnote[x=3]{A1}{Je suis une note attachee a la classe A1}
+\umlnote[x=2,y=-3, width=5cm]{A1}{Je suis une note plus large attachee a la classe A1}
+\end{tikzpicture}

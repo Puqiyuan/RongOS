@@ -1,0 +1,11 @@
+\begin{tikzpicture}
+\begin{umlseqdiag}
+\umlobject[class=A]{a}
+\umlobject[class=B]{b}
+\umlobject[class=C]{c}
+\begin{umlcall}{a}{b}
+\begin{umlcall}{b}{c}
+\end{umlcall}
+\end{umlcall}
+\end{umlseqdiag}
+\end{tikzpicture}

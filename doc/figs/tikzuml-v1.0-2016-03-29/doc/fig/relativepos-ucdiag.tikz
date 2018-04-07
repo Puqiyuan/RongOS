@@ -1,0 +1,5 @@
+\begin{tikzpicture}
+\umlactor{A}
+\umlactor[below left=2cm and 2cm of A, anchor=north]{B}
+\umlusecase[right=4cm of B.north, anchor=north]{C}
+\end{tikzpicture}

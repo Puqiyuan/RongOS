@@ -1,0 +1,4 @@
+\begin{tikzpicture}
+\umlusecase[x=0, y=0]{case1}
+\umlusecase[x=3, y=1]{case2}
+\end{tikzpicture}

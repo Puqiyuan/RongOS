@@ -1,0 +1,8 @@
+\begin{tikzpicture}
+\umlemptyclass{A1}
+\umlemptyclass[x=4, y=-1]{A2}
+\umlemptyclass[y=-2]{A3}
+\umlassoc[geometry=-|-, name=assoc]{A1}{A2}
+\umluniaggreg[geometry=-|-, weight=0.3]{A3}{A2}
+\umlpoint{assoc-4}
+\end{tikzpicture}

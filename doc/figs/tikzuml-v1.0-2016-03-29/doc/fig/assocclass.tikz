@@ -1,0 +1,7 @@
+\begin{tikzpicture}
+\umlemptyclass{A}
+\umlemptyclass[x=6, y=-3]{B}
+
+\umlHVassoc[name=assoc, attr=t|*, pos=1.9]{A}{B}
+\umlassocclass[geometry=|-|,x=2, y=-3]{C}{assoc-1}{}{}
+\end{tikzpicture}

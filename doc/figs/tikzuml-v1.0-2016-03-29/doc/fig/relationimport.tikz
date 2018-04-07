@@ -1,0 +1,5 @@
+\begin{tikzpicture}
+\umlemptypackage{P1}
+\umlemptypackage[x=5]{P2}
+\umlimport{P1}{P2}
+\end{tikzpicture}

@@ -1,0 +1,7 @@
+\begin{tikzpicture}
+\umlemptyclass{A}
+\umlemptyclass[x=4,y=2]{B}
+\umldep[geometry=-|]{A}{B}
+\umlassoc[geometry=-|, anchor1=30, anchor2=300, name=assoc1]{A}{B}
+\umlassoc[geometry=-|, anchor1=-30, anchor2=-60, name=assoc2]{A}{B}
+\end{tikzpicture}

@@ -1,0 +1,5 @@
+\begin{tikzpicture}
+\umlactor{normal user}
+\umlactor[x=2, scale=0.5]{small user}
+\umlactor[x=4, scale=2]{big user}
+\end{tikzpicture}

@@ -1,0 +1,6 @@
+\begin{tikzpicture}
+\begin{umlseqdiag}
+\umlobject[class=A, stereo=entity]{a}
+\umlobject[x=4, scale=2, class=B, stereo=entity]{b}
+\end{umlseqdiag}
+\end{tikzpicture}

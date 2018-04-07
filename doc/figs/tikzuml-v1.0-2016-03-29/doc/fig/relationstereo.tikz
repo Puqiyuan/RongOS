@@ -1,0 +1,5 @@
+\begin{tikzpicture}
+\umlemptyclass{A1}
+\umlemptyclass[x=4, y=-3]{A2}
+\umlassoc[geometry=-|-, stereo=vector, pos stereo=1.2]{A1}{A2}
+\end{tikzpicture}

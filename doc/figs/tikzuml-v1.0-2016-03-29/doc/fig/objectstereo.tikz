@@ -1,0 +1,10 @@
+\begin{tikzpicture}
+\begin{umlseqdiag}
+\umlactor[class=B]{b}
+\umlentity[x=2, class=C]{c}
+\umlboundary[x=4, class=D]{d}
+\umlcontrol[x=0, y=-2.5, class=E]{e}
+\umldatabase[x=2, y=-2.5, class=F]{f}
+\umlmulti[x=4, y=-2.5, class=G]{g}
+\end{umlseqdiag}
+\end{tikzpicture}

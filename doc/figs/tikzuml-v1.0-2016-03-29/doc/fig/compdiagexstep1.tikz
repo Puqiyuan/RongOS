@@ -1,0 +1,11 @@
+\begin{tikzpicture}
+\begin{umlcomponent}{A}
+\umlbasiccomponent{B}
+\umlbasiccomponent[y=-2]{C}
+\end{umlcomponent}
+\umlbasiccomponent[x=-10,y=1]{D}
+\umlbasiccomponent[x=3,y=-7.5]{E}
+\umlbasiccomponent[x=-2, y=-9]{F}
+\umlbasiccomponent[x=-7,y=-8]{G}
+\umlbasiccomponent[x=-7,y=-11]{H}
+\end{tikzpicture}

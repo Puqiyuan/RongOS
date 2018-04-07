@@ -1,0 +1,6 @@
+\begin{tikzpicture}
+\umlbasiccomponent{A}
+\umlbasiccomponent[x=4, y=-2]{B}
+\umlassemblyconnector[interface=AB]{A}{B}
+\umlHVassemblyconnector[with port]{A}{B}
+\end{tikzpicture}

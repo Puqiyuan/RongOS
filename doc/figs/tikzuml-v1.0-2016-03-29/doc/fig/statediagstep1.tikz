@@ -1,0 +1,9 @@
+\begin{tikzpicture}
+\begin{umlstate}[name=Amain]{Etat global de l'objet A}
+\begin{umlstate}[name=Bgraph, fill=red!20]{graphe B}
+\umlbasicstate[y=-4, name=test1, fill=white]{test1}
+\umlbasicstate[y=-8, name=test2, fill=white]{test2}
+\end{umlstate}
+\umlbasicstate[x=6, y=-6, name=visu, fill=green!20]{Visualisation}
+\end{umlstate}
+\end{tikzpicture}

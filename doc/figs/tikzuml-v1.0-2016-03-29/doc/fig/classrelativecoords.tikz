@@ -1,0 +1,8 @@
+\begin{tikzpicture}
+\umlclass[name=A]{namespace::A}{
+  + n : uint \\ \umlstatic{-- i : int} \\ \# r : const float
+  }{
+  + setA(i : int) : void \\ \umlvirt{\# getA() : A}
+}
+\umlsimpleclass[below right=2cm and 1cm of A]{B}
+\end{tikzpicture}

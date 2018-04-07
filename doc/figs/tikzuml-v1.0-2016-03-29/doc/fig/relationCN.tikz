@@ -1,0 +1,6 @@
+\begin{tikzpicture}
+\umlemptyclass{A1}
+\umlemptyclass[x=3,y=-3]{A2}
+\umluniaggreg[geometry=-|]{A1}{A2}
+\umlCNuniassoc{A1}{4,0}{A2}
+\end{tikzpicture}

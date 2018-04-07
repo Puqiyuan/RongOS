@@ -1,0 +1,5 @@
+\begin{tikzpicture}
+\begin{umlseqdiag}
+\umlobject[class=A]{a}
+\end{umlseqdiag}
+\end{tikzpicture}

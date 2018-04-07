@@ -1,0 +1,5 @@
+\begin{tikzpicture}
+\umlemptyclass{A1}
+\umlemptyclass[x=5]{A2}
+\umlcompo{A1}{A2}
+\end{tikzpicture}

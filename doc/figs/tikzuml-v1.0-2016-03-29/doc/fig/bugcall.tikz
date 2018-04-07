@@ -1,0 +1,9 @@
+\begin{tikzpicture}
+\begin{umlseqdiag}
+\umlactor[no ddots]{user}
+\umlobject[class=A]{a}
+\umlobject[class=B]{b}
+\begin{umlcall}{a}{b}
+\end{umlcall}
+\end{umlseqdiag}
+\end{tikzpicture}

@@ -1,0 +1,8 @@
+\begin{tikzpicture}
+\begin{umlpackage}{p}
+\begin{umlpackage}{sp1}
+\end{umlpackage}
+\begin{umlpackage}[x=10,y=-6]{sp2}
+\end{umlpackage}
+\end{umlpackage}
+\end{tikzpicture}

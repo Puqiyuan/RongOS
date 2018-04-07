@@ -1,0 +1,7 @@
+\begin{tikzpicture}
+\umlemptyclass{A1}
+\umlemptyclass[x=3, y=-3]{A2}
+\umluniaggreg[arg2=a, mult2=1, pos2=0.9]{A1}{A2}
+\umluniassoc[geometry=-|, arg1=x, mult1=1, pos1=1.9, arg2=y, mult2=*, pos2=0.2]{A1}{A2}
+\umlunicompo[arg=z, mult=1..*, pos=0.8, angle1=-90, angle2=-140, loopsize=2cm]{A2}{A2}
+\end{tikzpicture}

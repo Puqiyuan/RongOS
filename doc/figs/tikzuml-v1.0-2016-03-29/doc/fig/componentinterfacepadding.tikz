@@ -1,0 +1,8 @@
+\begin{tikzpicture}
+\begin{umlcomponent}{A}
+\umlbasiccomponent{B}
+\umlbasiccomponent[y=-2.5]{C}
+\umlrequiredinterface[interface=Bri,distance=2cm, padding=2cm]{B}
+\umlprovidedinterface[interface=Cpi,distance=3cm, padding=0cm]{C}
+\end{umlcomponent}
+\end{tikzpicture}

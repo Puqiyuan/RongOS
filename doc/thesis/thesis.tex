@@ -475,9 +475,14 @@ calls. Doing so protects the operating system. As picture ~\ref{fig:top-level} s
 \end{figure}
 
 
+
 \section{Kernel}
 \label{sec:kernel}
-The picture ~\ref{fig:kernel} shows how the various modules in
+
+\subsection{Module Relationship}
+\label{sec:overview-1}
+
+Fig. ~\ref{fig:kernel} shows how the various modules in
 the kernel are related.
 \begin{figure}[!htbp]
   \centering
@@ -485,6 +490,30 @@ the kernel are related.
   \caption{modules in kernel}
   \label{fig:kernel}
 \end{figure}
+
+Fig. ~\ref{fig:dotArrow}, ~\ref{fig:arrow} and ~\ref{fig:boldArrow} show the usage
+instructions of various arrow in ~\ref{fig:kernel}.
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.2\textwidth]{dotArrow}
+  \caption{A calls the initialization function in B to initialize the structure in B.}
+  \label{fig:dotArrow}
+\end{figure}
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.2\textwidth]{arrow}
+  \caption{A provides services to B}
+  \label{fig:arrow}
+\end{figure}
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.2\textwidth]{boldArrow}
+  \caption{Program running from A to B}
+  \label{fig:boldArrow}
+\end{figure}
+
 
 
 \section{API}

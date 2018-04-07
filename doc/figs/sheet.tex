@@ -1,0 +1,28 @@
+\input{printable}
+\usepackage{ifthen, xstring, pgfkeys, pgfopts}
+\usepackage{tikz-uml}
+
+
+\begin{document}
+\begin{tikzpicture} 
+  \umlclass[x=6.5, y=3]{SHEET}
+  {
+    unsigned char* : buf \\
+    int : bxsize, bysize \\
+    int : vx0, vy0, col\_inv \\
+    int : height, flags \\
+    struct SHTCTL* : ctl \\
+    struct TASK* : task
+  }
+  {
+    STRUCT MEMBER
+  }
+
+\end{tikzpicture}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

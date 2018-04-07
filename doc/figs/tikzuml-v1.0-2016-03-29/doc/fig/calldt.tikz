@@ -1,0 +1,12 @@
+\begin{tikzpicture}
+\begin{umlseqdiag}
+\umlobject[class=A]{a}
+\umlobject[class=B]{b}
+\begin{umlcall}{a}{b}
+\begin{umlcall}{b}{b}
+\end{umlcall}
+\begin{umlcallself}[dt=5]{b}
+\end{umlcallself}
+\end{umlcall}
+\end{umlseqdiag}
+\end{tikzpicture}

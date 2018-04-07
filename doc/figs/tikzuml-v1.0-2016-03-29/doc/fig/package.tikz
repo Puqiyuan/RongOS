@@ -1,0 +1,4 @@
+\begin{tikzpicture}
+\begin{umlpackage}[x=0, y=0]{package-name}
+\end{umlpackage}
+\end{tikzpicture}

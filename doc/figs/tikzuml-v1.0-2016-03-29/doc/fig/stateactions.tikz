@@ -1,0 +1,6 @@
+\begin{tikzpicture}
+\begin{umlstate}[name=state, do=b, exit=c]{state}
+\begin{umlstate}[name=substate, entry=d, exit=f]{substate}
+\end{umlstate}
+\end{umlstate}
+\end{tikzpicture}

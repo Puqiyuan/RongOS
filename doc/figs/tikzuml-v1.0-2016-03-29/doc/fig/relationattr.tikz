@@ -1,0 +1,5 @@
+\begin{tikzpicture}
+\umlemptyclass{A1}
+\umlemptyclass[x=5]{A2}
+\umlassoc[attr1=arg1|mult1, attr2=arg2|mult2]{A1}{A2}
+\end{tikzpicture}
