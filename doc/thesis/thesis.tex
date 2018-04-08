@@ -514,6 +514,171 @@ instructions of various arrow in ~\ref{fig:kernel}.
   \label{fig:boldArrow}
 \end{figure}
 
+\subsection{Datastructure in Kernel}
+\label{sec:datastructure-kernel}
+
+The tables ~\ref{tab:BOOTINFO} ~ describes the data structure used by RangOS in tabular form.
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}[c]{|c|c|l|}
+    \hline
+    \multicolumn{3}{|c|}{struct BOOTINFO} \\
+    \hline
+    Name & Type & Meaning \\ \hline
+    cyls & char & number of cylinders to read \\
+    \hline
+    leds & char & keyboard state at boot \\
+    \hline
+    vmode & char & bits of color of graphics card \\
+    \hline
+    reserve & char & reserved bytes \\
+    \hline
+    scrnx & short & screen resolution of x\\
+    \hline
+    scrny & short & screen resolution of y\\
+    \hline
+    vram & char* & the starting address of the image buffer \\
+    \hline
+  \end{tabular}
+  \caption{Structure of BOOTINFO}
+  \label{tab:BOOTINFO}
+\end{table}
+
+\begin{table}[!htbp]
+  \centering
+  \begin{tabular}[l]{|c|c|l|}
+    \hline
+    \multicolumn{3}{|c|}{struct FIFO32} \\
+    \hline
+    Name & Type & Meaning \\ \hline
+    buf & int* & the address of FIFO32 buffer\\
+    \hline
+    p & int & the writing address \\
+    \hline
+    q & int & the reading address \\
+    \hline
+    size & int & the size of FIFO32 buffer \\
+    \hline
+    free & int & how many space free \\
+    \hline
+    flags & int & the states of FIFO32 buffer \\
+    \hline
+    task & struct TASK* & point to a task \\
+    \hline
+  \end{tabular}
+  \caption{Structure of FIFO32}
+  \label{tab:FIFO32}
+\end{table}
+
+\begin{table}[!htbp]
+  \centering
+  \begin{tabular}[c]{|c|c|l|}
+    \hline
+    \multicolumn{3}{|c|}{struct SEGMENT\_DESCRIPTOR} \\
+    \hline
+    Name & Type & Meaning \\
+    \hline
+    limit\_low & short & the low part of segment size \\
+    \hline
+    base\_low & short & the low part of base address \\
+    \hline
+    base\_mid & char & the middle part of base address \\
+    \hline
+    access\_right & char & read and write permissions etc \\
+    \hline
+    limit\_high & char & the high part of segment size \\
+    \hline
+    base\_high & char & the high part of base address \\
+    \hline
+  \end{tabular}
+  \caption{Structure of SEGMENT DESCRIPTOR}
+  \label{tab:SEGMENT-DESCRIPTOR}
+\end{table}
+
+\begin{table}[!htbp]
+  \centering
+  \begin{tabular}[c]{|c|c|l|}
+    \hline
+    \multicolumn{3}{|c|}{struct GATE\_DESCRIPTOR} \\
+    \hline
+    Name & Type & Meaning \\
+    \hline
+    offset\_low & short & the low part of offset \\
+    \hline
+    selector & short & which interrupt to choose \\
+    \hline
+    dw\_count & char & how many interrupts are registered \\
+    \hline
+    access\_right & char & access permission \\
+    \hline
+    offset\_high & short & high part of offset \\
+    \hline
+    
+  \end{tabular}
+  \caption{Structure of GATE DESCRIPTOR}
+  \label{tab:GATE-DESCRIPTOR}
+\end{table}
+
+\begin{table}[!htbp]
+  \centering
+  \begin{tabular}[c]{|c|c|l|}
+    \hline
+    \multicolumn{3}{|c|}{struct MOUSE\_DEC} \\
+    \hline
+    Name & Type & Meaning \\
+    \hline
+    buf[3] & unsigned char & Store the data from mouse \\
+    \hline
+    phase & unsigned char & the stage of receiving mouse data \\
+    \hline
+    x & int & the x point of mouse \\
+    \hline
+    y & int & the y point of mouse \\
+    \hline
+    btn & int & whether the mouse is pressed \\
+    \hline
+  \end{tabular}
+  \caption{Structure of MOUSE DEC}
+  \label{tab:MOUSE-DEC}
+\end{table}
+
+\begin{table}[!htbp]
+  \centering
+  \begin{tabular}[c]{|c|c|l|}
+    \hline
+    \multicolumn{3}{|c|}{struct FREEINFO} \\
+    \hline
+    Name & Type & Meaning \\
+    \hline
+    addr & unsigned int & the starting address of free space \\
+    \hline
+    size & unsigned int & how many size is free \\
+    \hline
+  \end{tabular}
+  \caption{Structure of FREEINFO}
+  \label{tab:FREEINFO}
+\end{table}
+
+\begin{table}[!htbp]
+  \centering
+  \begin{tabular}[c]{|c|c|l|}
+    \hline
+    \multicolumn{3}{|c|}{struct MEMMAN} \\
+    \hline
+    Name & Type & Meaning \\
+    \hline
+    frees & int & how many memory blocks are free \\
+    \hline
+    free[MEMMAN\_FREES] & struct FREEINFO & record all free memory block information \\
+    \hline
+    
+  \end{tabular}
+  \caption{Structure of MEMMAN}
+  \label{tab:MEMMAN}
+\end{table}
+
+
 
 
 \section{API}
