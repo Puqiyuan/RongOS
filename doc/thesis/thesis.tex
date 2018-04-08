@@ -313,7 +313,7 @@ fastest way to access data. The term normally refers only to the group of regist
 are directly encoded as part of an instruction, as defined by the instruction
 set. Registers are normally measured by the number of bits they can hold, for example, an
 ``8-bit register'' or a ``32-bit register''. For x86 architecture, the following registers
-exist:
+exist\cite{intel_vol}:
 
 \begin{multicols}{3}
   \begin{description}
@@ -778,6 +778,53 @@ The tables ~\ref{tab:BOOTINFO} ~ describes the data structure used by RangOS in 
   \end{tabular}
   \caption{Structure of TIMERCTL}
   \label{tab:TIMERCTL}
+\end{table}
+
+\begin{table}[!htbp]
+  \centering
+  \begin{tabular}{|c|c|c|}
+    \hline
+    \multicolumn{3}{|c|}{struct TSS32} \\
+    \hline
+    Name & Meaning & Type \\
+    \hline
+    backlink & previous task link & \multirow{9}{*}{int} \\
+    \cline{1-2}
+    esp0 & \multirow{3}{*}{stack pointer register} & \\
+    esp1 & & \\
+    esp2 & & \\
+    \cline{1-2}
+    ss0 & \multirow{3}{*}{stack segment register} & \\
+    ss1 & & \\
+    ss2 & & \\
+    \cline{1-2}
+    cr3 & control register & \\
+    \cline{1-2}
+    eip & instruct pointer register & \\
+    \cline{1-2}
+    eflags & registers flag & \\
+    \cline{1-2}
+    eax & accumulator register & \\
+    \cline{1-2}
+    ecx & counter register & \\
+    \cline{1-2}
+    edx & data register & \\
+    \cline{1-2}
+    ebx & base register & \\
+    \cline{1-2}
+    esp & stack pointer register & \\
+    \cline{1-2}
+    ebp & base pointer register & \\
+    \cline{1-2}
+    esi & source index register & \\
+    \cline{1-2}
+    esi & destination index register & \\
+    
+    \hline
+    
+  \end{tabular}
+  \caption{Structure of TSS32}
+  \label{tab:TSS32}
 \end{table}
 
 
