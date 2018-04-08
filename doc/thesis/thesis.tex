@@ -678,6 +678,110 @@ The tables ~\ref{tab:BOOTINFO} ~ describes the data structure used by RangOS in 
   \label{tab:MEMMAN}
 \end{table}
 
+\begin{table}[!htbp]
+  \centering
+  \begin{tabular}{|c|c|l|}
+    \hline
+    \multicolumn{3}{|c|}{struct SHEET} \\
+    \hline
+    Name & Type & Meaning \\
+    \hline
+    buf & char* & the address of the graphic content depicted \\
+    \hline
+    bxszie & int & the size of x coordinate of sheet \\
+    \hline
+    bysize & int & the size of y coordinate of sheet \\
+    \hline
+    vx0 & int & the x coordinate of sheet \\
+    \hline
+    vy0 & int & the y coordinate of sheet \\
+    \hline
+    col\_inv & int & the number of invisible color \\
+    \hline
+    height & int & the height of sheet \\
+    \hline
+    flags & int & the states of sheet, using or not \\
+    \hline
+  \end{tabular}
+  \caption{Structure of SHEET}
+  \label{tab:SHEET}
+\end{table}
+
+\begin{table}[!htbp]
+  \centering
+  \begin{tabular}{|c|c|l|}
+    \hline
+    \multicolumn{3}{|c|}{struct SHTCTL} \\
+    \hline
+    Name & Type & Meaning \\
+    \hline
+    vram & unsigned char* & the address of VRAM \\
+    \hline
+    map & unsigned char* & which layer the pixel on the screen belongs to \\
+    \hline
+    xsize & int & the x size of screen \\
+    \hline
+    ysize & int & the y size of screen \\
+    \hline
+    top & int & the height of the top layer \\
+    \hline
+    sheets[MAX\_SHEETS] & struct SHEET* & order all layer addresses in order \\
+    \hline
+    sheets0[MAX\_SHEETS] & struct SHEET & all layers \\
+    \hline
+  \end{tabular}
+  \caption{Structure of SHTCTL}
+  \label{tab:SHTCTL}
+\end{table}
+
+\begin{table}[!htbp]
+  \centering
+  \begin{tabular}{|c|c|l|}
+    \hline
+    \multicolumn{3}{|c|}{struct TIMER} \\
+    \hline
+    Name & Type & Meaning \\
+    \hline
+    next & struct TIMER* & the next timer that is about to timeout \\
+    \hline
+    timeout & unsigned int & how long is the timeout \\
+    \hline
+    flags & char & the states of timer \\
+    \hline
+    flgas2 & char & whether to allow automatic cancellation \\
+    \hline
+    fifo & struct FIFO32* & store data(from mouse, keyboard etc) \\
+    \hline
+    data & int & accept data \\
+    \hline
+  \end{tabular}
+  \caption{Structure of TIMER}
+  \label{tab:TIMER}
+\end{table}
+
+\begin{table}[!htbp]
+  \centering
+  \begin{tabular}{|c|c|l|}
+    \hline
+    \multicolumn{3}{|c|}{struct TIMER} \\
+    \hline
+    Name & Type & Meaning \\
+    \hline
+    count & unsigned int & count variable \\
+    \hline
+    next & unsigned int & the next timeout timer \\
+    \hline
+    t0 & sturct TIMER* & the shortest timeout timer \\
+    \hline
+    timers0 & struct TIMER & all timers \\
+    \hline
+  \end{tabular}
+  \caption{Structure of TIMERCTL}
+  \label{tab:TIMERCTL}
+\end{table}
+
+
+
 
 
 
@@ -692,7 +796,7 @@ The tables ~\ref{tab:BOOTINFO} ~ describes the data structure used by RangOS in 
 \chapter{Implementation}
 
 \section{Kernel}
-\subsection{Boot Loader}
+\subsection{Boot Loader(ipl.asm)}
 
 The boot loader is implemented in Intel assembly. It works as following:
 
@@ -742,6 +846,14 @@ The boot loader is implemented in Intel assembly. It works as following:
   otherwise end loading floppy to memory process, for we only load ten cylinders of
   floppy. Appendix~\ref{sec:the-nex-cyl} is the code to perform this function.
 \end{enumerate}
+
+The above four steps can be intuitively reflected in the Fig. ~\ref{fig:flowchartp}.
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=1\textwidth]{flowchartp}
+  \label{fig:flowchartp}
+  \caption{the working flowchart of boot loader}
+\end{figure}
 
 \section{API}
 \label{sec:API}
