@@ -1,4 +1,5 @@
 \documentclass{swfcthesis}
+\usepackage{makecell}
 
 
 \renewcommand{\acknowledgmentspage}{% Acknowledgments page  
@@ -517,11 +518,11 @@ instructions of various arrow in ~\ref{fig:kernel}.
 \subsection{Datastructure in Kernel}
 \label{sec:datastructure-kernel}
 
-The tables ~\ref{tab:BOOTINFO} ~ describes the data structure used by RangOS in tabular form.
+The tables ~\ref{tab:BOOTINFO} - ~\ref{tab:FILEINFO} describes the data structure used by RangOS in tabular form.
 
 \begin{table}[h!]
   \centering
-  \begin{tabular}[c]{|c|c|l|}
+  \begin{tabular}[c]{|c|c|c|}
     \hline
     \multicolumn{3}{|c|}{struct BOOTINFO} \\
     \hline
@@ -547,7 +548,7 @@ The tables ~\ref{tab:BOOTINFO} ~ describes the data structure used by RangOS in 
 
 \begin{table}[!htbp]
   \centering
-  \begin{tabular}[l]{|c|c|l|}
+  \begin{tabular}[l]{|c|c|c|}
     \hline
     \multicolumn{3}{|c|}{struct FIFO32} \\
     \hline
@@ -573,7 +574,7 @@ The tables ~\ref{tab:BOOTINFO} ~ describes the data structure used by RangOS in 
 
 \begin{table}[!htbp]
   \centering
-  \begin{tabular}[c]{|c|c|l|}
+  \begin{tabular}[c]{|c|c|c|}
     \hline
     \multicolumn{3}{|c|}{struct SEGMENT\_DESCRIPTOR} \\
     \hline
@@ -598,7 +599,7 @@ The tables ~\ref{tab:BOOTINFO} ~ describes the data structure used by RangOS in 
 
 \begin{table}[!htbp]
   \centering
-  \begin{tabular}[c]{|c|c|l|}
+  \begin{tabular}[c]{|c|c|c|}
     \hline
     \multicolumn{3}{|c|}{struct GATE\_DESCRIPTOR} \\
     \hline
@@ -622,7 +623,7 @@ The tables ~\ref{tab:BOOTINFO} ~ describes the data structure used by RangOS in 
 
 \begin{table}[!htbp]
   \centering
-  \begin{tabular}[c]{|c|c|l|}
+  \begin{tabular}[c]{|c|c|c|}
     \hline
     \multicolumn{3}{|c|}{struct MOUSE\_DEC} \\
     \hline
@@ -645,7 +646,7 @@ The tables ~\ref{tab:BOOTINFO} ~ describes the data structure used by RangOS in 
 
 \begin{table}[!htbp]
   \centering
-  \begin{tabular}[c]{|c|c|l|}
+  \begin{tabular}[c]{|c|c|c|}
     \hline
     \multicolumn{3}{|c|}{struct FREEINFO} \\
     \hline
@@ -662,7 +663,7 @@ The tables ~\ref{tab:BOOTINFO} ~ describes the data structure used by RangOS in 
 
 \begin{table}[!htbp]
   \centering
-  \begin{tabular}[c]{|c|c|l|}
+  \begin{tabular}[c]{|c|c|c|}
     \hline
     \multicolumn{3}{|c|}{struct MEMMAN} \\
     \hline
@@ -680,7 +681,7 @@ The tables ~\ref{tab:BOOTINFO} ~ describes the data structure used by RangOS in 
 
 \begin{table}[!htbp]
   \centering
-  \begin{tabular}{|c|c|l|}
+  \begin{tabular}{|c|c|c|}
     \hline
     \multicolumn{3}{|c|}{struct SHEET} \\
     \hline
@@ -709,7 +710,7 @@ The tables ~\ref{tab:BOOTINFO} ~ describes the data structure used by RangOS in 
 
 \begin{table}[!htbp]
   \centering
-  \begin{tabular}{|c|c|l|}
+  \begin{tabular}{|c|c|c|}
     \hline
     \multicolumn{3}{|c|}{struct SHTCTL} \\
     \hline
@@ -736,7 +737,7 @@ The tables ~\ref{tab:BOOTINFO} ~ describes the data structure used by RangOS in 
 
 \begin{table}[!htbp]
   \centering
-  \begin{tabular}{|c|c|l|}
+  \begin{tabular}{|c|c|c|}
     \hline
     \multicolumn{3}{|c|}{struct TIMER} \\
     \hline
@@ -761,7 +762,7 @@ The tables ~\ref{tab:BOOTINFO} ~ describes the data structure used by RangOS in 
 
 \begin{table}[!htbp]
   \centering
-  \begin{tabular}{|c|c|l|}
+  \begin{tabular}{|c|c|c|}
     \hline
     \multicolumn{3}{|c|}{struct TIMER} \\
     \hline
@@ -777,7 +778,7 @@ The tables ~\ref{tab:BOOTINFO} ~ describes the data structure used by RangOS in 
     \hline
   \end{tabular}
   \caption{Structure of TIMERCTL}
-  \label{tab:TIMERCTL}p
+  \label{tab:TIMERCTL}
 \end{table}
 
 \begin{table}[!htbp]
@@ -844,6 +845,154 @@ The tables ~\ref{tab:BOOTINFO} ~ describes the data structure used by RangOS in 
   \label{tab:TSS32}
 \end{table}
 
+\begin{table}[!htbp]
+  \centering
+  \begin{tabular}{|c|c|c|}
+    \hline
+    \multicolumn{3}{|c|}{struct FILEHANDLE} \\
+    \hline
+    Name & Type & Meaning \\
+    \hline
+    buf & char* & store the handler of file \\
+    \hline
+    size & int & the size of file \\
+    \hline
+    pos & int & where to read the file \\
+    \hline
+  \end{tabular}
+  \caption{Structure of FILEHANDLE}
+  \label{tab:FILEHANDLE}
+\end{table}
+
+\begin{table}[!htbp]
+  \centering
+  \begin{tabular}{|c|c|c|}
+    \hline
+    \multicolumn{3}{|c|}{struct TASK} \\
+    \hline
+    Name & Type & Meaning \\
+    \hline
+    sel & int & the number of GDT \\
+    \hline
+    flags & int & the state of task \\
+    \hline
+    level & int & the level of task \\
+    \hline
+    priority & int & the priority of task \\
+    \hline
+    fifo & struct FIFO32 & a fifo buffer \\
+    \hline
+    tss & TSS32 & TSS segment for a task \\
+    \hline
+    cons & struct CONSOLE* & the console window address of task \\
+    \hline
+    ds\_base & int & data segment address of APPs \\
+    \hline
+    cons\_stack & int & the stack address of APPs \\ 
+    \hline 
+    ldt[2] & struct SEGMENT\_DESCRIPTOR &  tow LDT segments of task \\
+    \hline
+    fhandle & struct FILEHANDLE* & file handles for manipulating files \\
+    \hline
+    fat & int* & file allocation table \\
+    \hline
+    cmdline & char* & store the command line context \\
+    \hline
+    langmode & unsigned char & which font to use \\
+    \hline
+    langbyte1 & unsigned char & store the first byte of the full-width character \\
+    \hline
+  \end{tabular}
+  \caption{Structure of TASK}
+  \label{tab:TASK}
+\end{table}
+
+\begin{table}[!htbp]
+  \centering
+  \begin{tabular}{|c|c|c|}
+    \hline
+    \multicolumn{3}{|c|}{struct TASKLEVEL} \\
+    \hline
+    Name & Type & Meaning \\
+    \hline
+    running & int & how many tasks are running \\
+    \hline
+    now & int & which task is currently running \\
+    \hline
+    tasks[MAX\_TASKS\_LV] & struct TASK* & all tasks in one level \\
+    \hline
+  \end{tabular}
+  \caption{Structure of TASKLEVEL}
+  \label{tab:TASKLEVEL}
+\end{table}
+
+\begin{table}[!htbp]
+  \centering
+  \begin{tabular}{|c|c|c|}
+    \hline
+    \multicolumn{3}{|c|}{struct TASKCTL} \\
+    \hline
+    Name & Type & Meaning \\
+    \hline
+    now\_lv & int & current activity level \\
+    \hline
+    lv\_change & int & \makecell{does the hierarchy need to be \\ changed next time the task is
+                       switched} \\
+    \hline
+  \end{tabular}
+  \caption{Structure of TASKCTL}
+  \label{tab:TASKCTL}
+\end{table}
+
+\begin{table}[!htbp]
+  \centering
+  \begin{tabular}{|c|c|c|}
+    \hline
+    \multicolumn{3}{|c|}{struct CONSOLE} \\
+    \hline
+    Name & Type & Meaning \\
+    \hline
+    sht & struct SHEET* & Which layer is used on the command line \\
+    \hline
+    cur\_x & int & the x position of console \\
+    \hline
+    cur\_y & int & the y position of console \\
+    \hline
+    cur\_c & int & the color of console \\
+    \hline
+    timer & struct TIMER* & timer to control cursor blinking \\
+    \hline
+  \end{tabular}
+  \caption{Structure of CONSOLE}
+  \label{tab:CONSOLE}
+\end{table}
+
+\begin{table}[!htbp]
+  \centering
+  \begin{tabular}{|c|c|c|}
+    \hline
+    \multicolumn{3}{|c|}{struct FILEINFO} \\
+    \hline
+    Name & Type & Meaning \\
+    \hline
+    name[8] & unsigned char & file name \\
+    \hline
+    ext[3] & unsigned char & extend name of file \\
+    \hline
+    type & unsigned char & file attributes \\
+    \hline
+    char & reserve[10] & reserve byte \\
+    \hline
+    time & unsigned short & the time for storing file \\
+    \hline
+    date & unsigned short & the date for storing file \\
+    \hline
+    clustno & unsigned short & the file from which sector \makecell{on the disk is stored} \\
+    \hline
+  \end{tabular}
+  \caption{Structure of FILEINFO}
+  \label{tab:FILEINFO}
+\end{table}
 
 \section{API}
 \label{sec:api}
