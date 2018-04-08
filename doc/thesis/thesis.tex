@@ -313,7 +313,7 @@ fastest way to access data. The term normally refers only to the group of regist
 are directly encoded as part of an instruction, as defined by the instruction
 set. Registers are normally measured by the number of bits they can hold, for example, an
 ``8-bit register'' or a ``32-bit register''. For x86 architecture, the following registers
-exist\cite{intel_vol}:
+exist, see 3.4.1 and 3.4.2 \cite{intel_vol}:
 
 \begin{multicols}{3}
   \begin{description}
@@ -592,7 +592,7 @@ The tables ~\ref{tab:BOOTINFO} ~ describes the data structure used by RangOS in 
     base\_high & char & the high part of base address \\
     \hline
   \end{tabular}
-  \caption{Structure of SEGMENT DESCRIPTOR}
+  \caption{Structure of SEGMENT DESCRIPTOR(See 3.4.5\cite{intel_3a})}
   \label{tab:SEGMENT-DESCRIPTOR}
 \end{table}
 
@@ -731,7 +731,7 @@ The tables ~\ref{tab:BOOTINFO} ~ describes the data structure used by RangOS in 
     \hline
   \end{tabular}
   \caption{Structure of SHTCTL}
-  \label{tab:SHTCTL}
+  \label{tab:SHTCTL}p
 \end{table}
 
 \begin{table}[!htbp]
@@ -777,7 +777,7 @@ The tables ~\ref{tab:BOOTINFO} ~ describes the data structure used by RangOS in 
     \hline
   \end{tabular}
   \caption{Structure of TIMERCTL}
-  \label{tab:TIMERCTL}
+  \label{tab:TIMERCTL}p
 \end{table}
 
 \begin{table}[!htbp]
@@ -788,7 +788,7 @@ The tables ~\ref{tab:BOOTINFO} ~ describes the data structure used by RangOS in 
     \hline
     Name & Meaning & Type \\
     \hline
-    backlink & previous task link & \multirow{9}{*}{int} \\
+    backlink & previous task link & \multirow{26}{*}{int} \\
     \cline{1-2}
     esp0 & \multirow{3}{*}{stack pointer register} & \\
     esp1 & & \\
@@ -819,17 +819,30 @@ The tables ~\ref{tab:BOOTINFO} ~ describes the data structure used by RangOS in 
     esi & source index register & \\
     \cline{1-2}
     esi & destination index register & \\
-    
+    \cline{1-2}
+    edi & destination index register & \\
+    \cline{1-2}
+    es & extra segment register & \\
+    \cline{1-2}
+    cs & code segment register & \\
+    \cline{1-2}
+    ss & stack segment register & \\
+    \cline{1-2}
+    ds & data segment register & \\
+    \cline{1-2}
+    fs & segment part 2 & \\
+    \cline{1-2}
+    gs & segment part 3 & \\
+    \cline{1-2}
+    ldtr & LDT segment selector & \\
+    \cline{1-2}
+    iomap & I/O map base address & \\
     \hline
     
   \end{tabular}
-  \caption{Structure of TSS32}
+  \caption{Structure of TSS32(See 6.2.1\cite{intel_3a})}
   \label{tab:TSS32}
 \end{table}
-
-
-
-
 
 
 \section{API}
