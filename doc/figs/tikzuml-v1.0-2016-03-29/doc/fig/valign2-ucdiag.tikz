@@ -1,5 +1,0 @@
-\begin{tikzpicture}
-\umlactor{A}
-\umlactor[x=-2, y=-2, anchor=north]{B}
-\umlusecase[x=2, y=-2, anchor=north]{C}
-\end{tikzpicture}

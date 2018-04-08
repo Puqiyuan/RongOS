@@ -1,7 +1,0 @@
-\begin{tikzpicture}
-\umlclass{namespace::A}{
-  + n : uint \\ \umlstatic{-- i : int} \\ \# r : const float
-  }{
-  + setA(i : int) : void \\ \umlvirt{\# getA() : A}
-}
-\end{tikzpicture}

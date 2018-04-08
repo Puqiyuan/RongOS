@@ -1,3 +1,0 @@
-\begin{tikzpicture}
-\umlclass[x=0,y=0, name=classname]{namespace::class\_name}{}{}
-\end{tikzpicture}
