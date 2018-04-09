@@ -699,6 +699,8 @@ free from where in memory.
   \label{tab:FREEINFO}
 \end{table}
 
+As shown in ~\ref{tab:MEMMAN}, the \texttt{MEMMAN} structure is used to store the entire
+memory usage, such as the total remaining memory space and entries.
 \begin{table}[!htbp]
   \centering
   \begin{tabular}[c]{|c|c|c|}
@@ -709,6 +711,12 @@ free from where in memory.
     \hline
     frees & int & how many memory blocks are free \\
     \hline
+    maxfrees & int & the maximum of frees \\
+    \hline
+    lostsize & int & release the sum of the failed memory sizea \\
+    \hline
+    losts & int & the number of failures \\
+    \hline
     free[MEMMAN\_FREES] & struct FREEINFO & record all free memory block information \\
     \hline
     
@@ -716,6 +724,10 @@ free from where in memory.
   \caption{Structure of MEMMAN}
   \label{tab:MEMMAN}
 \end{table}
+
+As shown in ~\ref{tab:SHEET}, the \texttt{SHEET} structure is used to record the position,
+usage, and color of a layer.
+
 
 \begin{table}[!htbp]
   \centering
@@ -746,6 +758,9 @@ free from where in memory.
   \label{tab:SHEET}
 \end{table}
 
+As shown in ~\ref{tab:SHTCTL}, the \texttt{SHTCTL} structure is used to manage the structure
+of multiple layer information, including how many layers there are in total, the size and
+height of each layer.
 \begin{table}[!htbp]
   \centering
   \begin{tabular}{|c|c|c|}
@@ -770,9 +785,12 @@ free from where in memory.
     \hline
   \end{tabular}
   \caption{Structure of SHTCTL}
-  \label{tab:SHTCTL}p
+  \label{tab:SHTCTL}
 \end{table}
 
+As shown in ~\ref{tab:TIMER}, the \texttt{TIMER} structure is used to manage the time
+slice of the CPU. The timer interrupts the CPU at regular intervals. This structure
+records the length of the timer, usage status and other information.
 \begin{table}[!htbp]
   \centering
   \begin{tabular}{|c|c|c|}
@@ -798,11 +816,15 @@ free from where in memory.
   \label{tab:TIMER}
 \end{table}
 
+As shown in ~\ref{tab:TIMERCTL}, the \texttt{TIMERCTL} structure is used to manage all
+timers in the system. Including how many timers are in total, current use, and the next
+timer to be used.
+
 \begin{table}[!htbp]
   \centering
   \begin{tabular}{|c|c|c|}
     \hline
-    \multicolumn{3}{|c|}{struct TIMER} \\
+    \multicolumn{3}{|c|}{struct TIMERCTL} \\
     \hline
     Name & Type & Meaning \\
     \hline
@@ -819,6 +841,8 @@ free from where in memory.
   \label{tab:TIMERCTL}
 \end{table}
 
+As shown in ~\ref{tab:TSS32}, the \texttt{TSS32} structure holds information about task
+status segments, which are based on CPU specifications(See 6.2.1\cite{intel_3a}).
 \begin{table}[!htbp]
   \centering
   \begin{tabular}{|c|c|c|}
