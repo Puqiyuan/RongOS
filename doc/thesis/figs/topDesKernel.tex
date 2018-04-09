@@ -6,14 +6,18 @@
   \node (APP2) [oval, right=of APP1] {APP2};
   \node (APP3) [oval, right=of APP2] {APP3};
   \node (API) [process, below=of APP2, minimum width=7.5cm] {API}; 
-  \node (kernel) [startstop, below=of API, minimum width=7.5cm] {RongOS Kernel};
+  \node (kernel) [startstop, below=of API, minimum width=7.5cm,   label={[anchor=south
+    east, inner sep=1.5pt]south east:$Kernel$}] {\includegraphics[width=.8\textwidth]{kernel.pdf}};
   \node (hardware) [process, below=of kernel, minimum width=7.5cm] {Hardware};
   \node (B) [below right=of hardware, xshift=-1cm, yshift=0.8cm]{B};
   \node (A) [left=of B] {A};
   \node (C) [below=of A, yshift=1cm] {A};
   \node (D) [below=of B, yshift=1cm] {B};
+  \node (E) [below=of C, yshift=0.9cm] {A};
+  \node (F) [below=of D, yshift=0.9cm] {B};
   
 
+  \draw[arrow, line width= 0.9mm](E) -- node[below]{Running}(F);
   \draw[arrow] ($(APP1.south) + (-1em, 0.2em)$) -- ($(API.north) +
   (-8.55em, 0)$);
   \draw[dotArrow] ($(API.north) + (-6.55em, 0)$) -- ($(APP1.south) + (1em, .2em)$);

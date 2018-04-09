@@ -96,6 +96,9 @@
 \mainmatter{}
 
 \chapter{Introduction}
+This section will introduce the purpose and current status of the operating system
+research. The setup of the development environment will also be presented here.
+
 
 \section{Background}
 
@@ -195,32 +198,33 @@ have i386 support for our 64-bit Linux system.
      $ sudo apt-get update
 \end{verbatim}
 
-\chapter{Leading Knowledge}
-\label{cha:leading-knowledge-1}
+\iffalse
+%\chapter{Leading Knowledge}
+%\label{cha:leading-knowledge-1}
 
-\section{Layers}
-\label{sec:layers}
+%\section{Layers}
+%\label{sec:layers}
 
-\section{Memory Management}
-\label{sec:memory-management}
+%\section{Memory Management}
+%\label{sec:memory-management}
 
-\subsection{Overview}
-\label{sec:overview}
+%\subsection{Overview}
+%\label{sec:overview}
 
-\subsection{Round Down/Up and Page Size}
-\label{sec:round-downup-page}
+%\subsection{Round Down/Up and Page Size}
+%\label{sec:round-downup-page}
 
 
-\section{Mouse}
-\label{sec:mouse}
+%\section{Mouse}
+%\label{sec:mouse}
 
-\section{The Leap --- Road to the 32 Bit Mode}
-\label{sec:leap-road-32}
+%\section{The Leap --- Road to the 32 Bit Mode}
+%\label{sec:leap-road-32}
 
-\section{Data Structure}
-\label{sec:data-structure}
+%\section{Data Structure}
+%\label{sec:data-structure}
 
-\section{Programmable Interrupt Controller}
+%\section{Programmable Interrupt Controller}
 
 \section{C Language Basic}
 
@@ -314,7 +318,7 @@ fastest way to access data. The term normally refers only to the group of regist
 are directly encoded as part of an instruction, as defined by the instruction
 set. Registers are normally measured by the number of bits they can hold, for example, an
 ``8-bit register'' or a ``32-bit register''. For x86 architecture, the following registers
-exist, see 3.4.1 and 3.4.2 \cite{intel_vol}:
+exist, see 3.4.1 and 3.4.2 \cite{guide2011intel}:
 
 \begin{multicols}{3}
   \begin{description}
@@ -462,25 +466,38 @@ sector. A sector can store 512 byte. So the capacity of a floppy is:
 
 \[18 \times 80 \times 2 \times 512 = 1474560\,Byte = 1440\,KiB\]
 
+\fi
+
 
 \chapter{Design}
+In this section will introduce the design of the entire system including the kernel, API,
+and applications.
+
 
 \section{Top Level Design}
 All applications use the functions provided by the operating system kernel through API
-calls. Doing so protects the operating system. As picture ~\ref{fig:top-level} shown:
+calls. This facilitates the application's ability to call the operating system. The
+overall system architecture is as ~\ref{fig:top-level} shown:
+
 \begin{figure}[!htbp]
   \centering
-  \includegraphics[width=.2\textwidth]{topDes.pdf}
+  \includegraphics[width=0.5\textwidth]{topDes.pdf}
   \caption{Top-level design}
   \label{fig:top-level}
 \end{figure}
 
 
+\section{Detailed Design}
+\label{sec:detailed-design}
 
-\section{Kernel}
+
+
+\subsection{Kernel}
 \label{sec:kernel}
+The kernel receives the API call in the upward direction and the kernel requests the
+hardware service through the driver in the downward direction.
 
-\subsection{Module Relationship}
+\subsubsection{1. Module Relationship}
 \label{sec:overview-1}
 
 Fig. ~\ref{fig:kernel} shows how the various modules in
@@ -501,36 +518,335 @@ manage file-related operations such as reading, loading, and searching for files
 
 \begin{figure}[!htbp]
   \centering
-  \includegraphics[width=1\textwidth]{kernel}
+  \includegraphics[width=0.9\textwidth]{topDesKernel}
   \caption{modules in kernel}
   \label{fig:kernel}
 \end{figure}
 
-Fig. ~\ref{fig:dotArrow}, ~\ref{fig:arrow} and ~\ref{fig:boldArrow} show the usage
-instructions of various arrow in ~\ref{fig:kernel}.
-\begin{figure}[!htbp]
-  \centering
-  \includegraphics[width=0.2\textwidth]{dotArrow}
-  \caption{A calls the initialization function in B to initialize the structure in B.}
-  \label{fig:dotArrow}
-\end{figure}
 
-\begin{figure}[!htbp]
-  \centering
-  \includegraphics[width=0.2\textwidth]{arrow}
-  \caption{A provides services to B}
-  \label{fig:arrow}
-\end{figure}
+\subsubsection{2. Data Structure in Kernel}
+The following describes the data structure used in the RongOS operating system.
 
-\begin{figure}[!htbp]
-  \centering
-  \includegraphics[width=0.2\textwidth]{boldArrow}
-  \caption{Program running from A to B}
-  \label{fig:boldArrow}
-\end{figure}
-
-\subsection{Data Structure in Kernel}
 \label{sec:datastructure-kernel}
+\begin{enumerate}
+\item
+  NAME \\
+  \hspace*{1cm}\texttt{BOOTINFO} \\
+  SYNOPSIS \\
+  \hspace*{1cm}The structure \texttt{BOOTINFO} stores startup-related information, such as
+  how many cylinders were read, the status of the keyboard indicator, the mode of the
+  screen, the size of the screen, and the memory address of the graphics card. \\
+  MEMBER \\
+  \hspace*{1cm}char cyls \\
+  \hspace*{1.5cm} number of cylinders to read \\
+  \hspace*{1cm}char leds \\
+  \hspace*{1.5cm} keyboard state at boot \\
+  \hspace*{1cm}char vmode \\
+  \hspace*{1.5cm} bits of color of graphics card \\
+  \hspace*{1cm}char reserve \\
+  \hspace*{1.5cm} reserved bytes \\
+  \hspace*{1cm}short scrnx \\
+  \hspace*{1.5cm} screen resolution of x \\
+  \hspace*{1cm}short scrny \\
+  \hspace*{1.5cm} screen resolution of y \\
+  \hspace*{1cm}char* vram \\
+  \hspace*{1.5cm}the starting address of the image buffer\\
+
+  \item
+  NAME \\
+  \hspace*{1cm}\texttt{FIFO32} \\
+  SYNOPSIS \\
+  \hspace*{1cm} \texttt{FIFO32} is used to describe a FIFO structure. This
+structure is used to receive various kinds of information. \texttt{FIFO32} is used to
+describe a FIFO structure. This structure is used to receive various kinds of
+information. It specifies where to read and write the FIFO structure and the size of the
+buffer, available size.\\
+  MEMBER \\
+  \hspace*{1cm} int* buf \\
+  \hspace*{1.5cm}  the address of FIFO32 buffer \\
+  \hspace*{1cm} int p \\
+  \hspace*{1.5cm} the writing address \\
+  \hspace*{1cm} int q\\
+  \hspace*{1.5cm} the reading address \\
+  \hspace*{1cm} int size\\
+  \hspace*{1.5cm} the size of FIFO32 buffer \\
+  \hspace*{1cm} int free \\
+  \hspace*{1.5cm} how many space free\\
+  \hspace*{1cm} int flags\\
+  \hspace*{1.5cm}  the states of FIFO32 buffer\\
+  \hspace*{1cm} struct TASK* task \\
+  \hspace*{1.5cm} point to a task \\
+
+  \item
+  NAME \\
+  \hspace*{1cm}\texttt{SEGMENT\_DESCRIPTOR} \\
+  SYNOPSIS \\
+  \hspace*{1cm} \texttt{SEGMENT\_DESCRIPTOR} structure is
+used to store GDT related information, which is based on CPU specifications(3.5.1 and
+3.4.5\cite{intel_3a}). GDT is stored at 270000 in memory. \\
+  MEMBER \\
+  \hspace*{1cm} short limit\_low\\
+  \hspace*{1.5cm}  the low part of segment size\\ 
+  \hspace*{1cm} short base\_low\\
+  \hspace*{1.5cm} the low part of base address\\
+  \hspace*{1cm} char base\_mid\\
+  \hspace*{1.5cm} the middle part of base address\\
+  \hspace*{1cm} char access\_right\\
+  \hspace*{1.5cm} read and write permissions etc\\
+  \hspace*{1cm} char  limit\_high\\
+  \hspace*{1.5cm} the high part of segment size\\
+  \hspace*{1cm} char base\_high\\
+  \hspace*{1.5cm}  the high part of base address\\
+
+  \item
+  NAME \\
+  \hspace*{1cm}\texttt{GATE\_DESCRIPTOR} \\
+  SYNOPSIS \\
+  \hspace*{1cm} \texttt{GATE\_DESCRIPTOR} structure is used to
+store IDT related information, which is based on CPU specifications(3.5.1 and
+3.4.5\cite{intel_3a}). IDT is at 26f800 memory.\\
+  MEMBER \\
+  \hspace*{1cm} short offset\_low\\
+  \hspace*{1.5cm}  the low part of offset\\
+  \hspace*{1cm} short selector\\
+  \hspace*{1.5cm} which interrupt to choose\\
+  \hspace*{1cm} char dw\_count\\
+  \hspace*{1.5cm} how many interrupts are registered\\
+  \hspace*{1cm} char access\_right\\
+  \hspace*{1.5cm} access permission\\
+  \hspace*{1cm} short  offset\_high\\
+  \hspace*{1.5cm} high part of offset\\
+
+  \item
+  NAME \\
+  \hspace*{1cm}\texttt{MOUSE\_DEC} \\
+  SYNOPSIS \\
+  \hspace*{1cm} \texttt{MOUSE\_DEC} structure is used to store
+information about the mouse, such as the location of the mouse, whether the mouse is
+pressed or not.\\
+  MEMBER \\
+  \hspace*{1cm} unsigned char buf[3]\\
+  \hspace*{1.5cm}  store the data from mouse\\
+  \hspace*{1cm} unsigned char phase\\
+  \hspace*{1.5cm} the stage of receiving mouse data\\
+  \hspace*{1cm} int x\\
+  \hspace*{1.5cm} the x point of mouse\\
+  \hspace*{1cm} int y\\
+  \hspace*{1.5cm} the y point of mouse\\
+  \hspace*{1cm} int btn\\
+  \hspace*{1.5cm} whether the mouse is pressed\\
+
+  \item
+  NAME \\
+  \hspace*{1cm}\texttt{FREEINFO} \\
+  SYNOPSIS \\
+  \hspace*{1cm} \texttt{FREEINFO} structure stores how many bytes are
+free from where in memory.\\
+  MEMBER \\
+  \hspace*{1cm} unsigned int addr\\
+  \hspace*{1.5cm}  the starting address of free space\\
+  \hspace*{1cm} unsigned int size\\
+  \hspace*{1.5cm} how many size is free\\
+
+  \item
+  NAME \\
+  \hspace*{1cm}\texttt{MEMMAN} \\
+  SYNOPSIS \\
+  \hspace*{1cm} \texttt{MEMMAN} structure is used to store the entire
+memory usage, such as the total remaining memory space and entries.\\
+  MEMBER \\
+  \hspace*{1cm} int frees\\
+  \hspace*{1.5cm}  how many memory blocks are free\\
+  \hspace*{1cm} int maxfrees\\
+  \hspace*{1.5cm} the maximum of frees\\
+  \hspace*{1cm} int lostsize\\
+  \hspace*{1.5cm} release the sum of the failed memory size\\
+  \hspace*{1cm} int losts\\
+  \hspace*{1.5cm}  the number of failures\\
+  \hspace*{1cm} struct FREEINFO free[MEMMAN\_FREES]\\
+  \hspace*{1.5cm} record all free memory block information\\
+
+  \item
+  NAME \\
+  \hspace*{1cm}\texttt{SHEET} \\
+  SYNOPSIS \\
+  \hspace*{1cm}  \texttt{SHEET} structure is used to record the position,
+usage, and color of a layer.\\
+  MEMBER \\
+  \hspace*{1cm} char* buf\\
+  \hspace*{1.5cm}  the address of the graphic content depicted\\
+  \hspace*{1cm} int bxszie\\
+  \hspace*{1.5cm} the size of x coordinate of sheet\\
+  \hspace*{1cm} int bysize\\
+  \hspace*{1.5cm} the size of y coordinate of sheet\\
+  \hspace*{1cm} int vx0\\
+  \hspace*{1.5cm} the x coordinate of sheet\\
+  \hspace*{1cm} int vy0\\
+  \hspace*{1.5cm} the y coordinate of sheet\\
+  \hspace*{1cm} int col\_inv\\
+  \hspace*{1.5cm}  the number of invisible color\\
+  \hspace*{1cm} int height\\
+  \hspace*{1.5cm}  the height of sheet\\
+  \hspace*{1cm} int flags\\
+  \hspace*{1.5cm}  the states of sheet, using or not \\
+  
+  \item
+  NAME \\
+  \hspace*{1cm}\texttt{SHTCTL} \\
+  SYNOPSIS \\
+  \hspace*{1cm} \texttt{SHTCTL} structure is used to manage the structure
+of multiple layer information, including how many layers there are in total, the size and
+height of each layer.\\
+  MEMBER \\
+  \hspace*{1cm} unsigned char* vram\\
+  \hspace*{1.5cm}  the address of VRAM\\
+  \hspace*{1cm} unsigned char* map\\
+  \hspace*{1.5cm} which layer the pixel on the screen belongs to\\
+  \hspace*{1cm} int xsize \\
+  \hspace*{1.5cm} the x size of screen\\
+  \hspace*{1cm} int ysize\\
+  \hspace*{1.5cm} the y size of screen\\
+  \hspace*{1cm} int top\\
+  \hspace*{1.5cm}  the height of the top layer\\
+  \hspace*{1cm} struct SHEET* sheets[MAX\_SHEETS]\\
+  \hspace*{1.5cm}  order all layer addresses in order\\
+  \hspace*{1cm} struct SHEET sheets0[MAX\_SHEETS]\\
+  \hspace*{1.5cm} all layers\\
+
+  \item
+  NAME \\
+  \hspace*{1cm}\texttt{TIMER} \\
+  SYNOPSIS \\
+  \hspace*{1cm} \texttt{TIMER} structure is used to manage the time
+slice of the CPU. The timer interrupts the CPU at regular intervals. This structure
+records the length of the timer, usage status and other information.\\
+  MEMBER \\
+  \hspace*{1cm} struct TIMER* next\\
+  \hspace*{1.5cm}  the next timer that is about to timeout\\
+  \hspace*{1cm} unsigned int timeout\\
+  \hspace*{1.5cm} how long is the timeout\\
+  \hspace*{1cm} char flags\\
+  \hspace*{1.5cm} the states of timer\\
+  \hspace*{1cm} char flgas2\\
+  \hspace*{1.5cm} whether to allow automatic cancellation\\
+  \hspace*{1cm} struct FIFO32* fifo\\
+  \hspace*{1.5cm} store data(from mouse, keyboard etc)\\
+  \hspace*{1cm} int data\\
+  \hspace*{1.5cm}  accept data\\
+
+  \item
+  NAME \\
+  \hspace*{1cm}\texttt{TIMERCTL} \\
+  SYNOPSIS \\
+  \hspace*{1cm} \texttt{TIMERCTL} structure is used to manage all
+timers in the system. Including how many timers are in total, current use, and the next
+timer to be used.\\
+  MEMBER \\
+  \hspace*{1cm} unsigned int count\\
+  \hspace*{1.5cm}  count variable\\
+  \hspace*{1cm} unsigned int next\\
+  \hspace*{1.5cm} the next timeout timer\\
+  \hspace*{1cm} sturct TIMER* t0\\
+  \hspace*{1.5cm} the shortest timeout timer\\
+  \hspace*{1cm} struct TIMER timers0\\
+  \hspace*{1.5cm} all timers\\
+
+\item
+  NAME \\
+  \hspace*{1cm}\texttt{TSS32} \\
+  SYNOPSIS \\
+  \hspace*{1cm}  \texttt{TSS32} structure holds information about task
+status segments, which are based on CPU specifications(See 6.2.1\cite{intel_3a}).\\
+  MEMBER \\
+  \hspace*{1cm} int esp0, esp1, esp2\\
+  \hspace*{1.5cm}  stack pointer register\\
+  \hspace*{1cm} int ss0, ss1, ss2\\
+  \hspace*{1.5cm} stack segment register\\
+  \hspace*{1cm} int cr3\\
+  \hspace*{1.5cm} control register\\
+  \hspace*{1cm} int eip\\
+  \hspace*{1.5cm} instruct pointer register\\
+  \hspace*{1cm} int eflags\\
+  \hspace*{1.5cm} registers flag\\
+  \hspace*{1cm} int eax\\
+  \hspace*{1.5cm}  accumulator register\\
+  \hspace*{1cm} int ecx\\
+  \hspace*{1.5cm} counter register\\
+  \hspace*{1cm} int edx\\
+  \hspace*{1.5cm} data register\\
+  \hspace*{1cm} int ebx\\
+  \hspace*{1.5cm} base register\\
+  \hspace*{1cm} int esp\\
+  \hspace*{1.5cm}  stack pointer register\\
+  \hspace*{1cm} int ebp\\
+  \hspace*{1.5cm}  base pointer register\\
+  \hspace*{1cm} int esi\\
+  \hspace*{1.5cm} source index register\\
+  \hspace*{1cm} int edi\\
+  \hspace*{1.5cm}destination index register \\
+  \hspace*{1cm} int es\\
+  \hspace*{1.5cm}  extra segment register\\
+  \hspace*{1cm} int cs\\
+  \hspace*{1.5cm} code segment register\\
+  \hspace*{1cm} int ss\\
+  \hspace*{1.5cm} stack segment register\\
+  \hspace*{1cm} int ds\\
+  \hspace*{1.5cm} data segment register\\
+  \hspace*{1cm} int fs\\
+  \hspace*{1.5cm}  segment part 2\\
+  \hspace*{1cm} int gs\\
+  \hspace*{1.5cm} segment part 3\\
+  \hspace*{1cm} int ldtr\\
+  \hspace*{1.5cm}  LDT segment selector\\
+  \hspace*{1cm} int iomap\\
+  \hspace*{1.5cm} I/O map base address\\
+
+\item
+  NAME \\
+  \hspace*{1cm}\texttt{} \\
+  SYNOPSIS \\
+  \hspace*{1cm} \\
+  MEMBER \\
+  \hspace*{1cm} \\
+  \hspace*{1.5cm}  \\
+  \hspace*{1cm} \\
+  \hspace*{1.5cm} \\
+  \hspace*{1cm} \\
+  \hspace*{1.5cm} \\
+  \hspace*{1cm} \\
+  \hspace*{1.5cm} \\
+  \hspace*{1cm} \\
+  \hspace*{1.5cm} \\
+  \hspace*{1cm} \\
+  \hspace*{1.5cm}  \\
+  \hspace*{1cm} \\
+  \hspace*{1.5cm} \\
+  
+\item
+  NAME \\
+  \hspace*{1cm}\texttt{} \\
+  SYNOPSIS \\
+  \hspace*{1cm} \\
+  MEMBER \\
+  \hspace*{1cm} \\
+  \hspace*{1.5cm}  \\
+  \hspace*{1cm} \\
+  \hspace*{1.5cm} \\
+  \hspace*{1cm} \\
+  \hspace*{1.5cm} \\
+  \hspace*{1cm} \\
+  \hspace*{1.5cm} \\
+  \hspace*{1cm} \\
+  \hspace*{1.5cm} \\
+  \hspace*{1cm} \\
+  \hspace*{1.5cm}  \\
+  \hspace*{1cm} \\
+  \hspace*{1.5cm} \\
+  
+  
+\end{enumerate}
+    
+
 
 The tables ~\ref{tab:BOOTINFO} — ~\ref{tab:FILEINFO} describes the data structure used by
 RangOS in tabular form.
@@ -1057,10 +1373,10 @@ status segments, which are based on CPU specifications(See 6.2.1\cite{intel_3a})
   \label{tab:FILEINFO}
 \end{table}
 
-\section{API}
+\subsection{API}
 \label{sec:api}
 
-\section{APPs}
+\subsection{APPs}
 \label{sec:apps-1}
 
 
@@ -1105,7 +1421,7 @@ The boot loader is implemented in Intel assembly. It works as following:
   There is a pseudo code about this process:
   \begin{figure}[!ht]
     \centering
-    \includegraphics[width=.7\textwidth]{../figs/algorithm/read_two_side.pdf}
+    \includegraphics[width=.7\textwidth]{./figs/algorithm/read_two_side.pdf}
     \label{fig:read_two_sides}
   \end{figure}
 
@@ -1119,12 +1435,12 @@ The boot loader is implemented in Intel assembly. It works as following:
   floppy. Appendix~\ref{sec:the-nex-cyl} is the code to perform this function.
 \end{enumerate}
 
-The above four steps can be intuitively reflected in the Fig. ~\ref{fig:flowchartp}.
+The above four steps can be intuitively reflected in the Fig. ~\ref{fig:iplflowchart}.
 \begin{figure}[!htbp]
   \centering
   \includegraphics[width=1\textwidth]{flowchartp}
-  \label{fig:flowchartp}
   \caption{the working flowchart of boot loader}
+  \label{fig:iplflowchart}
 \end{figure}
 
 \section{API}
