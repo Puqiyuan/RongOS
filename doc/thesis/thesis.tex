@@ -484,7 +484,21 @@ calls. Doing so protects the operating system. As picture ~\ref{fig:top-level} s
 \label{sec:overview-1}
 
 Fig. ~\ref{fig:kernel} shows how the various modules in
-the kernel are related.
+the kernel are related. \texttt{bootpack} completes startup-related settings such as
+keyboard, PIC, GDT/IDT and mouse settings. \texttt{ipl} loads the entire operating system
+into memory. \texttt{asmhead} completes the switch to 32-bit mode and calls the C
+function. \texttt{naskfunc} is used to provide functions that the C language cannot do and
+thus requires assembly. \texttt{PIC}, \texttt{keyboard} and \texttt{mouse} is used to
+complete hardware-related initialization. \texttt{console} is used to accept command line
+arguments and run various commands related to the application. \texttt{graph} is used to
+depict the mouse, graphics etc. \texttt{window} for making windows. \texttt{sheet} is used to
+control layers, such as layer height settings etc. \texttt{memory} for managing
+memory. \texttt{task} is used to manage multiple tasks, such as task switching,
+scheduling. \texttt{timer} for managing time slices. \texttt{fifo} is used to manage FIFO buffers
+that are used to accept various data. \texttt{dsctbl} for GDT/IDT setting. \texttt{file} is used to
+manage file-related operations such as reading, loading, and searching for files. 
+
+
 \begin{figure}[!htbp]
   \centering
   \includegraphics[width=1\textwidth]{kernel}
@@ -518,8 +532,12 @@ instructions of various arrow in ~\ref{fig:kernel}.
 \subsection{Data Structure in Kernel}
 \label{sec:datastructure-kernel}
 
-The tables ~\ref{tab:BOOTINFO} - ~\ref{tab:FILEINFO} describes the data structure used by RangOS in tabular form.
+The tables ~\ref{tab:BOOTINFO} — ~\ref{tab:FILEINFO} describes the data structure used by
+RangOS in tabular form.
 
+As shown in ~\ref{tab:BOOTINFO}, the structure \texttt{BOOTINFO} stores startup-related information, such as how many cylinders were
+read, the status of the keyboard indicator, the mode of the screen, the size of the
+screen, and the memory address of the graphics card.
 \begin{table}[h!]
   \centering
   \begin{tabular}[c]{|c|c|c|}
@@ -545,6 +563,12 @@ The tables ~\ref{tab:BOOTINFO} - ~\ref{tab:FILEINFO} describes the data structur
   \caption{Structure of BOOTINFO}
   \label{tab:BOOTINFO}
 \end{table}
+
+As shown in ~\ref{tab:FIFO32}, \texttt{FIFO32} is used to describe a FIFO structure. This
+structure is used to receive various kinds of information. \texttt{FIFO32} is used to
+describe a FIFO structure. This structure is used to receive various kinds of
+information. It specifies where to read and write the FIFO structure and the size of the
+buffer, available size.
 
 \begin{table}[!htbp]
   \centering
@@ -572,6 +596,10 @@ The tables ~\ref{tab:BOOTINFO} - ~\ref{tab:FILEINFO} describes the data structur
   \label{tab:FIFO32}
 \end{table}
 
+As shown in ~\ref{tab:SEGMENT-DESCRIPTOR}, the \texttt{SEGMENT\_DESCRIPTOR} structure is
+used to store GDT related information, which is based on CPU specifications(3.5.1 and
+3.4.5\cite{intel_3a}). GDT is stored at 270000 in memory.
+
 \begin{table}[!htbp]
   \centering
   \begin{tabular}[c]{|c|c|c|}
@@ -597,6 +625,9 @@ The tables ~\ref{tab:BOOTINFO} - ~\ref{tab:FILEINFO} describes the data structur
   \label{tab:SEGMENT-DESCRIPTOR}
 \end{table}
 
+As shown in ~\ref{tab:GATE-DESCRIPTOR}, the \texttt{GATE\_DESCRIPTOR} structure is used to
+store IDT related information, which is based on CPU specifications(3.5.1 and
+3.4.5\cite{intel_3a}). IDT is at 26f800 memory.
 \begin{table}[!htbp]
   \centering
   \begin{tabular}[c]{|c|c|c|}
@@ -621,6 +652,10 @@ The tables ~\ref{tab:BOOTINFO} - ~\ref{tab:FILEINFO} describes the data structur
   \label{tab:GATE-DESCRIPTOR}
 \end{table}
 
+As shown in ~\ref{tab:MOUSE-DEC}, the \texttt{MOUSE\_DEC} structure is used to store
+information about the mouse, such as the location of the mouse, whether the mouse is
+pressed or not.
+
 \begin{table}[!htbp]
   \centering
   \begin{tabular}[c]{|c|c|c|}
@@ -643,6 +678,9 @@ The tables ~\ref{tab:BOOTINFO} - ~\ref{tab:FILEINFO} describes the data structur
   \caption{Structure of MOUSE DEC}
   \label{tab:MOUSE-DEC}
 \end{table}
+
+As shown in ~\ref{tab:FREEINFO}, the \texttt{FREEINFO} structure stores how many bytes are
+free from where in memory.
 
 \begin{table}[!htbp]
   \centering
