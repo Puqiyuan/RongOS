@@ -507,7 +507,7 @@ into memory. \texttt{asmhead} completes the switch to 32-bit mode and calls the 
 function. \texttt{naskfunc} is used to provide functions that the C language cannot do and
 thus requires assembly. \texttt{PIC}, \texttt{keyboard} and \texttt{mouse} is used to
 complete hardware-related initialization. \texttt{console} is used to accept command line
-arguments and run various commands related to the application. \texttt{graph} is used to
+arguments and run various commands related to the application. \texttt{graphic} is used to
 depict the mouse, graphics etc. \texttt{window} for making windows. \texttt{sheet} is used to
 control layers, such as layer height settings etc. \texttt{memory} for managing
 memory. \texttt{task} is used to manage multiple tasks, such as task switching,
@@ -912,13 +912,115 @@ status segments, which are based on CPU specifications(See 6.2.1\cite{intel_3a})
   \hspace*{1.5cm}  the date for storing file\\
   \hspace*{1cm} unsigned short  clustno\\
   \hspace*{1.5cm}the file from which sector on the disk is stored \\
-  
+
+
 \end{enumerate}
     
-\subsubsection{3. Modules in the Kernel}
+\subsubsection{3. Each Module}
 \label{sec:3.-modules-kernel}
 
+\begin{enumerate}
+\item
+  \begin{itemize}
+  \item NAME
+    \begin{itemize}
+    \item \texttt{graphic}
+    \end{itemize}
+    
+  \item SYNOPSIS
+    \begin{itemize}
+    \item \texttt{graphic} is used to depict the mouse, graphics. Finish the palette setting etc.
+    \end{itemize}
+    
+  \item FUNCTION
+    \begin{itemize}
+    \item \texttt{void init\_palette(void)}
+      \begin{itemize}
+      \item Objective: prepare the color definition and call the palette setting function
+        \texttt{set\_palete()}.
+      \item Parameter: NULL
+      \end{itemize}
+      
+    \item \texttt{void set\_palette(int start, int end, unsigned char *rgb)}
+      \begin{itemize}
+      \item Objective: using the color variables prepared in the \texttt{init\_palette},
+        the palette is set by calling the assembly function in \texttt{naskfunc} module to
+        operate the hardware.
+      \item Parameter
+        \begin{itemize}
+        \item \texttt{int start}: start color number
+        \item \texttt{int end}: end color number
+        \item \texttt{unsigned char* rgb}: the address of color buffer
+        \end{itemize}
+      \end{itemize}
 
+    \item \texttt{}
+      \begin{itemize}
+      \item Objective:
+      \item Parameter:
+        \begin{itemize}
+        \item
+        \item
+        \item
+        \item
+        \end{itemize}
+      \end{itemize}
+      
+    \end{itemize}
+    
+  \end{itemize}
+
+
+\item
+  \begin{itemize}
+  \item NAME
+    \begin{itemize}
+    \item \texttt{}
+    \end{itemize}
+    
+  \item SYNOPSIS
+    \begin{itemize}
+    \item \texttt{}
+    \end{itemize}
+    
+  \item FUNCTION
+    \begin{itemize}
+    \item \texttt{}
+      \begin{itemize}
+      \item Objective: 
+        \texttt{}
+      \item Parameter: 
+      \end{itemize}
+      
+    \item \texttt{}
+      \begin{itemize}
+      \item Objective:
+      \item Parameter
+        \begin{itemize}
+        \item \texttt{}
+        \item
+        \item
+        \item
+        \end{itemize}
+      \end{itemize}
+
+    \item \texttt{}
+      \begin{itemize}
+      \item Objective:
+      \item Parameter:
+        \begin{itemize}
+        \item
+        \item
+        \item
+        \item
+        \end{itemize}
+      \end{itemize}
+      \end{itemize}
+    
+  \end{itemize}
+  
+  
+\end{enumerate}
 
 \subsection{API}
 \label{sec:api}
