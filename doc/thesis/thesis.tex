@@ -198,7 +198,7 @@ have i386 support for our 64-bit Linux system.
      $ sudo apt-get update
 \end{verbatim}
 
-\iffalse
+\iffalse %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\chapter{Leading Knowledge}
 %\label{cha:leading-knowledge-1}
 
@@ -466,7 +466,7 @@ sector. A sector can store 512 byte. So the capacity of a floppy is:
 
 \[18 \times 80 \times 2 \times 512 = 1474560\,Byte = 1440\,KiB\]
 
-\fi
+\fi %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \chapter{Design}
@@ -477,11 +477,20 @@ and applications.
 \section{Top Level Design}
 All applications use the functions provided by the operating system kernel through API
 calls. This facilitates the application's ability to call the operating system. The
-overall system architecture is as ~\ref{fig:top-level} shown:
+overall system architecture is as ~\ref{fig:top-level} shown. The process control
+subsystem includes graphics processing, scheduler, and memory management. This system will
+interact with the file system. For example, to launch an application, the function in the
+file system must be used to search for related applications.Of course, the file system
+part will provide a file search service. All of these subsystems may interact with the
+driver or hardware control part. Various functions in the kernel are packaged into system
+call application programs. However, applications do not use these system calls directly,
+but use the API. The process in which the API requests a system call and hands over
+processing to the kernel is called trapping.
+
 
 \begin{figure}[!htbp]
   \centering
-  \includegraphics[width=1\textwidth]{top.pdf}
+  \includegraphics[width=1\textwidth]{kernel-block.pdf}
   \caption{Top-level design}
   \label{fig:top-level}
 \end{figure}
@@ -489,7 +498,19 @@ overall system architecture is as ~\ref{fig:top-level} shown:
 
 \section{Detailed Design}
 \label{sec:detailed-design}
+This section will introduce the detailed design of the entire operating system. Including
+the function of each module, data structure in boot loader, kernel, API, APPs. 
 
+\subsection{Boot Up}
+\label{sec:boot-up}
+At this stage the boot loader will load the operating system into memory. It is divided
+into the following four steps: 1, display boot information. 2, read the second sector. 3,
+read two sides of a track. 4, the next cylinder. Until all twenty cylinders have been
+read.
+
+
+At this stage, it is also necessary to complete the 32-bit protection mode switch and jump
+to the entry point of the operating system.
 
 
 \subsection{Kernel}
@@ -497,34 +518,93 @@ overall system architecture is as ~\ref{fig:top-level} shown:
 The kernel receives the API call in the upward direction and the kernel requests the
 hardware service through the driver in the downward direction.
 
-\subsubsection{1. Module Relationship}
-\label{sec:overview-1}
 
-Fig. ~\ref{fig:kernel} shows how the various modules in
-the kernel are related. \texttt{bootpack} completes startup-related settings such as
-keyboard, PIC, GDT/IDT and mouse settings. \texttt{ipl} loads the entire operating system
-into memory. \texttt{asmhead} completes the switch to 32-bit mode and calls the C
-function. \texttt{naskfunc} is used to provide functions that the C language cannot do and
-thus requires assembly. \texttt{PIC}, \texttt{keyboard} and \texttt{mouse} is used to
-complete hardware-related initialization. \texttt{console} is used to accept command line
-arguments and run various commands related to the application. \texttt{graphic} is used to
-depict the mouse, graphics etc. \texttt{window} for making windows. \texttt{sheet} is used to
-control layers, such as layer height settings etc. \texttt{memory} for managing
-memory. \texttt{task} is used to manage multiple tasks, such as task switching,
-scheduling. \texttt{timer} for managing time slices. \texttt{fifo} is used to manage FIFO buffers
-that are used to accept various data. \texttt{dsctbl} for GDT/IDT setting. \texttt{file} is used to
-manage file-related operations such as reading, loading, and searching for files. 
+\subsubsection{\centerline{Memory Management}}
 
 
-\begin{figure}[!htbp]
-  \centering
-  \includegraphics[width=0.9\textwidth]{kernel-block.pdf}
-  \caption{modules in kernel}
-  \label{fig:kernel}
-\end{figure}
+\label{sec:memory-management-1}
+The process needs memory resources at runtime, and it will return to the memory space when
+it finishes running. When an application requests a memory resource, the operating system
+should be able to find it for it. At the same time, when the application returns the
+memory, the operating system should put them together in an orderly manner. When operating
+systems manage memory, they should also pay attention to the utilization of memory and
+comprehensively consider the speed of memory allocation.
+
+The data structure used in the memory management module is shown in the code
+~\ref{src:FREEINFO} and ~\ref{src:MEMMAN}.
 
 
-\subsubsection{2. Data Structure in Kernel}
+\paragraph{FREEINFO}
+
+\begin{listing}[H]
+  \begin{codeblock}
+\begin{ccode}
+struct 
+{ 
+  unsigned int addr; /* the starting address of free space */
+  unsigned int size; /* how many size is free */
+};
+\end{ccode}
+  \end{codeblock}
+  \caption{\texttt{struct FREEINFO}}\label{src:FREEINFO}
+\end{listing}
+
+(code~\ref{src:FREEINFO}) structure stores how many bytes are
+free from where in memory.
+
+
+\paragraph{MEMMAN}
+
+\begin{listing}[H]
+  \begin{codeblock}
+\begin{ccode}
+struct 
+{ 
+  int frees;                           /* how many memory blocks are free */
+  int maxfrees;                        /* the maximum of frees */
+  int lostsize;                        /* release the sum of the failed memory size */
+  int losts;                           /* the number of failures */
+  struct FREEINFO free[MEMMAN_FREES];  /* record all free memory block information */
+};
+\end{ccode}
+  \end{codeblock}
+  \caption{\texttt{struct MEMMAN}}\label{src:MEMMAN}
+\end{listing}
+
+(code~\ref{src:MEMMAN}) structure is used to store the entire memory usage, such as the total
+remaining memory space and entries.
+
+All functions and its parameters are designed as follows.
+
+
+\texttt{void memman\_init(struct MEMMAN* man)}: the memory space is initialized and the
+\texttt{man} variable is used to record the memory space usage and free information.
+
+\texttt{unsigned int memman\_total(struct MEMMAN* man)}: report the sum of all empty
+space. Return the size of free memory.
+
+\texttt{unsigned int memman\_alloc(struct MEMMAN *man, unsigned int size)}: allocate
+memory to the application, where \texttt{size} is the space requested by the
+application. Success returns the available starting address, otherwise 0.
+
+\texttt{int memman\_free(struct MEMMAN *man, unsigned int addr, unsigned int size)}:
+releases memory, where \texttt{addr} is the starting address variable and \texttt{size} is
+the size of the release variable. Returns 0 if successful, otherwise -1.
+
+\texttt{unsigned int memman\_alloc\_4k(struct MEMMAN *man, unsigned int size)}: memory is
+allocated in 4k memory units and the starting address of the allocated memory is
+returned. \texttt{size} is the size of requested space.
+
+\texttt{int memman\_free\_4k(struct MEMMAN *man, unsigned int addr, unsigned int size)}:
+memory space is freed in units of 4k, \texttt{addr} is the starting point variable, and
+\texttt{size} is the release size.
+
+
+
+
+
+\iffalse %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{1. Data Structure in Kernel}
 In this section data structures used in the RongOS operating system will be introduced in
 detail.
 
@@ -963,116 +1043,10 @@ struct
 
 (code~\ref{src:FILEINFO}) is used to record file-related information, such as file name, size,
 etc.
-
+\fi %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
     
-\subsubsection{3. Each Module}
-\label{sec:3.-modules-kernel}
-
-\begin{enumerate}
-\item
-  \begin{itemize}
-  \item NAME
-    \begin{itemize}
-    \item \texttt{graphic}
-    \end{itemize}
-    
-  \item SYNOPSIS
-    \begin{itemize}
-    \item \texttt{graphic} is used to depict the mouse, graphics. Finish the palette setting etc.
-    \end{itemize}
-    
-  \item FUNCTION
-    \begin{itemize}
-    \item \texttt{void init\_palette(void)}
-      \begin{itemize}
-      \item Objective: prepare the color definition and call the palette setting function
-        \texttt{set\_palete()}.
-      \item Parameter: NULL
-      \end{itemize}
-      
-    \item \texttt{void set\_palette(int start, int end, unsigned char *rgb)}
-      \begin{itemize}
-      \item Objective: using the color variables prepared in the \texttt{init\_palette},
-        the palette is set by calling the assembly function in \texttt{naskfunc} module to
-        operate the hardware.
-      \item Parameter
-        \begin{itemize}
-        \item \texttt{int start}: start color number
-        \item \texttt{int end}: end color number
-        \item \texttt{unsigned char* rgb}: the address of color buffer
-        \end{itemize}
-      \end{itemize}
-
-    \item \texttt{}
-      \begin{itemize}
-      \item Objective:
-      \item Parameter:
-        \begin{itemize}
-        \item
-        \item
-        \item
-        \item
-        \end{itemize}
-      \end{itemize}
-      
-    \end{itemize}
-    
-  \end{itemize}
-
-
-\item
-  \begin{itemize}
-  \item NAME
-    \begin{itemize}
-    \item \texttt{}
-    \end{itemize}
-    
-  \item SYNOPSIS
-    \begin{itemize}
-    \item \texttt{}
-    \end{itemize}
-    
-  \item FUNCTION
-    \begin{itemize}
-    \item \texttt{}
-      \begin{itemize}
-      \item Objective: 
-        \texttt{}
-      \item Parameter: 
-      \end{itemize}
-      
-    \item \texttt{}
-      \begin{itemize}
-      \item Objective:
-      \item Parameter
-        \begin{itemize}
-        \item \texttt{}
-        \item
-        \item
-        \item
-        \end{itemize}
-      \end{itemize}
-
-    \item \texttt{}
-      \begin{itemize}
-      \item Objective:
-      \item Parameter:
-        \begin{itemize}
-        \item
-        \item
-        \item
-        \item
-        \end{itemize}
-      \end{itemize}
-      \end{itemize}
-    
-  \end{itemize}
-  
-  
-\end{enumerate}
-
 \subsection{API}
 \label{sec:api}
 
@@ -1083,9 +1057,8 @@ etc.
 
 \chapter{Implementation}
 
-\section{Kernel}
-This section is used to describe the detailed design of each module of the kernel.
-\subsection{Boot Loader(ipl.asm)}
+\section{Boot Up}
+\label{sec:boot-up-1}
 
 The boot loader is implemented in Intel assembly. It works as following:
 
@@ -1143,6 +1116,11 @@ The above four steps can be intuitively reflected in the Fig. ~\ref{fig:iplflowc
   \caption{the working flowchart of boot loader}
   \label{fig:iplflowchart}
 \end{figure}
+
+\section{Kernel}
+\label{sec:kernel-1}
+
+
 
 \section{API}
 \label{sec:API}
