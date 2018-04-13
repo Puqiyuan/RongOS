@@ -1,0 +1,64 @@
+\input{printable}
+\usetikzlibrary{decorations.pathreplacing}
+
+\begin{document}
+\begin{tikzpicture} [node distance=1cm]
+  \node (kernel) [startstop, minimum width=9.5cm, minimum height=3cm, label={[anchor=south
+    east, inner sep=1.5pt]south east:$Kernel$}] {};
+  \node(recp)[draw, minimum width=1cm] at ([xshift=3em, yshift=0.5cm]kernel.west)[text width=.8cm]{Front desk};
+  \node(disp) [process, right=of recp] {Dispatcher};
+  \node(list) [process, right=of disp, minimum width=1cm, minimum height=1.5cm,
+  label={[anchor=north, inner sep=1.5pt]north:$list$}] {};
+  \node(sys) [process, right=of list] {System \\ call};
+  \node(calling) [startstop, above=of kernel, yshift=0.1cm, xshift=-0.5cm] {end \\ call API \\ push
+    parameter \\ push nbytes};
+  \node(lib) [startstop, above=of calling] {return to caller \\ trap to kernel \\ put
+    parameters};
+  \node(1) [left=of calling, xshift=1cm, yshift=-0.7cm]{1};
+  \node(2) [left=of calling, xshift=1cm, yshift=-0.2cm]{2};
+  \node(2) [left=of calling, xshift=1cm, yshift=0.2cm]{3};
+  
+
+  \draw ($(list.west) + (0em, 0.5em)$) -- ($(list.east) + (0em, 0.5em)$);
+  \draw ($(list.west) + (0em, 0em)$) -- ($(list.east) + (0em, 0em)$);
+  \draw ($(list.west) + (0em, -0.5em)$) -- ($(list.east) + (0em, -0.5em)$);
+  \draw ($(list.west) + (0em, -1em)$) -- ($(list.east) + (0em, -1em)$);
+  \draw ($(list.west) + (0em, -1.5em)$) -- ($(list.east) + (0em, -1.5em)$);
+  \draw [arrow] (sys.south) to [out=150,in=30, bend left] node[above]{9} (recp.south);
+  \draw [arrow] (recp) -- node[above]{6} (disp);
+  \draw [arrow] (disp) -- node[above]{7} (list);
+  \draw [arrow] (list) -- node[above]{8} (sys);
+  \draw ($(kernel.west) + (-1cm, 2cm)$) -- ($(kernel.east) + (1.2cm, 2cm)$);
+  \draw ($(calling.west) + (0em, 0em)$) -- ($(calling.east) + (0em, 0em)$);
+  \draw ($(calling.west) + (0em, 1.2em)$) -- ($(calling.east) + (0em, 1.2em)$);
+  \draw ($(calling.west) + (0em, -1.2em)$) -- ($(calling.east) + (0em, -1.2em)$);
+  \draw ($(lib.west) + (0em, -0.6em)$) -- ($(lib.east) + (0em, -0.6em)$);
+  \draw ($(lib.west) + (0em, 0.6em)$) -- ($(lib.east) + (0em, 0.6em)$);
+  \draw [arrow] ($(calling.west) + (0em, 0.5em)$) to [out=150,in=30, bend left]
+  node[right]{4} ($(lib.west) + (0em, -1em)$);
+  \draw [arrow] (lib.west) -- node[right]{5}(recp.north);
+  \draw [arrow] ($(recp.west) + (0em, 1.2em)$) to [out=150,in=30, bend left]
+  node[right]{10} ($(lib.west) + (0em, 1em)$);
+  \draw [arrow] ($(lib.east) + (0em, 1.5em)$) to [out=150,in=30, bend left]
+  node[left, yshift=-1em]{11} ($(calling.east) + (0em, 1.5em)$);
+  \draw  [decorate,decoration={brace,amplitude=10pt,mirror,raise=4pt},yshift=5pt]
+  (3.5,2.5) -- (3.5,4.25) node [black,midway,xshift=1.6cm, yshift=0cm, text width= 1.5cm]
+  {User program  calling API};
+
+  \draw  [decorate,decoration={brace,amplitude=10pt,mirror,raise=4pt},yshift=5pt]
+  (3.5,5.25) -- (3.5,6.75) node [black,midway,xshift=1.6cm, yshift=0cm, text width= 1.5cm]
+  {Library procedure};
+  
+
+  
+  
+\end{tikzpicture}
+
+\end{document}
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
