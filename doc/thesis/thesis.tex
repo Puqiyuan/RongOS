@@ -515,31 +515,26 @@ to the entry point of the operating system.
 
 \subsection{Kernel}
 \label{sec:kernel}
+
 The kernel receives the API call in the upward direction and the kernel requests the
 hardware service through the driver in the downward direction.
 
-
-\subsubsection{\centerline{Memory Management}}
-
-
+\subsubsection{Memory Management}
 \label{sec:memory-management-1}
-The process needs memory resources at runtime, and it will return to the memory space when
-it finishes running. When an application requests a memory resource, the operating system
-should be able to find it for it. At the same time, when the application returns the
-memory, the operating system should put them together in an orderly manner. When operating
-systems manage memory, they should also pay attention to the utilization of memory and
-comprehensively consider the speed of memory allocation.
 
-The data structure used in the memory management module is shown in the code
-~\ref{src:FREEINFO} and ~\ref{src:MEMMAN}.
+The process requires memory space at run time. When it is finished running, it will return
+space to the operating system. So the operating system should be able to manage
+memory. Memory utilization should be improved when managing memory. 
 
+The data structures used in the memory management module are discussed below.
+%~\ref{src:FREEINFO} and ~\ref{src:MEMMAN}.
 
 \paragraph{FREEINFO}
 
 \begin{listing}[H]
   \begin{codeblock}
 \begin{ccode}
-struct 
+struct FREEINFO
 { 
   unsigned int addr; /* the starting address of free space */
   unsigned int size; /* how many size is free */
@@ -549,16 +544,15 @@ struct
   \caption{\texttt{struct FREEINFO}}\label{src:FREEINFO}
 \end{listing}
 
-(code~\ref{src:FREEINFO}) structure stores how many bytes are
-free from where in memory.
-
+\texttt{struct FREEINFO} (Code~\ref{src:FREEINFO}) structure is used to record the size in
+bytes of free memory while the system is running.
 
 \paragraph{MEMMAN}
 
 \begin{listing}[H]
   \begin{codeblock}
 \begin{ccode}
-struct 
+struct MEMMAN
 { 
   int frees;                           /* how many memory blocks are free */
   int maxfrees;                        /* the maximum of frees */
@@ -571,36 +565,35 @@ struct
   \caption{\texttt{struct MEMMAN}}\label{src:MEMMAN}
 \end{listing}
 
-(code~\ref{src:MEMMAN}) structure is used to store the entire memory usage, such as the total
-remaining memory space and entries.
+\texttt{struct MEMMAN} (code~\ref{src:MEMMAN}) structure is used to store the entire
+memory usage, such as the total remaining memory space and entries.
 
-All functions and its parameters are designed as follows.
+\subparagraph{Memory Management Functions}
 
-
-\texttt{void memman\_init(struct MEMMAN* man)}: the memory space is initialized and the
+\begin{description}
+\item[\mintinline{c}{void memman_init(struct MEMMAN* man);}] The memory space is initialized and the
 \texttt{man} variable is used to record the memory space usage and free information.
 
-\texttt{unsigned int memman\_total(struct MEMMAN* man)}: report the sum of all empty
+\item[\mintinline{c}{unsigned int memman_total(struct MEMMAN* man);}] Report the sum of all empty
 space. Return the size of free memory.
 
-\texttt{unsigned int memman\_alloc(struct MEMMAN *man, unsigned int size)}: allocate
-memory to the application, where \texttt{size} is the space requested by the
-application. Success returns the available starting address, otherwise 0.
+\item[\mintinline{c}{unsigned int memman_alloc(struct MEMMAN *man, unsigned int size);}]
+  Allocate memory to the application, where \texttt{size} is the space requested by the
+  application. Success returns the available starting address, otherwise 0.
+  
+\item[\mintinline{c}{int memman_free(struct MEMMAN *man, unsigned int addr, unsigned int size);}]
+  Releases memory, where \texttt{addr} is the starting address variable and \texttt{size} is
+  the size of the release variable. Returns 0 if successful, otherwise -1.
 
-\texttt{int memman\_free(struct MEMMAN *man, unsigned int addr, unsigned int size)}:
-releases memory, where \texttt{addr} is the starting address variable and \texttt{size} is
-the size of the release variable. Returns 0 if successful, otherwise -1.
+\item[\mintinline{c}{unsigned int memman_alloc_4k(struct MEMMAN *man, unsigned int
+    size);}] Memory is allocated in 4k memory units and the starting address of the
+  allocated memory is returned. \texttt{size} is the size of requested space.
 
-\texttt{unsigned int memman\_alloc\_4k(struct MEMMAN *man, unsigned int size)}: memory is
-allocated in 4k memory units and the starting address of the allocated memory is
-returned. \texttt{size} is the size of requested space.
+\item[\mintinline{c}{int memman_free_4k(struct MEMMAN *man, unsigned int addr, unsigned
+    int size);}] Memory space is freed in units of 4k, \texttt{addr} is the starting
+  point variable, and \texttt{size} is the release size.
+\end{description}
 
-\texttt{int memman\_free\_4k(struct MEMMAN *man, unsigned int addr, unsigned int size)}:
-memory space is freed in units of 4k, \texttt{addr} is the starting point variable, and
-\texttt{size} is the release size.
-
-
-\subsubsection{\centerline{Task Management}}
 
 
 
