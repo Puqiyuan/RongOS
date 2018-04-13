@@ -737,7 +737,7 @@ struct
   \caption{\texttt{struct SHTCTL}}\label{src:SHTCTL}
 \end{listing}
 
-(code~\ref{src:}) structure is used to manage the structure of multiple layer information,
+(code~\ref{src:SHTCTL}) structure is used to manage the structure of multiple layer information,
 including how many layers there are in total, the size and height of each layer.
 
 
@@ -767,414 +767,205 @@ usage status and other information.
 
 
 
-
-\paragraph{}
+\paragraph{TIMERCTL}
 
 \begin{listing}[H]
   \begin{codeblock}
 \begin{ccode}
 struct 
 { 
-
+  unsigned int count;   /* count variable */
+  unsigned int next;    /* the next timeout timer */
+  sturct TIMER* t0;     /* the shortest timeout timer */
+  struct TIMER timers0; /* all timers */
 };
 \end{ccode}
   \end{codeblock}
-  \caption{\texttt{struct }}\label{src:}
+  \caption{\texttt{struct TIMERCTL}}\label{src:TIMERCTL}
 \end{listing}
 
-(code~\ref{src:})
+(code~\ref{src:TIMERCTL}) structure is used to manage all timers in the system. Including
+how many timers are in total, current use, and the next timer to be used.
+
+
+
+\paragraph{TSS32}
+
+\begin{listing}[H]
+  \begin{codeblock}
+\begin{ccode}
+struct 
+{ 
+  int esp0, esp1, esp2; /* stack pointer register */
+  int ss0, ss1, ss2;    /* stack segment register */
+  int cr3;              /* control register */
+  int eip;              /* instruct pointer register */
+  int eflags;           /* registers flag */
+  int eax;              /* accumulator register */
+  int ecx;              /* counter register */
+  int edx;              /* data register */
+  int ebx;              /* base register */
+  int esp;              /* stack pointer register */
+  int ebp;              /* base pointer register*/
+  int esi;              /* source index register */
+  int edi;              /* destination index register */
+  int es;               /* extra segment register */
+  int cs;               /* code segment register */
+  int ss;               /* stack segment register */
+  int ds;               /* data segment register */
+  int fs;               /* segment part 2 */
+  int gs;               /* segment part 3 */
+  int ldtr;             /* LDT segment selector */
+  int iomap;            /* I/O map base address */
+};
+\end{ccode}
+  \end{codeblock}
+  \caption{\texttt{struct TSS32}}\label{src:TSS32}
+\end{listing}
+
+(code~\ref{src:TSS32}) structure holds information about task status segments, which are
+based on CPU specifications(See 6.2.1\cite{intel_3a}).
+
+
+\paragraph{FILEHANDLE}
+
+\begin{listing}[H]
+  \begin{codeblock}
+\begin{ccode}
+struct 
+{ 
+  char* buf; /* store the handler of file */
+  int size;  /* the size of file */
+  int pos;   /* where to read the file */
+};
+\end{ccode}
+  \end{codeblock}
+  \caption{\texttt{struct FILEHANDLE}}\label{src:FILEHANDLE}
+\end{listing}
+
+(code~\ref{src:FILEHANDLE}) is used to record an open file related data structure.
+
+
+
+\paragraph{TASK}
+
+\begin{listing}[H]
+  \begin{codeblock}
+\begin{ccode}
+struct 
+{ 
+  int sel;                          /* the number of GDT */
+  int flags;                        /* the state of task */
+  int level;                        /* the level of task */
+  int priority;                     /* the priority of task */
+  struct FIFO32 fifo;               /* a fifo buffer */
+  TSS32 tss;                        /* TSS segment for a task */
+  struct CONSOLE* cons;             /* the console window address of task */
+  int ds_base;                      /* data segment address of APPs */
+  int cons_stack;                   /* the stack address of APPs */
+  struct SEGMENT_DESCRIPTOR ldt[2]; /* tow LDT segments of task */
+  struct FILEHANDLE* fhandle;       /* file handles for manipulating files */
+  int* fat;                         /* file allocation table */
+  char* cmdline;                    /* store the command line context */
+  unsigned char langmode;           /* which font to use */
+  unsigned char langbyte1;          /* store the first byte of the full-width character */
+};
+\end{ccode}
+  \end{codeblock}
+  \caption{\texttt{struct TASK}}\label{src:TASK}
+\end{listing}
+
+(code~\ref{src:TASK})is used to manage variables for a task. Record the task's sections,
+permissions, stacks, etc.
+
+
+\paragraph{TASKLEVEL}
+
+\begin{listing}[H]
+  \begin{codeblock}
+\begin{ccode}
+struct 
+{ 
+  int running;                      /* how many tasks are running */
+  int now;                          /* which task is currently running */
+  struct TASK* tasks[MAX_TASKS_LV]; /* all tasks in one level */
+};
+\end{ccode}
+  \end{codeblock}
+  \caption{\texttt{struct TASKLEVEL}}\label{src:TASKLEV}
+\end{listing}
+
+(code~\ref{src:TASKLEV}) is used to record the status of each task in a layer.
+
+
+\paragraph{TASKCTL}
+
+\begin{listing}[H]
+  \begin{codeblock}
+\begin{ccode}
+struct 
+{ 
+  int now_lv;    /* current activity level */
+  int lv_change; /* does the hierarchy need to be changed next time the task is switched */
+};
+\end{ccode}
+  \end{codeblock}
+  \caption{\texttt{struct TASKCTL}}\label{src:TASKCT}
+\end{listing}
+
+(code~\ref{src:TASKCT}) is used to control all tasks in the system.
+
+
+
+\paragraph{CONSOLE}
+
+\begin{listing}[H]
+  \begin{codeblock}
+\begin{ccode}
+struct 
+{ 
+  struct SHEET* sht;   /* which layer is used on the command line */
+  int cur_x;           /* the x position of console */
+  int cur_y;           /* the y position of console */
+  int cur_c;           /* the color of console */
+  struct TIMER* timer; /* timer to control cursor blinking */
+};
+\end{ccode}
+  \end{codeblock}
+  \caption{\texttt{struct CONSOLE}}\label{src:CONSOLE}
+\end{listing}
+
+(code~\ref{src:CONSOLE})is used to record information about a console terminal, such as location,
+color, and so on.
 
 
 
 
-\label{sec:datastructure-kernel}
-\begin{enumerate}
-\item
-  NAME \\
-  \hspace*{1cm}\texttt{BOOTINFO} \\
-  SYNOPSIS \\
-  \hspace*{1cm}The structure \texttt{BOOTINFO} stores startup-related information, such as
-  how many cylinders were read, the status of the keyboard indicator, the mode of the
-  screen, the size of the screen, and the memory address of the graphics card. \\
-  MEMBER \\
-  \hspace*{1cm}char cyls \\
-  \hspace*{1.5cm} number of cylinders to read \\
-  \hspace*{1cm}char leds \\
-  \hspace*{1.5cm} keyboard state at boot \\
-  \hspace*{1cm}char vmode \\
-  \hspace*{1.5cm} bits of color of graphics card \\
-  \hspace*{1cm}char reserve \\
-  \hspace*{1.5cm} reserved bytes \\
-  \hspace*{1cm}short scrnx \\
-  \hspace*{1.5cm} screen resolution of x \\
-  \hspace*{1cm}short scrny \\
-  \hspace*{1.5cm} screen resolution of y \\
-  \hspace*{1cm}char* vram \\
-  \hspace*{1.5cm}the starting address of the image buffer\\
+\paragraph{FILEINFO}
 
-  \item
-  NAME \\
-  \hspace*{1cm}\texttt{FIFO32} \\
-  SYNOPSIS \\
-  \hspace*{1cm} \texttt{FIFO32} is used to describe a FIFO structure. This
-structure is used to receive various kinds of information. \texttt{FIFO32} is used to
-describe a FIFO structure. This structure is used to receive various kinds of
-information. It specifies where to read and write the FIFO structure and the size of the
-buffer, available size.\\
-  MEMBER \\
-  \hspace*{1cm} int* buf \\
-  \hspace*{1.5cm}  the address of FIFO32 buffer \\
-  \hspace*{1cm} int p \\
-  \hspace*{1.5cm} the writing address \\
-  \hspace*{1cm} int q\\
-  \hspace*{1.5cm} the reading address \\
-  \hspace*{1cm} int size\\
-  \hspace*{1.5cm} the size of FIFO32 buffer \\
-  \hspace*{1cm} int free \\
-  \hspace*{1.5cm} how many space free\\
-  \hspace*{1cm} int flags\\
-  \hspace*{1.5cm}  the states of FIFO32 buffer\\
-  \hspace*{1cm} struct TASK* task \\
-  \hspace*{1.5cm} point to a task \\
+\begin{listing}[H]
+  \begin{codeblock}
+\begin{ccode}
+struct 
+{ 
+  unsigned char name[8];   /* file name */
+  unsigned char ext[3];    /* extend name of file */
+  unsigned char type;      /* file attributes */
+  char reserve[10];        /* reserve byte */
+  unsigned short time;     /* the time for storing file */
+  unsigned short date;     /* the date for storing file */
+  unsigned short  clustno; /* the file from which sector on the disk is stored */
+};
+\end{ccode}
+  \end{codeblock}
+  \caption{\texttt{struct FILEINFO}}\label{src:FILEINFO}
+\end{listing}
 
-  \item
-  NAME \\
-  \hspace*{1cm}\texttt{SEGMENT\_DESCRIPTOR} \\
-  SYNOPSIS \\
-  \hspace*{1cm} \texttt{SEGMENT\_DESCRIPTOR} structure is
-used to store GDT related information, which is based on CPU specifications(3.5.1 and
-3.4.5\cite{intel_3a}). GDT is stored at 270000 in memory. \\
-  MEMBER \\
-  \hspace*{1cm} short limit\_low\\
-  \hspace*{1.5cm}  the low part of segment size\\ 
-  \hspace*{1cm} short base\_low\\
-  \hspace*{1.5cm} the low part of base address\\
-  \hspace*{1cm} char base\_mid\\
-  \hspace*{1.5cm} the middle part of base address\\
-  \hspace*{1cm} char access\_right\\
-  \hspace*{1.5cm} read and write permissions etc\\
-  \hspace*{1cm} char  limit\_high\\
-  \hspace*{1.5cm} the high part of segment size\\
-  \hspace*{1cm} char base\_high\\
-  \hspace*{1.5cm}  the high part of base address\\
-
-  \item
-  NAME \\
-  \hspace*{1cm}\texttt{GATE\_DESCRIPTOR} \\
-  SYNOPSIS \\
-  \hspace*{1cm} \texttt{GATE\_DESCRIPTOR} structure is used to
-store IDT related information, which is based on CPU specifications(3.5.1 and
-3.4.5\cite{intel_3a}). IDT is at 26f800 memory.\\
-  MEMBER \\
-  \hspace*{1cm} short offset\_low\\
-  \hspace*{1.5cm}  the low part of offset\\
-  \hspace*{1cm} short selector\\
-  \hspace*{1.5cm} which interrupt to choose\\
-  \hspace*{1cm} char dw\_count\\
-  \hspace*{1.5cm} how many interrupts are registered\\
-  \hspace*{1cm} char access\_right\\
-  \hspace*{1.5cm} access permission\\
-  \hspace*{1cm} short  offset\_high\\
-  \hspace*{1.5cm} high part of offset\\
-
-  \item
-  NAME \\
-  \hspace*{1cm}\texttt{MOUSE\_DEC} \\
-  SYNOPSIS \\
-  \hspace*{1cm} \texttt{MOUSE\_DEC} structure is used to store
-information about the mouse, such as the location of the mouse, whether the mouse is
-pressed or not.\\
-  MEMBER \\
-  \hspace*{1cm} unsigned char buf[3]\\
-  \hspace*{1.5cm}  store the data from mouse\\
-  \hspace*{1cm} unsigned char phase\\
-  \hspace*{1.5cm} the stage of receiving mouse data\\
-  \hspace*{1cm} int x\\
-  \hspace*{1.5cm} the x point of mouse\\
-  \hspace*{1cm} int y\\
-  \hspace*{1.5cm} the y point of mouse\\
-  \hspace*{1cm} int btn\\
-  \hspace*{1.5cm} whether the mouse is pressed\\
-
-  \item
-  NAME \\
-  \hspace*{1cm}\texttt{FREEINFO} \\
-  SYNOPSIS \\
-  \hspace*{1cm} \texttt{FREEINFO} structure stores how many bytes are
-free from where in memory.\\
-  MEMBER \\
-  \hspace*{1cm} unsigned int addr\\
-  \hspace*{1.5cm}  the starting address of free space\\
-  \hspace*{1cm} unsigned int size\\
-  \hspace*{1.5cm} how many size is free\\
-
-  \item
-  NAME \\
-  \hspace*{1cm}\texttt{MEMMAN} \\
-  SYNOPSIS \\
-  \hspace*{1cm} \texttt{MEMMAN} structure is used to store the entire
-memory usage, such as the total remaining memory space and entries.\\
-  MEMBER \\
-  \hspace*{1cm} int frees\\
-  \hspace*{1.5cm}  how many memory blocks are free\\
-  \hspace*{1cm} int maxfrees\\
-  \hspace*{1.5cm} the maximum of frees\\
-  \hspace*{1cm} int lostsize\\
-  \hspace*{1.5cm} release the sum of the failed memory size\\
-  \hspace*{1cm} int losts\\
-  \hspace*{1.5cm}  the number of failures\\
-  \hspace*{1cm} struct FREEINFO free[MEMMAN\_FREES]\\
-  \hspace*{1.5cm} record all free memory block information\\
-
-  \item
-  NAME \\
-  \hspace*{1cm}\texttt{SHEET} \\
-  SYNOPSIS \\
-  \hspace*{1cm}  \texttt{SHEET} structure is used to record the position,
-usage, and color of a layer.\\
-  MEMBER \\
-  \hspace*{1cm} char* buf\\
-  \hspace*{1.5cm}  the address of the graphic content depicted\\
-  \hspace*{1cm} int bxszie\\
-  \hspace*{1.5cm} the size of x coordinate of sheet\\
-  \hspace*{1cm} int bysize\\
-  \hspace*{1.5cm} the size of y coordinate of sheet\\
-  \hspace*{1cm} int vx0\\
-  \hspace*{1.5cm} the x coordinate of sheet\\
-  \hspace*{1cm} int vy0\\
-  \hspace*{1.5cm} the y coordinate of sheet\\
-  \hspace*{1cm} int col\_inv\\
-  \hspace*{1.5cm}  the number of invisible color\\
-  \hspace*{1cm} int height\\
-  \hspace*{1.5cm}  the height of sheet\\
-  \hspace*{1cm} int flags\\
-  \hspace*{1.5cm}  the states of sheet, using or not \\
-  
-  \item
-  NAME \\
-  \hspace*{1cm}\texttt{SHTCTL} \\
-  SYNOPSIS \\
-  \hspace*{1cm} \texttt{SHTCTL} structure is used to manage the structure
-of multiple layer information, including how many layers there are in total, the size and
-height of each layer.\\
-  MEMBER \\
-  \hspace*{1cm} unsigned char* vram\\
-  \hspace*{1.5cm}  the address of VRAM\\
-  \hspace*{1cm} unsigned char* map\\
-  \hspace*{1.5cm} which layer the pixel on the screen belongs to\\
-  \hspace*{1cm} int xsize \\
-  \hspace*{1.5cm} the x size of screen\\
-  \hspace*{1cm} int ysize\\
-  \hspace*{1.5cm} the y size of screen\\
-  \hspace*{1cm} int top\\
-  \hspace*{1.5cm}  the height of the top layer\\
-  \hspace*{1cm} struct SHEET* sheets[MAX\_SHEETS]\\
-  \hspace*{1.5cm}  order all layer addresses in order\\
-  \hspace*{1cm} struct SHEET sheets0[MAX\_SHEETS]\\
-  \hspace*{1.5cm} all layers\\
-
-  \item
-  NAME \\
-  \hspace*{1cm}\texttt{TIMER} \\
-  SYNOPSIS \\
-  \hspace*{1cm} \texttt{TIMER} structure is used to manage the time
-slice of the CPU. The timer interrupts the CPU at regular intervals. This structure
-records the length of the timer, usage status and other information.\\
-  MEMBER \\
-  \hspace*{1cm} struct TIMER* next\\
-  \hspace*{1.5cm}  the next timer that is about to timeout\\
-  \hspace*{1cm} unsigned int timeout\\
-  \hspace*{1.5cm} how long is the timeout\\
-  \hspace*{1cm} char flags\\
-  \hspace*{1.5cm} the states of timer\\
-  \hspace*{1cm} char flgas2\\
-  \hspace*{1.5cm} whether to allow automatic cancellation\\
-  \hspace*{1cm} struct FIFO32* fifo\\
-  \hspace*{1.5cm} store data(from mouse, keyboard etc)\\
-  \hspace*{1cm} int data\\
-  \hspace*{1.5cm}  accept data\\
-
-  \item
-  NAME \\
-  \hspace*{1cm}\texttt{TIMERCTL} \\
-  SYNOPSIS \\
-  \hspace*{1cm} \texttt{TIMERCTL} structure is used to manage all
-timers in the system. Including how many timers are in total, current use, and the next
-timer to be used.\\
-  MEMBER \\
-  \hspace*{1cm} unsigned int count\\
-  \hspace*{1.5cm}  count variable\\
-  \hspace*{1cm} unsigned int next\\
-  \hspace*{1.5cm} the next timeout timer\\
-  \hspace*{1cm} sturct TIMER* t0\\
-  \hspace*{1.5cm} the shortest timeout timer\\
-  \hspace*{1cm} struct TIMER timers0\\
-  \hspace*{1.5cm} all timers\\
-
-\item
-  NAME \\
-  \hspace*{1cm}\texttt{TSS32} \\
-  SYNOPSIS \\
-  \hspace*{1cm}  \texttt{TSS32} structure holds information about task
-status segments, which are based on CPU specifications(See 6.2.1\cite{intel_3a}).\\
-  MEMBER \\
-  \hspace*{1cm} int esp0, esp1, esp2\\
-  \hspace*{1.5cm}  stack pointer register\\
-  \hspace*{1cm} int ss0, ss1, ss2\\
-  \hspace*{1.5cm} stack segment register\\
-  \hspace*{1cm} int cr3\\
-  \hspace*{1.5cm} control register\\
-  \hspace*{1cm} int eip\\
-  \hspace*{1.5cm} instruct pointer register\\
-  \hspace*{1cm} int eflags\\
-  \hspace*{1.5cm} registers flag\\
-  \hspace*{1cm} int eax\\
-  \hspace*{1.5cm}  accumulator register\\
-  \hspace*{1cm} int ecx\\
-  \hspace*{1.5cm} counter register\\
-  \hspace*{1cm} int edx\\
-  \hspace*{1.5cm} data register\\
-  \hspace*{1cm} int ebx\\
-  \hspace*{1.5cm} base register\\
-  \hspace*{1cm} int esp\\
-  \hspace*{1.5cm}  stack pointer register\\
-  \hspace*{1cm} int ebp\\
-  \hspace*{1.5cm}  base pointer register\\
-  \hspace*{1cm} int esi\\
-  \hspace*{1.5cm} source index register\\
-  \hspace*{1cm} int edi\\
-  \hspace*{1.5cm}destination index register \\
-  \hspace*{1cm} int es\\
-  \hspace*{1.5cm}  extra segment register\\
-  \hspace*{1cm} int cs\\
-  \hspace*{1.5cm} code segment register\\
-  \hspace*{1cm} int ss\\
-  \hspace*{1.5cm} stack segment register\\
-  \hspace*{1cm} int ds\\
-  \hspace*{1.5cm} data segment register\\
-  \hspace*{1cm} int fs\\
-  \hspace*{1.5cm}  segment part 2\\
-  \hspace*{1cm} int gs\\
-  \hspace*{1.5cm} segment part 3\\
-  \hspace*{1cm} int ldtr\\
-  \hspace*{1.5cm}  LDT segment selector\\
-  \hspace*{1cm} int iomap\\
-  \hspace*{1.5cm} I/O map base address\\
-
-\item
-  NAME \\
-  \hspace*{1cm}\texttt{FILEHANDLE} \\
-  SYNOPSIS \\
-  \hspace*{1cm} \texttt{FILEHANDLE} is used to record an open file related data structure\\
-  MEMBER \\
-  \hspace*{1cm} char* buf\\
-  \hspace*{1.5cm}  store the handler of file\\
-  \hspace*{1cm} int size\\
-  \hspace*{1.5cm} the size of file\\
-  \hspace*{1cm} int pos\\
-  \hspace*{1.5cm} where to read the file\\
-
-  \item
-  NAME \\
-  \hspace*{1cm}\texttt{TASK} \\
-  SYNOPSIS \\
-  \hspace*{1cm} \texttt{TASK} is used to manage variables for a task. Record the task's sections, permissions, stacks, etc.\\
-  MEMBER \\
-  \hspace*{1cm} int sel\\
-  \hspace*{1.5cm}   the number of GDT\\
-  \hspace*{1cm} int flags\\
-  \hspace*{1.5cm} the state of task\\
-  \hspace*{1cm} int level\\
-  \hspace*{1.5cm} the level of task\\
-  \hspace*{1cm} int priority\\
-  \hspace*{1.5cm} the priority of task\\
-  \hspace*{1cm} struct FIFO32 fifo\\
-  \hspace*{1.5cm} a fifo buffer\\
-  \hspace*{1cm} TSS32 tss\\
-  \hspace*{1.5cm}  TSS segment for a task\\
-  \hspace*{1cm} struct CONSOLE* cons\\
-  \hspace*{1.5cm} the console window address of task\\
-  \hspace*{1cm} int ds\_base\\
-  \hspace*{1.5cm}  data segment address of APPs\\
-  \hspace*{1cm} int cons\_stack\\
-  \hspace*{1.5cm}  the stack address of APPs\\
-  \hspace*{1cm} struct SEGMENT\_DESCRIPTOR ldt[2]\\
-  \hspace*{1.5cm}  tow LDT segments of task\\
-  \hspace*{1cm}  struct FILEHANDLE* fhandle\\
-  \hspace*{1.5cm}  file handles for manipulating files \\
-  \hspace*{1cm} int* fat\\
-  \hspace*{1.5cm}  file allocation table\\
-  \hspace*{1cm} char* cmdline\\
-  \hspace*{1.5cm}  store the command line context\\
-  \hspace*{1cm} unsigned char langmode\\
-  \hspace*{1.5cm}  which font to use\\
-  \hspace*{1cm} unsigned char langbyte1\\
-  \hspace*{1.5cm}  store the first byte of the full-width character\\
-
-  \item
-  NAME \\
-  \hspace*{1cm}\texttt{TASKLEVEL} \\
-  SYNOPSIS \\
-  \hspace*{1cm} \texttt{TASKLEVEL} is used to record information for all tasks on a layer\\
-  MEMBER \\
-  \hspace*{1cm} int running\\
-  \hspace*{1.5cm}  how many tasks are running\\
-  \hspace*{1cm} int now\\
-  \hspace*{1.5cm} which task is currently running\\
-  \hspace*{1cm} struct TASK* tasks[MAX\_TASKS\_LV]\\
-  \hspace*{1.5cm} all tasks in one level\\
-
-  \item
-  NAME \\
-  \hspace*{1cm}\texttt{TASKCTL} \\
-  SYNOPSIS \\
-  \hspace*{1cm} \texttt{TASKCTL} is used for all levels of tasks in the entire system.\\
-  MEMBER \\
-  \hspace*{1cm} int now\_lv\\
-  \hspace*{1.5cm}  current activity level\\
-  \hspace*{1cm} int lv\_change\\
-  \hspace*{1.5cm} does the hierarchy need to be changed next time the task is switched\\
-
-  \item
-  NAME \\
-  \hspace*{1cm}\texttt{CONSOLE} \\
-  SYNOPSIS \\
-  \hspace*{1cm} \texttt{CONSOLE} controls terminal window-related variables\\
-  MEMBER \\
-  \hspace*{1cm} struct SHEET* sht\\
-  \hspace*{1.5cm}  which layer is used on the command line\\
-  \hspace*{1cm} int cur\_x\\
-  \hspace*{1.5cm} the x position of console\\
-  \hspace*{1cm} int cur\_y \\
-  \hspace*{1.5cm} the y position of console\\
-  \hspace*{1cm} int cur\_c\\
-  \hspace*{1.5cm} the color of console \\
-  \hspace*{1cm} struct TIMER* timer\\
-  \hspace*{1.5cm} timer to control cursor blinking\\
-  
-\item
-  NAME \\
-  \hspace*{1cm}\texttt{FILEINFO} \\
-  SYNOPSIS \\
-  \hspace*{1cm} \texttt{FILEINFO} is used to record file-related information, such as file name, size, etc.\\
-  MEMBER \\
-  \hspace*{1cm} unsigned char name[8]\\
-  \hspace*{1.5cm}  file name\\
-  \hspace*{1cm} unsigned char ext[3]\\
-  \hspace*{1.5cm} extend name of file\\
-  \hspace*{1cm} unsigned char type\\
-  \hspace*{1.5cm}  file attributes\\
-  \hspace*{1cm} char reserve[10]\\
-  \hspace*{1.5cm} reserve byte\\
-  \hspace*{1cm}  unsigned short time\\
-  \hspace*{1.5cm} the time for storing file\\
-  \hspace*{1cm} unsigned short date\\
-  \hspace*{1.5cm}  the date for storing file\\
-  \hspace*{1cm} unsigned short  clustno\\
-  \hspace*{1.5cm}the file from which sector on the disk is stored \\
+(code~\ref{src:FILEINFO}) is used to record file-related information, such as file name, size,
+etc.
 
 
-\end{enumerate}
+
     
 \subsubsection{3. Each Module}
 \label{sec:3.-modules-kernel}
@@ -1293,6 +1084,7 @@ status segments, which are based on CPU specifications(See 6.2.1\cite{intel_3a})
 \chapter{Implementation}
 
 \section{Kernel}
+This section is used to describe the detailed design of each module of the kernel.
 \subsection{Boot Loader(ipl.asm)}
 
 The boot loader is implemented in Intel assembly. It works as following:
