@@ -526,10 +526,13 @@ The process requires memory space at run time. When it is finished running, it w
 space to the operating system. So the operating system should be able to manage
 memory. Memory utilization should be improved when managing memory. 
 
-The data structures used in the memory management module are discussed below.
+\subparagraph{Data Structure}
+
+
 %~\ref{src:FREEINFO} and ~\ref{src:MEMMAN}.
 
 \paragraph{FREEINFO}
+
 
 \begin{listing}[H]
   \begin{codeblock}
@@ -595,6 +598,191 @@ space. Return the size of free memory.
 \end{description}
 
 
+
+\subsubsection{Task Management(Scheduler)}
+\label{sec:task-management}
+
+The general operating system needs to be able to support multitasking. Simply saying that
+multi-tasking is running multiple programs at the same time. But this only caused the user
+an illusion. For a single CPU, it does not implement a real sense of running programs at
+the same time. It merely divides the running time into many small pieces for different
+programs to run. The operating system should be able to return to the original program
+when switching tasks. Therefore, the register value should be saved when the task is
+switched. The task switching itself will also take time. The operating system should try
+to shorten this time. Doing this on the one hand provides the user with a good experience
+and does not leave the user with a delayed impression. On the other hand, reducing this
+time can improve CPU utilization. Because this time can not be used for program operation.
+
+\subparagraph{Data Structure}
+
+
+\paragraph{TASKLEVEL}
+
+\begin{listing}[H]
+  \begin{codeblock}
+\begin{ccode}
+struct TASKLEVEL
+{ 
+  int running;                      /* how many tasks are running */
+  int now;                          /* which task is currently running */
+  struct TASK* tasks[MAX_TASKS_LV]; /* all tasks in one level */
+};
+\end{ccode}
+  \end{codeblock}
+  \caption{\texttt{struct TASKLEVEL}}\label{src:TASKLEVEL}
+\end{listing}
+
+\texttt{struct TASKLEVEL} (Code~\ref{src:}) is used to record the status of each task in a
+layer.
+
+
+\paragraph{TSS32}
+
+\begin{listing}[H]
+  \begin{codeblock}
+\begin{ccode}
+struct TSS32
+{ 
+  int esp0, esp1, esp2; /* stack pointer register */
+  int ss0, ss1, ss2;    /* stack segment register */
+  int cr3;              /* control register */
+  int eip;              /* instruct pointer register */
+  int eflags;           /* registers flag */
+  int eax;              /* accumulator register */
+  int ecx;              /* counter register */
+  int edx;              /* data register */
+  int ebx;              /* base register */
+  int esp;              /* stack pointer register */
+  int ebp;              /* base pointer register*/
+  int esi;              /* source index register */
+  int edi;              /* destination index register */
+  int es;               /* extra segment register */
+  int cs;               /* code segment register */
+  int ss;               /* stack segment register */
+  int ds;               /* data segment register */
+  int fs;               /* segment part 2 */
+  int gs;               /* segment part 3 */
+  int ldtr;             /* LDT segment selector */
+  int iomap;            /* I/O map base address */
+};
+\end{ccode}
+  \end{codeblock}
+  \caption{\texttt{struct TSS32}}\label{src:TSS32}
+\end{listing}
+
+\texttt{struct TSS32} (Code~\ref{src:TSS32}) structure holds information about task status
+segments, which are based on CPU specifications(See 6.2.1\cite{intel_3a}).
+
+
+\paragraph{TASKCTL}
+
+\begin{listing}[H]
+  \begin{codeblock}
+\begin{ccode}
+struct 
+{ 
+  int now_lv;                             /* current activity level */
+  int lv_change;                          /* does the hierarchy need to be changed next time the task is switched
+  *                                       /
+  struct TASKLEVEL level[MAX_TASKLEVELS]; /*all levels*/
+  struct TASK tasks0[MAX_TASKS];          /* all running program */
+  
+};
+\end{ccode}
+  \end{codeblock}
+  \caption{\texttt{struct TASKCTL}}\label{src:TASKCTL}
+\end{listing}
+
+\texttt{struct } (Code~\ref{src:TASKCTL}) is used to control all tasks in the system.
+
+
+
+\paragraph{TASK}
+
+\begin{listing}[H]
+  \begin{codeblock}
+\begin{ccode}
+struct TASK
+{ 
+  int sel;                          /* the number of GDT */
+  int flags;                        /* the state of task */
+  int level;                        /* the level of task */
+  int priority;                     /* the priority of task */
+  struct FIFO32 fifo;               /* a fifo buffer */
+  TSS32 tss;                        /* TSS segment for a task */
+  struct CONSOLE* cons;             /* the console window address of task */
+  int ds_base;                      /* data segment address of APPs */
+  int cons_stack;                   /* the stack address of APPs */
+  struct SEGMENT_DESCRIPTOR ldt[2]; /* tow LDT segments of task */
+  struct FILEHANDLE* fhandle;       /* file handles for manipulating files */
+  int* fat;                         /* file allocation table */
+  char* cmdline;                    /* store the command line context */
+  unsigned char langmode;           /* which font to use */
+  unsigned char langbyte1;          /* store the first byte of the full-width character */
+};
+\end{ccode}
+  \end{codeblock}
+  \caption{\texttt{struct TASK}}\label{src:TASK}
+\end{listing}
+
+\texttt{struct TASK} (Code~\ref{src:TASK}) is used to manage variables for a task. Record
+the task's sections, permissions, stacks, etc. 
+
+
+
+\subparagraph{Task Management Functions}
+
+\begin{description}
+\item[\mintinline{c}{struct TASK *task_now(void);}] eturns which level of which task is
+  currently running.
+  
+\item[\mintinline{c}{struct TASK *task_init(struct MEMMAN *memman);}] initialize a task.
+
+\item[\mintinline{c}{struct TASK *task_alloc(void);}] initialize the structure of a task.
+
+\item[\mintinline{c}{void task_run(struct TASK *task, int level, int priority);}] add a
+  task to list.
+
+\item[\mintinline{c}{void task_switch(void);}] switch to the next task.
+
+\item[\mintinline{c}{void task_sleep(struct TASK *task);}] put a task to sleep.
+\end{description}
+
+
+
+
+
+\subsubsection{}
+\label{sec:}
+
+
+  
+\subparagraph{Data Structure}
+
+\paragraph{}
+
+\begin{listing}[H]
+  \begin{codeblock}
+\begin{ccode}
+struct 
+{ 
+  
+};
+\end{ccode}
+  \end{codeblock}
+  \caption{\texttt{struct }}\label{src:}
+\end{listing}
+
+\texttt{struct } (Code~\ref{src:})
+
+\subparagraph{ Functions}
+
+\begin{description}
+  
+\item[\mintinline{c}{}]
+\item[\mintinline{c}{}]
+  
+\end{description}
 
 
 \iffalse %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
