@@ -1,0 +1,23 @@
+\input{printable}
+
+\begin{document}
+\begin{tikzpicture}
+  \node (test) [process, minimum width=4cm] {};
+  \draw (test.north) -- (test.south);
+  \draw ($(test.north) + (-1cm, 0)$) -- ($(test.south) + (-1cm, 0)$);
+  \draw ($(test.north) + (1cm, 0)$) -- ($(test.south) + (1cm, 0)$);
+  \node (test2) [process, minimum width=4cm] {};
+  \draw (test.south) -- ($(test.south) + (0, -0.5em)$);
+  \node (label) [below=of test, yshift=1cm, xshift=-0.5cm, scale=0.5] {test};
+  
+  
+\end{tikzpicture}
+\end{document}
+
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
