@@ -526,7 +526,7 @@ The process requires memory space at run time. When it is finished running, it w
 space to the operating system. So the operating system should be able to manage
 memory. Memory utilization should be improved when managing memory. 
 
-\subparagraph{Data Structure}
+\subparagraph{Memory Management Data Structure}
 
 
 %~\ref{src:FREEINFO} and ~\ref{src:MEMMAN}.
@@ -613,7 +613,7 @@ to shorten this time. Doing this on the one hand provides the user with a good e
 and does not leave the user with a delayed impression. On the other hand, reducing this
 time can improve CPU utilization. Because this time can not be used for program operation.
 
-\subparagraph{Data Structure}
+\subparagraph{Task Management Data Structure}
 
 
 \paragraph{TASKLEVEL}
@@ -748,6 +748,169 @@ the task's sections, permissions, stacks, etc.
 \item[\mintinline{c}{void task_sleep(struct TASK *task);}] put a task to sleep.
 \end{description}
 
+
+\subsubsection{Graphic Management}
+\label{sec:graphic}
+The patterns on the screen belong to one layer. The movement of the window is achieved
+through layers. The height of the layer affects the layout of the screen. Layers to
+consider how to cover when moving, which one is on and below.
+
+
+  
+\subparagraph{Graphic Management Data Structure}
+
+\paragraph{SHEET}
+
+\begin{listing}[H]
+  \begin{codeblock}
+\begin{ccode}
+struct SHEET
+{ 
+  char* buf;   /* the address of the graphic content depicted */
+  int bxszie;  /* the size of x coordinate of sheet */
+  int bysize;  /* the size of y coordinate of sheet */
+  int vx0;     /* the x coordinate of sheet */
+  int vy0;     /* the y coordinate of sheet */
+  int col_inv; /* the number of invisible color */
+  int height;  /* the height of sheet */
+  int flags;   /* the states of sheet, using or not */
+};
+\end{ccode}
+  \end{codeblock}
+  \caption{\texttt{struct SHEET}}\label{src:SHEET}  
+\end{listing}
+
+\texttt{struct SHEET} (Code~\ref{src:SHEET}) is used to record layer-related information,
+including the layer's size and position.
+
+
+\paragraph{SHTCTL}
+
+\begin{listing}[H]
+  \begin{codeblock}
+\begin{ccode}
+struct SHTCTL
+{ 
+  unsigned char* vram;              /* the address of VRAM */
+  unsigned char* map;               /* which layer the pixel on the screen belongs to*/
+  int xsize;                        /* the x size of screen */
+  int ysize;                        /* the y size of screen */
+  int top;                          /* the height of the top layer */
+  struct SHEET* sheets[MAX_SHEETS]; /* order all layer addresses in order */
+  struct SHEET sheets0[MAX_SHEETS]; /* all layers */
+};
+\end{ccode}
+  \end{codeblock}
+  \caption{\texttt{struct SHTCTL}}\label{src:SHTCTL}
+\end{listing}
+
+\texttt{struct SHTCTL} (Code~\ref{src:SHTCTL}) structure is used to manage the structure
+of multiple layer information, including how many layers there are in total, the size and
+height of each layer.
+
+
+\subparagraph{Graphic Management Functions}
+
+\begin{description}
+  
+\item[\mintinline{c}{struct SHTCTL *shtctl_init(struct MEMMAN *memman,unsigned char
+    *vram,int xsize,int ysize);}] initialize a sheet control structure, \texttt{vram} is
+  the address of video RAM. \texttt{xsize} and \texttt{ysize} is the size of sheet.
+  
+\item[\mintinline{c}{struct SHEET *sheet_alloc(struct SHTCTL *ctl);}] return a
+  \texttt{SHEET} structure if success, otherwise 0.
+
+\item[\mintinline{c}{void sheet_setbuf(struct SHEET *sht,unsigned char *buf,int xsize,int
+    ysize,int col_inv);}] set the properties of the layer \texttt{buf}.
+
+\item[\mintinline{c}{void sheet_updown(struct SHEET *sht, int height);}] set the height of
+  layer \texttt{sht}.
+
+\item[\mintinline{c}{void sheet_refresh(struct SHEET *sht, int bx0, int by0, int bx1, int
+    by1);}] refreshes the screen range specified by \texttt{bx0}, \texttt{by0},
+  \texttt{bx1} and \texttt{by1}.
+
+\item[\mintinline{c}{void sheet_free(struct SHEET *sht);}] release layer.
+
+\item[\mintinline{c}{void make_window8(unsigned char *buf, int xsize, int ysize, char
+    *title, char act);}] make a window in \texttt{SHEET} \texttt{buf}.
+
+\item[\mintinline{c}{void putfonts8_asc_sht(struct SHEET *sht, int x, int y, int c, int b,
+    char *s, int l);}] paint the background color and write the characters and finish the
+  refresh.
+    
+\end{description}
+
+
+
+
+\subsubsection{System Call}
+\label{sec:system-call}
+The system call encapsulates each module in the kernel. These system calls are part of the
+kernel. In this system, system calls are called by the API instead of the application.
+
+  
+\subparagraph{System Calls Prototype}
+
+\begin{description}
+  
+\item[\mintinline{c}{void cons_putchar(struct CONSOLE *cons, int chr, char move);}] put a
+  \texttt{chr} character on \texttt{cons} console.
+  
+\item[\mintinline{c}{void cons_newline(struct CONSOLE *cons);}] newline in \texttt{cons}
+  console.
+    
+\item[\mintinline{c}{void cons_putstr0(struct CONSOLE *cons, char *s);}] put string
+  \texttt{s} in \texttt{cons} console, no length.
+
+\item[\mintinline{c}{void cons_putstr1(struct CONSOLE *cons, char *s, int l);}] put string
+  \texttt{s} in \texttt{cons}, \texttt{l} is the length of string \texttt{s}.
+    
+\item[\mintinline{c}{int cmd_app(struct CONSOLE *cons, int *fat, char *cmdline);}] Start
+  an application based on the input from the command line \texttt{cmdline};
+  
+    
+\end{description}
+
+
+
+
+\subsubsection{Driver}
+\label{sec:driver}
+The driver is used to control and manipulate the hardware. The driver blocked the hardware
+information. It is the dividing line between hardware and software. A driver provides a
+software interface to hardware devices, enabling operating systems and other computer
+programs to access hardware functions without needing to know precise details of the
+hardware being used.
+
+
+  
+\subparagraph{Data Structure}
+
+\paragraph{}
+
+\begin{listing}[H]
+  \begin{codeblock}
+\begin{ccode}
+struct 
+{ 
+  
+};
+\end{ccode}
+  \end{codeblock}
+  \caption{\texttt{struct }}\label{src:}
+\end{listing}
+
+\texttt{struct } (Code~\ref{src:})
+
+\subparagraph{ Functions}
+
+\begin{description}
+  
+\item[\mintinline{c}{}]
+\item[\mintinline{c}{}]
+  
+\end{description}
 
 
 
