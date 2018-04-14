@@ -470,27 +470,32 @@ sector. A sector can store 512 byte. So the capacity of a floppy is:
 
 
 \chapter{Design}
-In this section will introduce the design of the entire system including the kernel, API,
-and applications.
+
+This chapter describes the design issues in the entire software system, including system startup,
+the kernel, APIs, and some applications.
 
 
 \section{Top Level Design}
-All applications use the functions provided by the operating system kernel through API
-calls. This facilitates the application's ability to call the operating system. The
-overall system architecture is as ~\ref{fig:top-level} shown. The process control
-subsystem includes graphics processing, scheduler, and memory management. This system will
-interact with the file system. For example, to launch an application, the function in the
-file system must be used to search for related applications.Of course, the file system
-part will provide a file search service. All of these subsystems may interact with the
-driver or hardware control part. Various functions in the kernel are packaged into system
-call application programs. However, applications do not use these system calls directly,
-but use the API. The process in which the API requests a system call and hands over
-processing to the kernel is called trapping.
 
+As shown in Fig.~\ref{fig:top-level} shown, all applications require services from the
+operating system through a set of function calls. This set of functions provided by the OS
+kernel is usually called \emph{system calls}. However, the user applications do not invoke
+these system calls directly. Instead, they call the API library functions. The process in
+which the API invokes a system call and hands over processing to the kernel is called
+\emph{trapping}.
 
-\begin{figure}[!htbp]
+Within the kernel, there are some important software modules working to keep the system
+running well. The process control subsystem provides graphics processing, CPU scheduling,
+and memory management functions for processes. \fxerror{do you have VFS?} The file
+subsystem provides a friendly way to the user processes for accessing disk data. For
+example, to launch an application program stored on the disk, the function in the file
+system must be invoked to find the specific application. All of these subsystems may
+interact with the driver or hardware control module so as to operate on the system
+hardwares.
+
+\begin{figure}%[!htbp]
   \centering
-  \includegraphics[width=1\textwidth]{kernel-block.pdf}
+  \includegraphics[width=.7\textwidth]{kernel-block.pdf}
   \caption{Top-level design}
   \label{fig:top-level}
 \end{figure}
@@ -498,120 +503,128 @@ processing to the kernel is called trapping.
 
 \section{Detailed Design}
 \label{sec:detailed-design}
-This section will introduce the detailed design of the entire operating system. Including
-the function of each module, data structure in boot loader, kernel, API, APPs. 
+
+This section discusses the system design in details, including the function of each
+module, data structures used in boot loader, kernel, API, and APPs.
 
 \subsection{Boot Up}
 \label{sec:boot-up}
-At this stage the boot loader will load the operating system into memory. It is divided
-into the following four steps: 1, display boot information. 2, read the second sector. 3,
-read two sides of a track. 4, the next cylinder. Until all twenty cylinders have been
-read.
 
+At this stage the boot loader loads the operating system kernel into memory. This is done
+in the following four steps:
+\begin{enumerate}
+\item Display boot information;
+\item Read the second sector;
+\item Read two sides of a track;
+\item Read the next cylinder until all twenty cylinders have been read.
+\end{enumerate}
 
 At this stage, it is also necessary to complete the 32-bit protection mode switch and jump
 to the entry point of the operating system.
 
-
 \subsection{Kernel}
 \label{sec:kernel}
 
-The kernel receives the API call in the upward direction and the kernel requests the
-hardware service through the driver in the downward direction.
+The kernel receives the API calls from user processes, and operates the
+hardwares through the device drivers.\fxerror{say some more.}
 
 \subsubsection{Memory Management}
 \label{sec:memory-management-1}
 
-The process requires memory space at run time. When it is finished running, it will return
-space to the operating system. So the operating system should be able to manage
-memory. Memory utilization should be improved when managing memory. 
 
-\subparagraph{Memory Management Data Structure}
+The process may request memory space while running. When it is finished running, the
+operating system kernel shall reclaim its memory space. % So the operating system should be
+% able to manage memory. Memory utilization should be improved when managing memory.
+\fxerror{say some more. you can get some ideas from wikipedia.}
 
 
-%~\ref{src:FREEINFO} and ~\ref{src:MEMMAN}.
+\paragraph{Data Structures used in MM}
 
-\paragraph{FREEINFO}
+\subparagraph{\texttt{struct FREEINFO}}
 
+(Code~\ref{src:FREEINFO}) is used to record the size in bytes of free memory while the
+system is running.
 
 \begin{listing}[H]
   \begin{codeblock}
 \begin{ccode}
 struct FREEINFO
 { 
-  unsigned int addr; /* the starting address of free space */
-  unsigned int size; /* how many size is free */
+  unsigned int addr; /* start address of free space */
+  unsigned int size; /* size of free mem in bytes*/
 };
 \end{ccode}
   \end{codeblock}
   \caption{\texttt{struct FREEINFO}}\label{src:FREEINFO}
 \end{listing}
 
-\texttt{struct FREEINFO} (Code~\ref{src:FREEINFO}) structure is used to record the size in
-bytes of free memory while the system is running.
-
-\paragraph{MEMMAN}
+\subparagraph{\texttt{struct MEMMAN}} (code~\ref{src:MEMMAN}) is used to record the entire
+memory usage, such as the total remaining free memory space and \fxerror*{???}{entries}.
 
 \begin{listing}[H]
   \begin{codeblock}
 \begin{ccode}
 struct MEMMAN
 { 
-  int frees;                           /* how many memory blocks are free */
-  int maxfrees;                        /* the maximum of frees */
-  int lostsize;                        /* release the sum of the failed memory size */
-  int losts;                           /* the number of failures */
-  struct FREEINFO free[MEMMAN_FREES];  /* record all free memory block information */
+  int frees;    /* free memory blocks */
+  int maxfrees; /* max of frees */
+  int lostsize; /* release the sum of the failed memory size ??????????*/
+  int losts;    /* number of failures */
+  struct FREEINFO free[MEMMAN_FREES]; /* free memory block info */
 };
 \end{ccode}
   \end{codeblock}
   \caption{\texttt{struct MEMMAN}}\label{src:MEMMAN}
 \end{listing}
 
-\texttt{struct MEMMAN} (code~\ref{src:MEMMAN}) structure is used to store the entire
-memory usage, such as the total remaining memory space and entries.
-
-\subparagraph{Memory Management Functions}
+\paragraph{Memory Management Functions}
 
 \begin{description}
-\item[\mintinline{c}{void memman_init(struct MEMMAN* man);}] The memory space is initialized and the
-\texttt{man} variable is used to record the memory space usage and free information.
-
-\item[\mintinline{c}{unsigned int memman_total(struct MEMMAN* man);}] Report the sum of all empty
-space. Return the size of free memory.
-
-\item[\mintinline{c}{unsigned int memman_alloc(struct MEMMAN *man, unsigned int size);}]
+\item[\mintinline{c}{void memman_init(struct MEMMAN* man);}]\ \par The memory space is
+  initialized and the \texttt{man} variable is used to record the memory space usage and
+  free information.
+\item[\mintinline{c}{unsigned int memman_total(struct MEMMAN* man);}]\ \par Report the sum
+  of all empty space. Return the size of free memory.
+\item[\mintinline{c}{unsigned int memman_alloc(struct MEMMAN *man, unsigned int
+    size);}]\ \par
   Allocate memory to the application, where \texttt{size} is the space requested by the
   application. Success returns the available starting address, otherwise 0.
-  
-\item[\mintinline{c}{int memman_free(struct MEMMAN *man, unsigned int addr, unsigned int size);}]
-  Releases memory, where \texttt{addr} is the starting address variable and \texttt{size} is
-  the size of the release variable. Returns 0 if successful, otherwise -1.
-
+\item[\mintinline{c}{int memman_free(struct MEMMAN *man, unsigned int addr, unsigned int
+    size);}]\ \par
+  Releases memory, where \texttt{addr} is the starting address variable and \texttt{size}
+  is the size of the release variable. Returns 0 if successful, otherwise -1.
 \item[\mintinline{c}{unsigned int memman_alloc_4k(struct MEMMAN *man, unsigned int
-    size);}] Memory is allocated in 4k memory units and the starting address of the
+    size);}]\ \par Memory is allocated in 4k memory units and the starting address of the
   allocated memory is returned. \texttt{size} is the size of requested space.
-
 \item[\mintinline{c}{int memman_free_4k(struct MEMMAN *man, unsigned int addr, unsigned
     int size);}] Memory space is freed in units of 4k, \texttt{addr} is the starting
   point variable, and \texttt{size} is the release size.
 \end{description}
 
-
-
-\subsubsection{Task Management(Scheduler)}
+\subsubsection{Task Management (Scheduler)}
 \label{sec:task-management}
 
-The general operating system needs to be able to support multitasking. Simply saying that
-multi-tasking is running multiple programs at the same time. But this only caused the user
-an illusion. For a single CPU, it does not implement a real sense of running programs at
-the same time. It merely divides the running time into many small pieces for different
-programs to run. The operating system should be able to return to the original program
-when switching tasks. Therefore, the register value should be saved when the task is
-switched. The task switching itself will also take time. The operating system should try
-to shorten this time. Doing this on the one hand provides the user with a good experience
-and does not leave the user with a delayed impression. On the other hand, reducing this
-time can improve CPU utilization. Because this time can not be used for program operation.
+The general operating systems need to be able to support multitasking. Simply saying that
+multi-tasking is running multiple programs at the same time. But this only gives the user
+an illusion. For a single CPU, it cannot handle multiple programs at the same time. It
+merely divides the CPU time into many small pieces for different programs to run. The
+operating system should be able to do task switching, that is to pass the CPU from one
+process to another. And at a later time to switch it back, as shown in
+Fig.~\ref{fig:ctxt-switch}. \fxerror*{see wikipedia}{Therefore, the register values should
+  be saved when the task is switched. The task switching itself also takes time. The
+  operating system should try to shorten this time. Doing this on the one hand provides
+  the user with a good experience and does not leave the user with a delayed
+  impression. On the other hand, reducing this time can improve CPU utilization. Because
+  this time can not be used for program operation.}
+
+\begin{figure}
+  \centering
+  \begin{center}
+    \includegraphics[width=.5\textwidth]{switch}
+  \end{center}
+  \caption{Context switch}
+  \label{fig:ctxt-switch}
+\end{figure}
 
 \subparagraph{Task Management Data Structure}
 
@@ -1405,13 +1418,15 @@ etc.
 \section{Boot Up}
 \label{sec:boot-up-1}
 
-The boot loader is implemented in Intel assembly. It works as following:
+The boot loader is implemented in Intel assembly. It works as follows:
 
 \begin{enumerate}
 \item \textbf{Display boot information:} Firstly, the code in boot sector (See
-  Appendix~\ref{sec:dis-boo-inf}) outputs some boot information. When \texttt{al=0}, the
+  Appendix~\ref{sec:dis-boo-inf}) outputs some boot information. \fxerror*{Not clear. You
+    have to explain what is al/ah for. For example, as shown in table... al is for..., ah
+    is for... int 0x10 is for...}{When \texttt{al=0}, the
   null character of boot information hit. Interrupt \texttt{0x10} is used for showing a
-  character.
+  character on the screen.}
 \item \textbf{Read the second sector:} Then jump to load C0-H0-S2, \texttt{ax} register
   saved the address where beginning puts the sectors from floppy. And preparing parameters
   for interrupt \texttt{0x13} in registers. The \texttt{0x13} interrupt used for read
@@ -1427,15 +1442,15 @@ The boot loader is implemented in Intel assembly. It works as following:
   sector number (\texttt{cl} register) is added by 1 and compare it to 18, if it's smaller
   than 18, jump to \texttt{readloop}, read the next sector.
 
-  If the value of \texttt{cl} register bigger or equal to than 18, meaning that one track
+  If the value of \texttt{cl} register is bigger or equal to 18, meaning that one track
   18 sector in this side of floppy read already, then reversed the head, add 1 to
   \texttt{dh} register.
 
   If the value of \texttt{dh} register after adding larger than or equal to 2, it's saying
   the original head is 1, one track of two sides read already. Otherwise the value of
   \texttt{dh} register smaller than 2, read this side indicating by \texttt{dh} register,
-  jump to \texttt{readloop} segmentation. Appendix~\ref{sec:rea-two-sid} is the code to
-  perform this function.
+  jump to \texttt{readloop} segmentation. Appendix~\ref{sec:rea-two-sid} is the code 
+  performing this function.
 
   There is a pseudo code about this process:
   \begin{figure}[!ht]
@@ -1514,9 +1529,7 @@ The above four steps can be intuitively reflected in the Fig. ~\ref{fig:iplflowc
 
 %% 不要动下面四行！
 \appendix{}
-\printbibliography[heading={bibintoc},title={Bibliography}] % 输出参考文献
-\advisorinfopage{}                 % 输出指导教师简介
-\acknowledgmentspage{}             % 输出鸣谢
+\maketailpages{} % 参考文献、指导教师简介、鸣谢
 
 %%% 下面是附录部分，可以没有。
 
