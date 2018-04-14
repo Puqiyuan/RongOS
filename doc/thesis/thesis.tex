@@ -645,7 +645,7 @@ struct TASKLEVEL
   \caption{\texttt{struct TASKLEVEL}}\label{src:TASKLEVEL}
 \end{listing}
 
-\texttt{struct TASKLEVEL} (Code~\ref{src:}) is used to record the status of each task in a
+\texttt{struct TASKLEVEL} (Code~\ref{src:TASKLEVEL}) is used to record the status of each task in a
 layer.
 
 
@@ -897,31 +897,16 @@ programs to access hardware functions without needing to know precise details of
 hardware being used.
 
 
-  
-\subparagraph{Data Structure}
-
-\paragraph{}
-
-\begin{listing}[H]
-  \begin{codeblock}
-\begin{ccode}
-struct 
-{ 
-  
-};
-\end{ccode}
-  \end{codeblock}
-  \caption{\texttt{struct }}\label{src:}
-\end{listing}
-
-\texttt{struct } (Code~\ref{src:})
-
-\subparagraph{ Functions}
+\subparagraph{Driver Functions}
 
 \begin{description}
   
-\item[\mintinline{c}{}]
-\item[\mintinline{c}{}]
+\item[\mintinline{c}{void set_palette(int start, int end, unsigned char *rgb)}] initialize the palette.
+\item[\mintinline{c}{void init_pic(void);}] initialize the PIC.
+\item[\mintinline{c}{void init_keyboard(struct FIFO32 *fifo, int data0);}] initialze the
+  keyboard.
+\item[\mintinline{c}{void enable_mouse(struct FIFO32 *fifo, int data0, struct  MOUSE_DEC
+    *mdec);}] activate mouse
   
 \end{description}
 
