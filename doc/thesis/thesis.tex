@@ -985,31 +985,296 @@ void enable_mouse(struct FIFO32 *fifo, int data0, struct MOUSE_DEC *mdec);
 
 \begin{codeblock}[1]
 \begin{ccode}
-struct 
+struct FILEINFO
 { 
-  
+  unsigned char name[8];   /* file name */
+  unsigned char ext[3];    /* extend name of file */
+  unsigned char type;      /* file attributes */
+  char reserve[10];        /* reserve byte */
+  unsigned short time;     /* the time for storing file */
+  unsigned short date;     /* the date for storing file */
+  unsigned short  clustno; /* the file from which sector on the disk is stored */
 };
 \end{ccode}
 \end{codeblock}
 \begin{itemize}
-\item 
+\item is used to record file-related information, such as file name, size, etc.
 \end{itemize}
 
-\paragraph{ Functions}
+\paragraph{FAT Functions}
 
 \begin{ccode}
-
+void file_readfat(int *fat, unsigned char *img);
 \end{ccode}
 \begin{itemize}
-\item 
+\item read file allocation table
 \end{itemize}
 
 \begin{ccode}
-
+void file_loadfile(int clustno, int size, char *buf, int *fat, char *img);
 \end{ccode}
 \begin{itemize}
-\item 
+\item read file contents into memory
 \end{itemize}
+
+
+\begin{ccode}
+struct FILEINFO *file_search(char *name, struct FILEINFO *finfo, int max);
+\end{ccode}
+\begin{itemize}
+\item search for files based on provided \texttt{name}.
+\end{itemize}
+
+
+\subsection{API}
+\label{sec:api}
+In computer programming, APIs are subroutines that are used to develop
+applications. Usually, it communicates all parts of the software. A good API makes
+application development easier. By abstracting the underlying implementation and only
+exposing objects or actions the developer needs, an API simplifies programming.
+
+\subsubsection{All APIs}
+\label{sec:all-apis}
+
+
+\begin{ccode}
+void api_putchar(int c);
+\end{ccode}
+\begin{itemize}
+\item output a character \texttt{c} on the console window.
+\end{itemize}
+
+
+
+\begin{ccode}
+void api_putstr0(char *s);
+\end{ccode}
+\begin{itemize}
+\item ouput a string \texttt{s} on the console window.
+\end{itemize}
+
+
+
+\begin{ccode}
+void api_putstr1(char *s, int l);
+\end{ccode}
+\begin{itemize}
+\item output a string \texttt{s} on console window, \texttt{l} is the length of this string.
+\end{itemize}
+
+
+\begin{ccode}
+void api_end(void);
+\end{ccode}
+\begin{itemize}
+\item end the application's running.
+\end{itemize}
+
+
+\begin{ccode}
+int api_openwin(char *buf, int xsiz, int ysiz, int col_inv, char *title);
+\end{ccode}
+\begin{itemize}
+\item open a window, return the hanlder of window.
+\end{itemize}
+
+
+\begin{ccode}
+void api_putstrwin(int win, int x, int y, int col, int len, char *str);
+\end{ccode}
+\begin{itemize}
+\item display string \texttt{str} on window. 
+\end{itemize}
+
+
+
+\begin{ccode}
+void api_boxfilwin(int win, int x0, int y0, int x1, int y1, int col);
+\end{ccode}
+\begin{itemize}
+\item draw a box on the window
+\end{itemize}
+
+
+
+\begin{ccode}
+void api_initmalloc(void);
+\end{ccode}
+\begin{itemize}
+\item initialize the structure of the management memory
+\end{itemize}
+
+
+
+\begin{ccode}
+char *api_malloc(int size);
+\end{ccode}
+\begin{itemize}
+\item allocating memory for the application.
+\end{itemize}
+
+
+
+\begin{ccode}
+void api_free(char *addr, int size);
+\end{ccode}
+\begin{itemize}
+\item free up memory used by the application.
+\end{itemize}
+
+
+
+\begin{ccode}
+void api_point(int win, int x, int y, int col);
+\end{ccode}
+\begin{itemize}
+\item draw a pint on \texttt{win} window.
+\end{itemize}
+
+
+
+\begin{ccode}
+void api_refreshwin(int win, int x0, int y0, int x1, int y1);
+\end{ccode}
+\begin{itemize}
+\item refresh the window.
+\end{itemize}
+
+
+
+\begin{ccode}
+void api_linewin(int win, int x0, int y0, int x1, int y1, int col);
+\end{ccode}
+\begin{itemize}
+\item draw a straight line.
+\end{itemize}
+
+
+\begin{ccode}
+void api_closewin(int win);
+\end{ccode}
+\begin{itemize}
+\item close window.
+\end{itemize}
+
+
+\begin{ccode}
+int api_getkey(int mode);
+\end{ccode}
+\begin{itemize}
+\item accept keyboard input.
+\end{itemize}
+
+
+\begin{ccode}
+int api_alloctimer(void);
+\end{ccode}
+\begin{itemize}
+\item get timer.
+\end{itemize}
+
+
+
+\begin{ccode}
+void api_inittimer(int timer, int data);
+\end{ccode}
+\begin{itemize}
+\item set the data of timer sending.
+\end{itemize}
+
+
+\begin{ccode}
+void api_settimer(int timer, int time);
+\end{ccode}
+\begin{itemize}
+\item set the time of timer.
+\end{itemize}
+
+
+
+\begin{ccode}
+void api_freetimer(int timer);
+\end{ccode}
+\begin{itemize}
+\item release timer.
+\end{itemize}
+
+
+
+
+\begin{ccode}
+void api_beep(int tone);
+\end{ccode}
+\begin{itemize}
+\item make a buzzer sound
+\end{itemize}
+
+
+
+\begin{ccode}
+int api_fopen(char *fname);
+\end{ccode}
+\begin{itemize}
+\item open file, return file hanlder
+\end{itemize}
+
+
+
+\begin{ccode}
+void api_fclose(int fhandle);
+\end{ccode}
+\begin{itemize}
+\item close file
+\end{itemize}
+
+
+\begin{ccode}
+void api_fseek(int fhandle, int offset, int mode);
+\end{ccode}
+\begin{itemize}
+\item locate a file
+\end{itemize}
+
+
+
+\begin{ccode}
+int api_fsize(int fhandle, int mode);
+\end{ccode}
+\begin{itemize}
+\item return the size of \texttt{fhandle} file.
+\end{itemize}
+
+
+
+\begin{ccode}
+int api_fread(char *buf, int maxsize, int fhandle);
+\end{ccode}
+\begin{itemize}
+\item read file, return read bytes. 
+\end{itemize}
+
+
+
+\begin{ccode}
+int api_cmdline(char *buf, int maxsize);
+\end{ccode}
+\begin{itemize}
+\item return the context of command line.
+\end{itemize}
+
+
+
+\begin{ccode}
+int api_getlang(void);
+\end{ccode}
+\begin{itemize}
+\item return the language mode.
+\end{itemize}
+
+
+
+\subsection{APPs}
+\label{sec:apps-1}
 
 
 \subsubsection{}
@@ -1492,11 +1757,11 @@ etc.
 
 
     
-\subsection{API}
-\label{sec:api}
+%\subsection{API}
+%\label{sec:api}
 
-\subsection{APPs}
-\label{sec:apps-1}
+%\subsection{APPs}
+%\label{sec:apps-1}
 
 
 
