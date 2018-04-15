@@ -572,49 +572,37 @@ memory usage, such as the total remaining free memory space and \fxerror*{???}{e
 
 \paragraph{Memory Management Functions}
 
-\begin{ccode}
-void memman_init(struct MEMMAN* man);
-\end{ccode}
+\csingle|void memman_init(struct MEMMAN* man);|
 \begin{itemize}
 \item The memory space is initialized and the \texttt{man} variable is used to record the
   memory space usage and free information.
 \end{itemize}
 
-\begin{ccode}
-unsigned int memman_total(struct MEMMAN* man);
-\end{ccode}
+\csingle|unsigned int memman_total(struct MEMMAN* man);|
 \begin{itemize}
 \item Report the sum of all empty space. Return the size of free memory.
 \end{itemize}
 
-\begin{ccode}
-unsigned int memman_alloc(struct MEMMAN *man, unsigned int size);
-\end{ccode}
+\csingle|unsigned int memman_alloc(struct MEMMAN *man, unsigned int size);|
 \begin{itemize}
 \item Allocate memory to the application, where \texttt{size} is the space requested by the
   application. Success returns the available starting address, otherwise 0.
 \end{itemize}
 
-\begin{ccode}
-int memman_free(struct MEMMAN *man, unsigned int addr, unsigned int size);
-\end{ccode}
+\csingle|int memman_free(struct MEMMAN *man, unsigned int addr, unsigned int size);|
 \begin{itemize}
 \item Releases memory, where \texttt{addr} is the starting address variable and
   \texttt{size} is the size of the release variable. Returns 0 if successful, otherwise
   -1.
 \end{itemize}
 
-\begin{ccode}
-unsigned int memman_alloc_4k(struct MEMMAN *man, unsigned int size);
-\end{ccode}
+\csingle|unsigned int memman_alloc_4k(struct MEMMAN *man, unsigned int size);|
 \begin{itemize}
 \item Memory is allocated in 4k memory units and the starting address of the allocated
   memory is returned. \texttt{size} is the size of requested space.
 \end{itemize}
 
-\begin{ccode}
-int memman_free_4k(struct MEMMAN *man, unsigned int addr, unsigned int size);
-\end{ccode}
+\csingle|int memman_free_4k(struct MEMMAN *man, unsigned int addr, unsigned int size);|
 \begin{itemize}
 \item Memory space is freed in units of 4k, \texttt{addr} is the starting
   point variable, and \texttt{size} is the release size.
@@ -738,44 +726,32 @@ struct TASK
 
 \paragraph{Task Management Functions}
 
-\begin{ccode}
-struct TASK *task_now(void);
-\end{ccode}
+\csingle|struct TASK *task_now(void);|
 \begin{itemize}
 \item Returns which level of which task is currently running.
 \end{itemize}
 
-\begin{ccode}
-struct TASK *task_init(struct MEMMAN *memman);
-\end{ccode}
+\csingle|struct TASK *task_init(struct MEMMAN *memman);|
 \begin{itemize}
 \item Initialize a task.
 \end{itemize}
 
-\begin{ccode}
-struct TASK *task_alloc(void);
-\end{ccode}
+\csingle|struct TASK *task_alloc(void);|
 \begin{itemize}
 \item Initialize the structure of a task.
 \end{itemize}
 
-\begin{ccode}
-void task_run(struct TASK *task, int level, int priority);
-\end{ccode}
+\csingle|void task_run(struct TASK *task, int level, int priority);|
 \begin{itemize}
 \item Add a task to list.
 \end{itemize}
 
-\begin{ccode}
-void task_switch(void);
-\end{ccode}
+\csingle|void task_switch(void);|
 \begin{itemize}
 \item Switch to the next task.
 \end{itemize}
 
-\begin{ccode}
-void task_sleep(struct TASK *task);
-\end{ccode}
+\csingle|void task_sleep(struct TASK *task);|
 \begin{itemize}
 \item Put a task to sleep.
 \end{itemize}
@@ -831,60 +807,44 @@ struct SHTCTL
 
 \paragraph{Graphic Management Functions}
 
-\begin{ccode}
-struct SHTCTL *shtctl_init(struct MEMMAN *memman,unsigned char *vram,int xsize,int ysize);
-\end{ccode}
+\csingle|struct SHTCTL *shtctl_init(struct MEMMAN *memman,unsigned char *vram,int xsize,int ysize);|
 \begin{itemize}
 \item Initialize a sheet control structure, \texttt{vram} is the address of video
   RAM. \texttt{xsize} and \texttt{ysize} is the size of sheet.
 \end{itemize}
 
-\begin{ccode}
-struct SHEET *sheet_alloc(struct SHTCTL *ctl);
-\end{ccode}
+\csingle|struct SHEET *sheet_alloc(struct SHTCTL *ctl);|
 \begin{itemize}
 \item Return a \texttt{SHEET} structure if success, otherwise 0.
 \end{itemize}
 
-\begin{ccode}
-void sheet_setbuf(struct SHEET *sht,unsigned char *buf,int xsize,int ysize,int col_inv);
-\end{ccode}
+\csingle|void sheet_setbuf(struct SHEET *sht,unsigned char *buf,int xsize,int ysize,int col_inv);|
 \begin{itemize}
 \item Set the properties of the layer \texttt{buf}.
 \end{itemize}
 
-\begin{ccode}
-void sheet_updown(struct SHEET *sht, int height);
-\end{ccode}
+\csingle|void sheet_updown(struct SHEET *sht, int height);|
 \begin{itemize}
 \item Set the height of layer \texttt{sht}.
 \end{itemize}
 
-\begin{ccode}
-void sheet_refresh(struct SHEET *sht, int bx0, int by0, int bx1, int by1);
-\end{ccode}
+\csingle|void sheet_refresh(struct SHEET *sht, int bx0, int by0, int bx1, int by1);|
 \begin{itemize}
 \item Refreshes the screen range specified by \texttt{bx0}, \texttt{by0}, \texttt{bx1} and
   \texttt{by1}.
 \end{itemize}
 
-\begin{ccode}
-void sheet_free(struct SHEET *sht);
-\end{ccode}
+\csingle|void sheet_free(struct SHEET *sht);|
 \begin{itemize}
 \item Release layer.
 \end{itemize}
 
-\begin{ccode}
-void make_window8(unsigned char *buf, int xsize, int ysize, char *title, char act);
-\end{ccode}
+\csingle|void make_window8(unsigned char *buf, int xsize, int ysize, char *title, char act);|
 \begin{itemize}
 \item Make a window in \texttt{SHEET} \texttt{buf}.
 \end{itemize}
 
-\begin{ccode}
-void putfonts8_asc_sht(struct SHEET *sht, int x, int y, int c, int b, char *s, int l);
-\end{ccode}
+\csingle|void putfonts8_asc_sht(struct SHEET *sht, int x, int y, int c, int b, char *s, int l);|
 \begin{itemize}
 \item Paint the background color and write the characters and finish the refresh.
 \end{itemize}
@@ -898,38 +858,28 @@ application.\fxerror{see wikipedia}
 
 \paragraph{System Calls Prototype}
 
-\begin{ccode}
-void cons_putchar(struct CONSOLE *cons, int chr, char move);
-\end{ccode}
+\csingle|void cons_putchar(struct CONSOLE *cons, int chr, char move);|
 \begin{itemize}
 \item put a \texttt{chr} character on \texttt{cons} console.
 \end{itemize}
 
-\begin{ccode}
-void cons_newline(struct CONSOLE *cons);
-\end{ccode}
+\csingle|void cons_newline(struct CONSOLE *cons);|
 \begin{itemize}
 \item newline in \texttt{cons} console.
 \end{itemize}
 
-\begin{ccode}
-void cons_putstr0(struct CONSOLE *cons, char *s);
-\end{ccode}
+\csingle|void cons_putstr0(struct CONSOLE *cons, char *s);|
 \begin{itemize}
 \item put string \texttt{s} in \texttt{cons} console, no length.
 \end{itemize}
 
-\begin{ccode}
-void cons_putstr1(struct CONSOLE *cons, char *s, int l);
-\end{ccode}
+\csingle|void cons_putstr1(struct CONSOLE *cons, char *s, int l);|
 \begin{itemize}
 \item put string \texttt{s} in \texttt{cons}, \texttt{l} is the length of string
   \texttt{s}.
 \end{itemize}
 
-\begin{ccode}
-int cmd_app(struct CONSOLE *cons, int *fat, char *cmdline);
-\end{ccode}
+\csingle|int cmd_app(struct CONSOLE *cons, int *fat, char *cmdline);|
 \begin{itemize}
 \item Start an application based on the input from the command line \texttt{cmdline};
 \end{itemize}
@@ -945,30 +895,22 @@ hardware functions without needing to know precise details of the hardware being
 
 \paragraph{Driver Functions}
 
-\begin{ccode}
-void set_palette(int start, int end, unsigned char *rgb);
-\end{ccode}
+\csingle|void set_palette(int start, int end, unsigned char *rgb);|
 \begin{itemize}
 \item initialize the palette.
 \end{itemize}
 
-\begin{ccode}
-void init_pic(void);
-\end{ccode}
+\csingle|void init_pic(void);|
 \begin{itemize}
 \item initialize the PIC.
 \end{itemize}
 
-\begin{ccode}
-void init_keyboard(struct FIFO32 *fifo, int data0);
-\end{ccode}
+\csingle|void init_keyboard(struct FIFO32 *fifo, int data0);|
 \begin{itemize}
 \item initialze the keyboard.
 \end{itemize}
 
-\begin{ccode}
-void enable_mouse(struct FIFO32 *fifo, int data0, struct MOUSE_DEC *mdec);
-\end{ccode}
+\csingle|void enable_mouse(struct FIFO32 *fifo, int data0, struct MOUSE_DEC *mdec);|
 \begin{itemize}
 \item activate mouse.
 \end{itemize}
@@ -1003,28 +945,20 @@ struct FILEINFO
 
 \paragraph{FAT Functions}
 
-\begin{ccode}
-void file_readfat(int *fat, unsigned char *img);
-\end{ccode}
+\csingle|void file_readfat(int *fat, unsigned char *img);|
 \begin{itemize}
 \item read file allocation table
 \end{itemize}
 
-\begin{ccode}
-void file_loadfile(int clustno, int size, char *buf, int *fat, char *img);
-\end{ccode}
+\csingle|void file_loadfile(int clustno, int size, char *buf, int *fat, char *img);|
 \begin{itemize}
 \item read file contents into memory
 \end{itemize}
 
-
-\begin{ccode}
-struct FILEINFO *file_search(char *name, struct FILEINFO *finfo, int max);
-\end{ccode}
+\csingle|struct FILEINFO *file_search(char *name, struct FILEINFO *finfo, int max);|
 \begin{itemize}
 \item search for files based on provided \texttt{name}.
 \end{itemize}
-
 
 \subsection{API}
 \label{sec:api}
@@ -1036,242 +970,140 @@ exposing objects or actions the developer needs, an API simplifies programming.
 \subsubsection{All APIs}
 \label{sec:all-apis}
 
-
-\begin{ccode}
-void api_putchar(int c);
-\end{ccode}
+\csingle|void api_putchar(int c);|
 \begin{itemize}
 \item output a character \texttt{c} on the console window.
 \end{itemize}
 
-
-
-\begin{ccode}
-void api_putstr0(char *s);
-\end{ccode}
+\csingle|void api_putstr0(char *s);|
 \begin{itemize}
 \item ouput a string \texttt{s} on the console window.
 \end{itemize}
 
-
-
-\begin{ccode}
-void api_putstr1(char *s, int l);
-\end{ccode}
+\csingle|void api_putstr1(char *s, int l);|
 \begin{itemize}
 \item output a string \texttt{s} on console window, \texttt{l} is the length of this string.
 \end{itemize}
 
-
-\begin{ccode}
-void api_end(void);
-\end{ccode}
+\csingle|void api_end(void);|
 \begin{itemize}
 \item end the application's running.
 \end{itemize}
 
-
-\begin{ccode}
-int api_openwin(char *buf, int xsiz, int ysiz, int col_inv, char *title);
-\end{ccode}
+\csingle|int api_openwin(char *buf, int xsiz, int ysiz, int col_inv, char *title);|
 \begin{itemize}
 \item open a window, return the hanlder of window.
 \end{itemize}
 
-
-\begin{ccode}
-void api_putstrwin(int win, int x, int y, int col, int len, char *str);
-\end{ccode}
+\csingle|void api_putstrwin(int win, int x, int y, int col, int len, char *str);|
 \begin{itemize}
 \item display string \texttt{str} on window. 
 \end{itemize}
 
-
-
-\begin{ccode}
-void api_boxfilwin(int win, int x0, int y0, int x1, int y1, int col);
-\end{ccode}
+\csingle|void api_boxfilwin(int win, int x0, int y0, int x1, int y1, int col);|
 \begin{itemize}
 \item draw a box on the window
 \end{itemize}
 
-
-
-\begin{ccode}
-void api_initmalloc(void);
-\end{ccode}
+\csingle|void api_initmalloc(void);|
 \begin{itemize}
 \item initialize the structure of the management memory
 \end{itemize}
 
-
-
-\begin{ccode}
-char *api_malloc(int size);
-\end{ccode}
+\csingle|char *api_malloc(int size);|
 \begin{itemize}
 \item allocating memory for the application.
 \end{itemize}
 
-
-
-\begin{ccode}
-void api_free(char *addr, int size);
-\end{ccode}
+\csingle|void api_free(char *addr, int size);|
 \begin{itemize}
 \item free up memory used by the application.
 \end{itemize}
 
-
-
-\begin{ccode}
-void api_point(int win, int x, int y, int col);
-\end{ccode}
+\csingle|void api_point(int win, int x, int y, int col);|
 \begin{itemize}
 \item draw a pint on \texttt{win} window.
 \end{itemize}
 
-
-
-\begin{ccode}
-void api_refreshwin(int win, int x0, int y0, int x1, int y1);
-\end{ccode}
+\csingle|void api_refreshwin(int win, int x0, int y0, int x1, int y1);|
 \begin{itemize}
 \item refresh the window.
 \end{itemize}
 
-
-
-\begin{ccode}
-void api_linewin(int win, int x0, int y0, int x1, int y1, int col);
-\end{ccode}
+\csingle|void api_linewin(int win, int x0, int y0, int x1, int y1, int col);|
 \begin{itemize}
 \item draw a straight line.
 \end{itemize}
 
-
-\begin{ccode}
-void api_closewin(int win);
-\end{ccode}
+\csingle|void api_closewin(int win);|
 \begin{itemize}
 \item close window.
 \end{itemize}
 
-
-\begin{ccode}
-int api_getkey(int mode);
-\end{ccode}
+\csingle|int api_getkey(int mode);|
 \begin{itemize}
 \item accept keyboard input.
 \end{itemize}
 
-
-\begin{ccode}
-int api_alloctimer(void);
-\end{ccode}
+\csingle|int api_alloctimer(void);|
 \begin{itemize}
 \item get timer.
 \end{itemize}
 
-
-
-\begin{ccode}
-void api_inittimer(int timer, int data);
-\end{ccode}
+\csingle|void api_inittimer(int timer, int data);|
 \begin{itemize}
 \item set the data of timer sending.
 \end{itemize}
 
-
-\begin{ccode}
-void api_settimer(int timer, int time);
-\end{ccode}
+\csingle|void api_settimer(int timer, int time);|
 \begin{itemize}
 \item set the time of timer.
 \end{itemize}
 
-
-
-\begin{ccode}
-void api_freetimer(int timer);
-\end{ccode}
+\csingle|void api_freetimer(int timer);|
 \begin{itemize}
 \item release timer.
 \end{itemize}
 
-
-
-
-\begin{ccode}
-void api_beep(int tone);
-\end{ccode}
+\csingle|void api_beep(int tone);|
 \begin{itemize}
 \item make a buzzer sound
 \end{itemize}
 
-
-
-\begin{ccode}
-int api_fopen(char *fname);
-\end{ccode}
+\csingle|int api_fopen(char *fname);|
 \begin{itemize}
 \item open file, return file hanlder
 \end{itemize}
 
-
-
-\begin{ccode}
-void api_fclose(int fhandle);
-\end{ccode}
+\csingle|void api_fclose(int fhandle);|
 \begin{itemize}
 \item close file
 \end{itemize}
 
-
-\begin{ccode}
-void api_fseek(int fhandle, int offset, int mode);
-\end{ccode}
+\csingle|void api_fseek(int fhandle, int offset, int mode);|
 \begin{itemize}
 \item locate a file
 \end{itemize}
 
-
-
-\begin{ccode}
-int api_fsize(int fhandle, int mode);
-\end{ccode}
+\csingle|int api_fsize(int fhandle, int mode);|
 \begin{itemize}
 \item return the size of \texttt{fhandle} file.
 \end{itemize}
 
-
-
-\begin{ccode}
-int api_fread(char *buf, int maxsize, int fhandle);
-\end{ccode}
+\csingle|int api_fread(char *buf, int maxsize, int fhandle);|
 \begin{itemize}
 \item read file, return read bytes. 
 \end{itemize}
 
-
-
-\begin{ccode}
-int api_cmdline(char *buf, int maxsize);
-\end{ccode}
+\csingle|int api_cmdline(char *buf, int maxsize);|
 \begin{itemize}
 \item return the context of command line.
 \end{itemize}
 
-
-
-\begin{ccode}
-int api_getlang(void);
-\end{ccode}
+\csingle|int api_getlang(void);|
 \begin{itemize}
 \item return the language mode.
 \end{itemize}
-
-
 
 \subsection{APPs}
 \label{sec:apps-1}
