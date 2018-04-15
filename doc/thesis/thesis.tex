@@ -531,22 +531,14 @@ hardwares through the device drivers.\fxerror{say some more.}
 \subsubsection{Memory Management}
 \label{sec:memory-management-1}
 
-
 The process may request memory space while running. When it is finished running, the
 operating system kernel shall reclaim its memory space. % So the operating system should be
 % able to manage memory. Memory utilization should be improved when managing memory.
 \fxerror{say some more. you can get some ideas from wikipedia.}
 
-
 \paragraph{Data Structures used in MM}
 
-\subparagraph{\texttt{struct FREEINFO}}
-
-(Code~\ref{src:FREEINFO}) is used to record the size in bytes of free memory while the
-system is running.
-
-\begin{listing}[H]
-  \begin{codeblock}
+\begin{codeblock}[1]
 \begin{ccode}
 struct FREEINFO
 { 
@@ -554,15 +546,14 @@ struct FREEINFO
   unsigned int size; /* size of free mem in bytes*/
 };
 \end{ccode}
-  \end{codeblock}
-  \caption{\texttt{struct FREEINFO}}\label{src:FREEINFO}
-\end{listing}
+\end{codeblock}
+\begin{itemize}
+\item % (Code~\ref{src:FREEINFO})
+  is used to record the size in bytes of free memory while
+  the system is running.
+\end{itemize}
 
-\subparagraph{\texttt{struct MEMMAN}} (code~\ref{src:MEMMAN}) is used to record the entire
-memory usage, such as the total remaining free memory space and \fxerror*{???}{entries}.
-
-\begin{listing}[H]
-  \begin{codeblock}
+\begin{codeblock}[1]
 \begin{ccode}
 struct MEMMAN
 { 
@@ -573,33 +564,61 @@ struct MEMMAN
   struct FREEINFO free[MEMMAN_FREES]; /* free memory block info */
 };
 \end{ccode}
-  \end{codeblock}
-  \caption{\texttt{struct MEMMAN}}\label{src:MEMMAN}
-\end{listing}
+\end{codeblock}
+\begin{itemize}
+\item is used to record the entire
+memory usage, such as the total remaining free memory space and \fxerror*{???}{entries}.
+\end{itemize}
 
 \paragraph{Memory Management Functions}
 
-\begin{description}
-\item[\mintinline{c}{void memman_init(struct MEMMAN* man);}]\ \par The memory space is
-  initialized and the \texttt{man} variable is used to record the memory space usage and
-  free information.
-\item[\mintinline{c}{unsigned int memman_total(struct MEMMAN* man);}]\ \par Report the sum
-  of all empty space. Return the size of free memory.
-\item[\mintinline{c}{unsigned int memman_alloc(struct MEMMAN *man, unsigned int
-    size);}]\ \par
-  Allocate memory to the application, where \texttt{size} is the space requested by the
+\begin{ccode}
+void memman_init(struct MEMMAN* man);
+\end{ccode}
+\begin{itemize}
+\item The memory space is initialized and the \texttt{man} variable is used to record the
+  memory space usage and free information.
+\end{itemize}
+
+\begin{ccode}
+unsigned int memman_total(struct MEMMAN* man);
+\end{ccode}
+\begin{itemize}
+\item Report the sum of all empty space. Return the size of free memory.
+\end{itemize}
+
+\begin{ccode}
+unsigned int memman_alloc(struct MEMMAN *man, unsigned int size);
+\end{ccode}
+\begin{itemize}
+\item Allocate memory to the application, where \texttt{size} is the space requested by the
   application. Success returns the available starting address, otherwise 0.
-\item[\mintinline{c}{int memman_free(struct MEMMAN *man, unsigned int addr, unsigned int
-    size);}]\ \par
-  Releases memory, where \texttt{addr} is the starting address variable and \texttt{size}
-  is the size of the release variable. Returns 0 if successful, otherwise -1.
-\item[\mintinline{c}{unsigned int memman_alloc_4k(struct MEMMAN *man, unsigned int
-    size);}]\ \par Memory is allocated in 4k memory units and the starting address of the
-  allocated memory is returned. \texttt{size} is the size of requested space.
-\item[\mintinline{c}{int memman_free_4k(struct MEMMAN *man, unsigned int addr, unsigned
-    int size);}] Memory space is freed in units of 4k, \texttt{addr} is the starting
+\end{itemize}
+
+\begin{ccode}
+int memman_free(struct MEMMAN *man, unsigned int addr, unsigned int size);
+\end{ccode}
+\begin{itemize}
+\item Releases memory, where \texttt{addr} is the starting address variable and
+  \texttt{size} is the size of the release variable. Returns 0 if successful, otherwise
+  -1.
+\end{itemize}
+
+\begin{ccode}
+unsigned int memman_alloc_4k(struct MEMMAN *man, unsigned int size);
+\end{ccode}
+\begin{itemize}
+\item Memory is allocated in 4k memory units and the starting address of the allocated
+  memory is returned. \texttt{size} is the size of requested space.
+\end{itemize}
+
+\begin{ccode}
+int memman_free_4k(struct MEMMAN *man, unsigned int addr, unsigned int size);
+\end{ccode}
+\begin{itemize}
+\item Memory space is freed in units of 4k, \texttt{addr} is the starting
   point variable, and \texttt{size} is the release size.
-\end{description}
+\end{itemize}
 
 \subsubsection{Task Management (Scheduler)}
 \label{sec:task-management}
@@ -626,327 +645,371 @@ Fig.~\ref{fig:ctxt-switch}. \fxerror*{see wikipedia}{Therefore, the register val
   \label{fig:ctxt-switch}
 \end{figure}
 
-\subparagraph{Task Management Data Structure}
+\paragraph{Data Structures For Task Management}
 
-
-\paragraph{TASKLEVEL}
-
-\begin{listing}[H]
-  \begin{codeblock}
+\begin{codeblock}[1]
 \begin{ccode}
 struct TASKLEVEL
 { 
-  int running;                      /* how many tasks are running */
-  int now;                          /* which task is currently running */
+  int running; /* how many tasks are running */
+  int now;     /* which task is currently running */
   struct TASK* tasks[MAX_TASKS_LV]; /* all tasks in one level */
 };
 \end{ccode}
-  \end{codeblock}
-  \caption{\texttt{struct TASKLEVEL}}\label{src:TASKLEVEL}
-\end{listing}
+\end{codeblock}
+\begin{itemize}
+\item is used to record the status of each task in a layer\fxerror{What's a layer/level?}.
+\end{itemize}
 
-\texttt{struct TASKLEVEL} (Code~\ref{src:TASKLEVEL}) is used to record the status of each task in a
-layer.
-
-
-\paragraph{TSS32}
-
-\begin{listing}[H]
-  \begin{codeblock}
+\begin{codeblock}[1]
 \begin{ccode}
 struct TSS32
 { 
   int esp0, esp1, esp2; /* stack pointer register */
   int ss0, ss1, ss2;    /* stack segment register */
-  int cr3;              /* control register */
-  int eip;              /* instruct pointer register */
-  int eflags;           /* registers flag */
-  int eax;              /* accumulator register */
-  int ecx;              /* counter register */
-  int edx;              /* data register */
-  int ebx;              /* base register */
-  int esp;              /* stack pointer register */
-  int ebp;              /* base pointer register*/
-  int esi;              /* source index register */
-  int edi;              /* destination index register */
-  int es;               /* extra segment register */
-  int cs;               /* code segment register */
-  int ss;               /* stack segment register */
-  int ds;               /* data segment register */
-  int fs;               /* segment part 2 */
-  int gs;               /* segment part 3 */
-  int ldtr;             /* LDT segment selector */
-  int iomap;            /* I/O map base address */
+  int cr3;    /* control register */
+  int eip;    /* instruct pointer register */
+  int eflags; /* registers flag */
+  int eax;    /* accumulator register */
+  int ecx;    /* counter register */
+  int edx;    /* data register */
+  int ebx;    /* base register */
+  int esp;    /* stack pointer register */
+  int ebp;    /* base pointer register*/
+  int esi;    /* source index register */
+  int edi;    /* destination index register */
+  int es;     /* extra segment register */
+  int cs;     /* code segment register */
+  int ss;     /* stack segment register */
+  int ds;     /* data segment register */
+  int fs;     /* segment part 2 */
+  int gs;     /* segment part 3 */
+  int ldtr;   /* LDT segment selector */
+  int iomap;  /* I/O map base address */
 };
 \end{ccode}
-  \end{codeblock}
-  \caption{\texttt{struct TSS32}}\label{src:TSS32}
-\end{listing}
+\end{codeblock}
+\begin{itemize}
+\item holds information about task status segments, which are based on CPU
+  specifications\cite[Sec.6.2.1]{intel_3a}.
+\end{itemize}
 
-\texttt{struct TSS32} (Code~\ref{src:TSS32}) structure holds information about task status
-segments, which are based on CPU specifications(See 6.2.1\cite{intel_3a}).
-
-
-\paragraph{TASKCTL}
-
-\begin{listing}[H]
-  \begin{codeblock}
+\begin{codeblock}[1]
 \begin{ccode}
-struct 
+struct TASKCTL
 { 
-  int now_lv;                             /* current activity level */
-  int lv_change;                          /* does the hierarchy need to be changed next time the task is switched
-  *                                       /
-  struct TASKLEVEL level[MAX_TASKLEVELS]; /*all levels*/
+  int now_lv;    /* current activity level */
+  int lv_change; /* does the hierarchy need to be changed next time the task is switched */
+  struct TASKLEVEL level[MAX_TASKLEVELS]; /* all levels*/
   struct TASK tasks0[MAX_TASKS];          /* all running program */
-  
 };
 \end{ccode}
-  \end{codeblock}
-  \caption{\texttt{struct TASKCTL}}\label{src:TASKCTL}
-\end{listing}
+\end{codeblock}
+\begin{itemize}
+\item is used to control all tasks in the system.\fxerror{not clear.}
+\end{itemize}
 
-\texttt{struct } (Code~\ref{src:TASKCTL}) is used to control all tasks in the system.
-
-
-
-\paragraph{TASK}
-
-\begin{listing}[H]
-  \begin{codeblock}
+\begin{codeblock}[1]
 \begin{ccode}
 struct TASK
 { 
-  int sel;                          /* the number of GDT */
-  int flags;                        /* the state of task */
-  int level;                        /* the level of task */
-  int priority;                     /* the priority of task */
-  struct FIFO32 fifo;               /* a fifo buffer */
-  TSS32 tss;                        /* TSS segment for a task */
-  struct CONSOLE* cons;             /* the console window address of task */
-  int ds_base;                      /* data segment address of APPs */
-  int cons_stack;                   /* the stack address of APPs */
+  int sel;              /* the number of GDT */
+  int flags;            /* the state of task */
+  int level;            /* the level of task */
+  int priority;         /* the priority of task */
+  struct FIFO32 fifo;   /* a fifo buffer */
+  TSS32 tss;            /* TSS segment for a task */
+  struct CONSOLE* cons; /* the console window address of task */
+  int ds_base;          /* data segment address of APPs */
+  int cons_stack;       /* the stack address of APPs */
   struct SEGMENT_DESCRIPTOR ldt[2]; /* tow LDT segments of task */
-  struct FILEHANDLE* fhandle;       /* file handles for manipulating files */
-  int* fat;                         /* file allocation table */
-  char* cmdline;                    /* store the command line context */
-  unsigned char langmode;           /* which font to use */
-  unsigned char langbyte1;          /* store the first byte of the full-width character */
+  struct FILEHANDLE* fhandle; /* file handles for manipulating files */
+  int* fat; /* file allocation table */
+  char* cmdline; /* store the command line context */
+  unsigned char langmode;  /* which font to use */
+  unsigned char langbyte1; /* store the first byte of the full-width character */
 };
 \end{ccode}
-  \end{codeblock}
-  \caption{\texttt{struct TASK}}\label{src:TASK}
-\end{listing}
+\end{codeblock}
+\begin{itemize}
+\item is used to manage variables for a task. Record the task's sections, permissions,
+  stacks, etc.
+\end{itemize}
 
-\texttt{struct TASK} (Code~\ref{src:TASK}) is used to manage variables for a task. Record
-the task's sections, permissions, stacks, etc. 
+\paragraph{Task Management Functions}
 
+\begin{ccode}
+struct TASK *task_now(void);
+\end{ccode}
+\begin{itemize}
+\item Returns which level of which task is currently running.
+\end{itemize}
 
+\begin{ccode}
+struct TASK *task_init(struct MEMMAN *memman);
+\end{ccode}
+\begin{itemize}
+\item Initialize a task.
+\end{itemize}
 
-\subparagraph{Task Management Functions}
+\begin{ccode}
+struct TASK *task_alloc(void);
+\end{ccode}
+\begin{itemize}
+\item Initialize the structure of a task.
+\end{itemize}
 
-\begin{description}
-\item[\mintinline{c}{struct TASK *task_now(void);}] eturns which level of which task is
-  currently running.
-  
-\item[\mintinline{c}{struct TASK *task_init(struct MEMMAN *memman);}] initialize a task.
+\begin{ccode}
+void task_run(struct TASK *task, int level, int priority);
+\end{ccode}
+\begin{itemize}
+\item Add a task to list.
+\end{itemize}
 
-\item[\mintinline{c}{struct TASK *task_alloc(void);}] initialize the structure of a task.
+\begin{ccode}
+void task_switch(void);
+\end{ccode}
+\begin{itemize}
+\item Switch to the next task.
+\end{itemize}
 
-\item[\mintinline{c}{void task_run(struct TASK *task, int level, int priority);}] add a
-  task to list.
-
-\item[\mintinline{c}{void task_switch(void);}] switch to the next task.
-
-\item[\mintinline{c}{void task_sleep(struct TASK *task);}] put a task to sleep.
-\end{description}
-
+\begin{ccode}
+void task_sleep(struct TASK *task);
+\end{ccode}
+\begin{itemize}
+\item Put a task to sleep.
+\end{itemize}
 
 \subsubsection{Graphic Management}
 \label{sec:graphic}
+
 The patterns on the screen belong to one layer. The movement of the window is achieved
-through layers. The height of the layer affects the layout of the screen. Layers to
-consider how to cover when moving, which one is on and below.
-
-
+through layers\fxerror{???}. The height of the layer affects the layout of the
+screen. \fxerror*{bad}{Layers to consider how to cover when moving, which one is on and
+  below.}
   
-\subparagraph{Graphic Management Data Structure}
+\paragraph{Graphic Management Data Structures}
 
-\paragraph{SHEET}
-
-\begin{listing}[H]
-  \begin{codeblock}
+\begin{codeblock}[1]
 \begin{ccode}
 struct SHEET
 { 
-  char* buf;   /* the address of the graphic content depicted */
-  int bxszie;  /* the size of x coordinate of sheet */
-  int bysize;  /* the size of y coordinate of sheet */
-  int vx0;     /* the x coordinate of sheet */
-  int vy0;     /* the y coordinate of sheet */
-  int col_inv; /* the number of invisible color */
-  int height;  /* the height of sheet */
-  int flags;   /* the states of sheet, using or not */
+  char* buf;   /* address of the graphic content depicted */
+  int bxszie;  /* size of x coordinate of sheet */
+  int bysize;  /* size of y coordinate of sheet */
+  int vx0;     /* x coordinate of sheet */
+  int vy0;     /* y coordinate of sheet */
+  int col_inv; /* number of invisible color */
+  int height;  /* height of sheet */
+  int flags;   /* states of sheet, using or not */
 };
 \end{ccode}
-  \end{codeblock}
-  \caption{\texttt{struct SHEET}}\label{src:SHEET}  
-\end{listing}
+\end{codeblock}
+\begin{itemize}
+\item is used to record layer-related information, including the layer's size and
+  position.
+\end{itemize}
 
-\texttt{struct SHEET} (Code~\ref{src:SHEET}) is used to record layer-related information,
-including the layer's size and position.
-
-
-\paragraph{SHTCTL}
-
-\begin{listing}[H]
-  \begin{codeblock}
+\begin{codeblock}[1]
 \begin{ccode}
 struct SHTCTL
 { 
-  unsigned char* vram;              /* the address of VRAM */
-  unsigned char* map;               /* which layer the pixel on the screen belongs to*/
-  int xsize;                        /* the x size of screen */
-  int ysize;                        /* the y size of screen */
-  int top;                          /* the height of the top layer */
+  unsigned char* vram; /* the address of VRAM */
+  unsigned char* map;  /* which layer the pixel on the screen belongs to*/
+  int xsize; /* the x size of screen */
+  int ysize; /* the y size of screen */
+  int top;   /* the height of the top layer */
   struct SHEET* sheets[MAX_SHEETS]; /* order all layer addresses in order */
   struct SHEET sheets0[MAX_SHEETS]; /* all layers */
 };
 \end{ccode}
-  \end{codeblock}
-  \caption{\texttt{struct SHTCTL}}\label{src:SHTCTL}
-\end{listing}
+\end{codeblock}
+\begin{itemize}
+\item is used to manage the structure of multiple layer information, including how many
+  layers there are in total, the size and height of each layer.
+\end{itemize}
 
-\texttt{struct SHTCTL} (Code~\ref{src:SHTCTL}) structure is used to manage the structure
-of multiple layer information, including how many layers there are in total, the size and
-height of each layer.
+\paragraph{Graphic Management Functions}
 
+\begin{ccode}
+struct SHTCTL *shtctl_init(struct MEMMAN *memman,unsigned char *vram,int xsize,int ysize);
+\end{ccode}
+\begin{itemize}
+\item Initialize a sheet control structure, \texttt{vram} is the address of video
+  RAM. \texttt{xsize} and \texttt{ysize} is the size of sheet.
+\end{itemize}
 
-\subparagraph{Graphic Management Functions}
+\begin{ccode}
+struct SHEET *sheet_alloc(struct SHTCTL *ctl);
+\end{ccode}
+\begin{itemize}
+\item Return a \texttt{SHEET} structure if success, otherwise 0.
+\end{itemize}
 
-\begin{description}
-  
-\item[\mintinline{c}{struct SHTCTL *shtctl_init(struct MEMMAN *memman,unsigned char
-    *vram,int xsize,int ysize);}] initialize a sheet control structure, \texttt{vram} is
-  the address of video RAM. \texttt{xsize} and \texttt{ysize} is the size of sheet.
-  
-\item[\mintinline{c}{struct SHEET *sheet_alloc(struct SHTCTL *ctl);}] return a
-  \texttt{SHEET} structure if success, otherwise 0.
+\begin{ccode}
+void sheet_setbuf(struct SHEET *sht,unsigned char *buf,int xsize,int ysize,int col_inv);
+\end{ccode}
+\begin{itemize}
+\item Set the properties of the layer \texttt{buf}.
+\end{itemize}
 
-\item[\mintinline{c}{void sheet_setbuf(struct SHEET *sht,unsigned char *buf,int xsize,int
-    ysize,int col_inv);}] set the properties of the layer \texttt{buf}.
+\begin{ccode}
+void sheet_updown(struct SHEET *sht, int height);
+\end{ccode}
+\begin{itemize}
+\item Set the height of layer \texttt{sht}.
+\end{itemize}
 
-\item[\mintinline{c}{void sheet_updown(struct SHEET *sht, int height);}] set the height of
-  layer \texttt{sht}.
+\begin{ccode}
+void sheet_refresh(struct SHEET *sht, int bx0, int by0, int bx1, int by1);
+\end{ccode}
+\begin{itemize}
+\item Refreshes the screen range specified by \texttt{bx0}, \texttt{by0}, \texttt{bx1} and
+  \texttt{by1}.
+\end{itemize}
 
-\item[\mintinline{c}{void sheet_refresh(struct SHEET *sht, int bx0, int by0, int bx1, int
-    by1);}] refreshes the screen range specified by \texttt{bx0}, \texttt{by0},
-  \texttt{bx1} and \texttt{by1}.
+\begin{ccode}
+void sheet_free(struct SHEET *sht);
+\end{ccode}
+\begin{itemize}
+\item Release layer.
+\end{itemize}
 
-\item[\mintinline{c}{void sheet_free(struct SHEET *sht);}] release layer.
+\begin{ccode}
+void make_window8(unsigned char *buf, int xsize, int ysize, char *title, char act);
+\end{ccode}
+\begin{itemize}
+\item Make a window in \texttt{SHEET} \texttt{buf}.
+\end{itemize}
 
-\item[\mintinline{c}{void make_window8(unsigned char *buf, int xsize, int ysize, char
-    *title, char act);}] make a window in \texttt{SHEET} \texttt{buf}.
+\begin{ccode}
+void putfonts8_asc_sht(struct SHEET *sht, int x, int y, int c, int b, char *s, int l);
+\end{ccode}
+\begin{itemize}
+\item Paint the background color and write the characters and finish the refresh.
+\end{itemize}
 
-\item[\mintinline{c}{void putfonts8_asc_sht(struct SHEET *sht, int x, int y, int c, int b,
-    char *s, int l);}] paint the background color and write the characters and finish the
-  refresh.
-    
-\end{description}
-
-
-
-
-\subsubsection{System Call}
+\subsubsection{System Calls}
 \label{sec:system-call}
-The system call encapsulates each module in the kernel. These system calls are part of the
-kernel. In this system, system calls are called by the API instead of the application.
 
-  
-\subparagraph{System Calls Prototype}
+The system calls encapsulate each module in the kernel\fxerror{???}. These system calls are part of the
+kernel. In this system, system calls are called by the API instead of the
+application.\fxerror{see wikipedia}
 
-\begin{description}
-  
-\item[\mintinline{c}{void cons_putchar(struct CONSOLE *cons, int chr, char move);}] put a
-  \texttt{chr} character on \texttt{cons} console.
-  
-\item[\mintinline{c}{void cons_newline(struct CONSOLE *cons);}] newline in \texttt{cons}
-  console.
-    
-\item[\mintinline{c}{void cons_putstr0(struct CONSOLE *cons, char *s);}] put string
-  \texttt{s} in \texttt{cons} console, no length.
+\paragraph{System Calls Prototype}
 
-\item[\mintinline{c}{void cons_putstr1(struct CONSOLE *cons, char *s, int l);}] put string
-  \texttt{s} in \texttt{cons}, \texttt{l} is the length of string \texttt{s}.
-    
-\item[\mintinline{c}{int cmd_app(struct CONSOLE *cons, int *fat, char *cmdline);}] Start
-  an application based on the input from the command line \texttt{cmdline};
-  
-    
-\end{description}
+\begin{ccode}
+void cons_putchar(struct CONSOLE *cons, int chr, char move);
+\end{ccode}
+\begin{itemize}
+\item put a \texttt{chr} character on \texttt{cons} console.
+\end{itemize}
 
+\begin{ccode}
+void cons_newline(struct CONSOLE *cons);
+\end{ccode}
+\begin{itemize}
+\item newline in \texttt{cons} console.
+\end{itemize}
 
+\begin{ccode}
+void cons_putstr0(struct CONSOLE *cons, char *s);
+\end{ccode}
+\begin{itemize}
+\item put string \texttt{s} in \texttt{cons} console, no length.
+\end{itemize}
 
+\begin{ccode}
+void cons_putstr1(struct CONSOLE *cons, char *s, int l);
+\end{ccode}
+\begin{itemize}
+\item put string \texttt{s} in \texttt{cons}, \texttt{l} is the length of string
+  \texttt{s}.
+\end{itemize}
+
+\begin{ccode}
+int cmd_app(struct CONSOLE *cons, int *fat, char *cmdline);
+\end{ccode}
+\begin{itemize}
+\item Start an application based on the input from the command line \texttt{cmdline};
+\end{itemize}
 
 \subsubsection{Driver}
 \label{sec:driver}
-The driver is used to control and manipulate the hardware. The driver blocked the hardware
-information. It is the dividing line between hardware and software. A driver provides a
-software interface to hardware devices, enabling operating systems and other computer
-programs to access hardware functions without needing to know precise details of the
-hardware being used.
 
+The device drivers are used to control and manipulate the
+hardware. \fxerror*{wikipedia}{The driver blocked the hardware information}. It is the
+dividing line between hardware and software. A driver provides a software interface to
+hardware devices, enabling operating systems and other computer programs to access
+hardware functions without needing to know precise details of the hardware being used.
 
-\subparagraph{Driver Functions}
+\paragraph{Driver Functions}
 
-\begin{description}
-  
-\item[\mintinline{c}{void set_palette(int start, int end, unsigned char *rgb)}] initialize the palette.
-\item[\mintinline{c}{void init_pic(void);}] initialize the PIC.
-\item[\mintinline{c}{void init_keyboard(struct FIFO32 *fifo, int data0);}] initialze the
-  keyboard.
-\item[\mintinline{c}{void enable_mouse(struct FIFO32 *fifo, int data0, struct  MOUSE_DEC
-    *mdec);}] activate mouse
-  
-\end{description}
+\begin{ccode}
+void set_palette(int start, int end, unsigned char *rgb);
+\end{ccode}
+\begin{itemize}
+\item initialize the palette.
+\end{itemize}
 
+\begin{ccode}
+void init_pic(void);
+\end{ccode}
+\begin{itemize}
+\item initialize the PIC.
+\end{itemize}
 
+\begin{ccode}
+void init_keyboard(struct FIFO32 *fifo, int data0);
+\end{ccode}
+\begin{itemize}
+\item initialze the keyboard.
+\end{itemize}
 
+\begin{ccode}
+void enable_mouse(struct FIFO32 *fifo, int data0, struct MOUSE_DEC *mdec);
+\end{ccode}
+\begin{itemize}
+\item activate mouse.
+\end{itemize}
 
 \subsubsection{FAT File System}
 \label{sec:fat}
-The file system defines how data is stored and accessed. The file system divides the
-entire storage space according to a certain form. This facilitates the storage of files
-while increasing the utilization of storage media. The small blocks thus divided are
-called sectors. The FAT records which sectors all files are stored on. 
+
+\fxerror*{wikipedia}{The file system defines how data is stored and accessed. The file
+  system divides the entire storage space according to a certain form. This facilitates
+  the storage of files while increasing the utilization of storage media. The small blocks
+  thus divided are called sectors. The FAT records which sectors all files are stored on.}
   
-\subparagraph{FAT Data Structure}
+\paragraph{FAT Data Structure}
 
-\paragraph{}
-
-\begin{listing}[H]
-  \begin{codeblock}
+\begin{codeblock}[1]
 \begin{ccode}
 struct 
 { 
   
 };
 \end{ccode}
-  \end{codeblock}
-  \caption{\texttt{struct }}\label{src:}
-\end{listing}
+\end{codeblock}
+\begin{itemize}
+\item 
+\end{itemize}
 
-\texttt{struct } (Code~\ref{src:})
+\paragraph{ Functions}
 
-\subparagraph{ Functions}
+\begin{ccode}
 
-\begin{description}
-  
-\item[\mintinline{c}{}]
-\item[\mintinline{c}{}]
-  
-\end{description}
+\end{ccode}
+\begin{itemize}
+\item 
+\end{itemize}
 
+\begin{ccode}
+
+\end{ccode}
+\begin{itemize}
+\item 
+\end{itemize}
 
 
 \subsubsection{}
@@ -954,33 +1017,35 @@ struct
 
 
   
-\subparagraph{Data Structure}
+\paragraph{Data Structures}
 
-\paragraph{}
-
-\begin{listing}[H]
-  \begin{codeblock}
+\begin{codeblock}[1]
 \begin{ccode}
 struct 
 { 
   
 };
 \end{ccode}
-  \end{codeblock}
-  \caption{\texttt{struct }}\label{src:}
-\end{listing}
+\end{codeblock}
+\begin{itemize}
+\item 
+\end{itemize}
 
-\texttt{struct } (Code~\ref{src:})
+\paragraph{ Functions}
 
-\subparagraph{ Functions}
+\begin{ccode}
 
-\begin{description}
-  
-\item[\mintinline{c}{}]
-\item[\mintinline{c}{}]
-  
-\end{description}
+\end{ccode}
+\begin{itemize}
+\item 
+\end{itemize}
 
+\begin{ccode}
+
+\end{ccode}
+\begin{itemize}
+\item 
+\end{itemize}
 
 
 \iffalse %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
