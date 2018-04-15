@@ -1,0 +1,36 @@
+\input{printable}
+
+\begin{document}
+\begin{tikzpicture} [node distance=1cm, thick]
+  \node (start) [startstop] {Start};
+  \node (dec1) [decision, below=of start, minimum width=0.5cm]{eflg \& \\ 40000 != 0?};
+  \node (pro1) [process, below=of dec1.west, xshift=-0.5cm] {flg486 = 1 \\ cr0 |= \\ 60000000};
+  \node (pro2) [process, below=of dec1, yshift=-1cm] {i = memtest\_sub \\ (start, end)};
+  \node (dec2) [decision, below=of pro2] {flg486 != 0?};
+  \node (pro3) [process, below=of dec2.west, xshift=-0.5cm] {cr0 \&= \\ 60000000};
+  \node (end) [startstop, below=of dec2.south, yshift=-1cm] {return i};
+
+
+  \draw[arrow] (start) -- (dec1);
+  \draw[arrow] (dec1.west) -| node[above]{yes} (pro1.north);
+  \draw[arrow] (pro1.south) |- (pro2.west);
+  \draw[arrow, -] (dec1.east) -- node[above] {no} ($(dec1.east) + (0.5cm, 0)$);
+  \draw[arrow] ($(dec1.east) + (0.5cm, 0)$) |- (pro2.east);
+  \draw[arrow] (pro2) -- (dec2);
+  \draw[arrow] (dec2) -| node[above] {yes} (pro3);
+  \draw[arrow] (pro3) |- (end);
+  \draw[arrow, -] (dec2.east) -- node[above] {no} ($(dec2.east) + (0.5cm, 0)$);
+  \draw[arrow] ($(dec2.east) + (0.5cm, 0)$) |- (end.east);
+  
+  
+  
+\end{tikzpicture}
+
+\end{document}
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

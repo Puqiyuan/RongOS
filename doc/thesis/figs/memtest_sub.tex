@@ -1,0 +1,39 @@
+\input{printable}
+
+\begin{document}
+\begin{tikzpicture} [node distance=1cm, thick]
+  \node (start) [startstop] {Start};
+  \node (pro1) [process, below=of start] {p=i+ffc \\ old=*p \\ *p=aa55aa55 \\
+    *p\verb|^|=ffffffff};
+  \node (dec1) [decision, below=of pro1] {*p != 55aa55aa?};
+  \node (pro2) [process, below=of dec1] {*p\verb|^|=ffffffff};
+  \node (dec2) [decision, below=of pro2] {*p != aa55aa55?};
+  \node (pro3) [process, below=of dec2] {*p=old \\ i+=1000};
+  \node (dec3) [decision, below=of pro3] {i <= end?};
+  \node (end) [startstop, below=of dec3]{*p = old \\ i = eax};
+  
+
+
+  \draw[arrow] (start) -- (pro1);
+  \draw[arrow] (pro1) -- (dec1);
+  \draw[arrow] (dec1) -- node[left]{no}(pro2);
+  \draw[arrow] (pro2) -- (dec2);
+  \draw[arrow] (dec2) -- node[left]{no}(pro3);
+  \draw[arrow] (pro3) -- (dec3);
+  \draw[arrow, -] (dec3.east) -- node[above]{yes}($(dec3.east) + (1cm, 0)$);
+  \draw[arrow] ($(dec3.east) + (1cm, 0)$) |- (pro1.east);
+  \draw[arrow] (dec3) -- node[left]{no} (end);
+  \draw[arrow, -] (dec1) -- node[above]{yes}($(dec1.west) + (-1cm, 0)$);
+  \draw[arrow] ($(dec1.west) + (-1cm, 0)$) |- (end);
+  \draw[arrow, -] (dec2) -- node[above]{yes}($(dec2.west) + (-1cm, 0)$);
+    
+\end{tikzpicture}
+
+\end{document}
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

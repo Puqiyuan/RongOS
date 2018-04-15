@@ -1631,6 +1631,36 @@ The above four steps can be intuitively reflected in the Fig. ~\ref{fig:iplflowc
 \section{Kernel}
 \label{sec:kernel-1}
 
+\subsection{Memory Management}
+\label{sec:memory-management-2}
+
+\subsubsection{Memory Check}
+\label{sec:memory-check}
+
+For memory management, memory must be checked to see how large the memory is. After i486,
+the CPU turned on the cache function. In order to avoid checking the cache, the CPU's
+cache function must be turned off. So first check the version of the CPU. Then check the
+memory capacity. When checking the memory capacity, first write a value to the same
+address and immediately read out whether the observation is equal to the previously
+written value. The entire inspection process can be shown by ~\ref{fig:mem_tst} and
+~\ref{fig:mem_sub}.
+
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=.5\textwidth]{memtest}
+  \caption{memory check}
+  \label{fig:mem_tst}
+\end{figure}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=.5\textwidth]{memtest_sub}
+  \caption{subprogram of memory check}
+  \label{fig:mem_sub}
+\end{figure}
+
+
 
 
 \section{API}
