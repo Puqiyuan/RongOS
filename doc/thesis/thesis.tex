@@ -477,7 +477,8 @@ the kernel, APIs, and some applications.
 
 \section{Top Level Design}
 
-As shown in Fig.~\ref{fig:top-level} shown, all applications require services from the
+As shown in Fig.~\ref{fig:top-level} shown, \fxerror{correct picture}, all applications
+require services from the
 operating system through a set of function calls. This set of functions provided by the OS
 kernel is usually called \emph{system calls}. However, the user applications do not invoke
 these system calls directly. Instead, they call the API library functions. The process in
@@ -571,6 +572,15 @@ memory usage, such as the total remaining free memory space and \fxerror*{???}{e
 \end{itemize}
 
 \paragraph{Memory Management Functions}
+\fxerror{All functions see more}
+\csingle|unsigned int memtest(unsigned int start, unsigned int end);|
+\begin{itemize}
+\item Check the memory capacity and confirm that the memory is intact. \texttt{start} is the start
+  address of the memory check and \texttt{end} is the end address of the memory
+  check. This function returns the maximum value of available addresses. Memory is
+  available between this value and the \texttt{start} value.
+\end{itemize}
+
 
 \csingle|void memman_init(struct MEMMAN* man);|
 \begin{itemize}
@@ -679,7 +689,7 @@ struct TSS32
 \end{codeblock}
 \begin{itemize}
 \item holds information about task status segments, which are based on CPU
-  specifications\cite[Sec.6.2.1]{intel_3a}.
+  specifications\cite[Sec.6.2.1]{intel_3a}. \fxerror{more about these registers}
 \end{itemize}
 
 \begin{codeblock}[1]
@@ -694,7 +704,7 @@ struct TASKCTL
 \end{ccode}
 \end{codeblock}
 \begin{itemize}
-\item is used to control all tasks in the system.\fxerror{not clear.}
+\item is used to control all tasks in the system.\fxerror{not clear. the memory manage structure}
 \end{itemize}
 
 \begin{codeblock}[1]
@@ -725,6 +735,7 @@ struct TASK
 \end{itemize}
 
 \paragraph{Task Management Functions}
+\fxerror{more about each function}
 
 \csingle|struct TASK *task_now(void);|
 \begin{itemize}
@@ -806,6 +817,7 @@ struct SHTCTL
 \end{itemize}
 
 \paragraph{Graphic Management Functions}
+\fxerror{more about each function}
 
 \csingle|struct SHTCTL *shtctl_init(struct MEMMAN *memman,unsigned char *vram,int xsize,int ysize);|
 \begin{itemize}
@@ -857,6 +869,7 @@ kernel. In this system, system calls are called by the API instead of the
 application.\fxerror{see wikipedia}
 
 \paragraph{System Calls Prototype}
+\fxerror{more about each function}
 
 \csingle|void cons_putchar(struct CONSOLE *cons, int chr, char move);|
 \begin{itemize}
@@ -895,6 +908,7 @@ hardware functions without needing to know precise details of the hardware being
 
 \paragraph{Driver Functions}
 
+\fxerror{more about each function}
 \csingle|void set_palette(int start, int end, unsigned char *rgb);|
 \begin{itemize}
 \item initialize the palette.
@@ -944,6 +958,7 @@ struct FILEINFO
 \end{itemize}
 
 \paragraph{FAT Functions}
+\fxerror{more about each function}
 
 \csingle|void file_readfat(int *fat, unsigned char *img);|
 \begin{itemize}
@@ -969,6 +984,7 @@ exposing objects or actions the developer needs, an API simplifies programming.
 
 \subsubsection{All APIs}
 \label{sec:all-apis}
+\fxerror{more about each function}
 
 \csingle|void api_putchar(int c);|
 \begin{itemize}
@@ -1642,24 +1658,29 @@ the CPU turned on the cache function. In order to avoid checking the cache, the 
 cache function must be turned off. So first check the version of the CPU. Then check the
 memory capacity. When checking the memory capacity, first write a value to the same
 address and immediately read out whether the observation is equal to the previously
-written value. The entire inspection process can be shown by ~\ref{fig:mem_tst} and
-~\ref{fig:mem_sub}.
-
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[width=.5\textwidth]{memtest}
-  \caption{memory check}
-  \label{fig:mem_tst}
-\end{figure}
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[width=.5\textwidth]{memtest_sub}
-  \caption{subprogram of memory check}
-  \label{fig:mem_sub}
-\end{figure}
-
+written value. The entire inspection process can be summarized as follows.
+\begin{enumerate}
+\item Check the version of the CPU.
+\item If the version of the CPU is greater than 386 then caching is disabled, otherwise
+  nothing will be done.
+  
+\item Check memory
+\item If the CPU version is greater than the 386 restore cache feature. Otherwise do
+  nothing.
+\end{enumerate}
+Step 2 can be divided into the following steps
+\begin{enumerate}
+\item Save the original value of a location in memory.
+\item Write a constant to the above memory address.
+\item Read the above memory address and invert it.
+\item The inverted value of the constant prepared in advance is compared with the value
+  obtained in the third step.
+\item Equal to continue to check, otherwise stop.
+\end{enumerate}
+In general, the C compiler has optimized optimization, so it seems that the above
+comparison is definitely equivalent. So the above check subfunction should be done in
+assembly language. Specific implementation, please see appendix
+~\ref{sec:memory-check-process}.
 
 
 
@@ -1738,6 +1759,13 @@ linenos=true]{nasm}{../../src/kernel/ipl10.asm}
 \label{sec:the-nex-cyl}
 
 \inputminted[firstline=134,lastline=137,linenos=true]{nasm}{../../src/kernel/ipl10.asm}
+
+\subsection{Memory check process}
+\label{sec:memory-check-process}
+
+\inputminted[firstline=7, lastline=42, linenos=true]{c}{../../src/kernel/memory.c}
+\inputminted[firstline=220, lastline=254, linenos=true]{nasm}{../../src/kernel/naskfunc.asm}
+
 
 \end{document} % 结束。不要动下面几行！
 

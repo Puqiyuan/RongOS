@@ -1,0 +1,29 @@
+\documentclass{standalone}
+\usepackage[linesnumbered]{algorithm2e}
+\begin{document}
+\begin{algorithm}[H]
+  \SetAlgoLined
+  \SetKwFunction{memtest}{memtest}\SetKwFunction{memtest_sub}{memtest_sub}
+  \KwResult{check the memory}
+
+  ENTRANCE: call \memtest{}\;
+  
+  \SetKwProg{myproc}{Procedure}{}{}
+  \myproc{\memtest{}}
+  {
+    read $eflg$ from CPU\;
+    \eIf{cl <= 18}
+     {
+       to read this sector\;
+     }
+  }
+\end{algorithm}
+\end{document}
+
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
