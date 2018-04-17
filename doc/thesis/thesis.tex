@@ -532,10 +532,43 @@ hardwares through the device drivers.\fxerror{say some more.}
 \subsubsection{Memory Management}
 \label{sec:memory-management-1}
 
-The process may request memory space while running. When it is finished running, the
-operating system kernel shall reclaim its memory space. % So the operating system should be
-% able to manage memory. Memory utilization should be improved when managing memory.
-\fxerror{say some more. you can get some ideas from wikipedia.}
+Memory management refers to the technology that allocates and uses computer memory
+resources while the software is running. Its main purpose is how to allocate efficiently
+and quickly, and release for reusing memory resources when appropriate. This is critical
+to any advanced computer system where more than a single process might be underway at any
+time.
+
+Several methods have been invented to improve the effectiveness of memory management. For
+modern operating systems, memory virtualization technology is used. This technique
+separates the memory space used by the process from the actual physical memory. Processes
+that are temporarily not running will be moved to secondary storage through paging or
+swapping. How virtual memory is designed and how it is implemented will have a wide impact
+on the overall system performance.
+
+For RongOS, table ~\ref{tab:memo-tab} reflects the memory management system.
+\begin{table}[!ht]
+  \centering
+  \begin{tabular}{|c|c|}
+    \hline
+    Start Address & Free Size \\
+    \hline
+    1 & 301 \\
+    \hline
+    302 & 100 \\
+    \hline
+    402 & 203 \\
+    \hline
+    605 & ... \\
+    \hline
+  \end{tabular}
+  \caption{memory management table}
+  \label{tab:memo-tab}
+\end{table}
+An \emph{entry} is a record reflects how much memory space is free from where. Actually,
+this table is an member \texttt{struct FREEINFO} in \texttt{struct MEMMAN}.
+
+
+
 
 \paragraph{Data Structures used in MM}
 
@@ -559,8 +592,8 @@ struct FREEINFO
 struct MEMMAN
 { 
   int frees;    /* free memory blocks */
-  int maxfrees; /* max of frees */
-  int lostsize; /* release the sum of the failed memory size ??????????*/
+  int maxfrees; 
+  int lostsize; /* the sum of the failed memory size to freed*/
   int losts;    /* number of failures */
   struct FREEINFO free[MEMMAN_FREES]; /* free memory block info */
 };
@@ -568,7 +601,7 @@ struct MEMMAN
 \end{codeblock}
 \begin{itemize}
 \item is used to record the entire
-memory usage, such as the total remaining free memory space and \fxerror*{???}{entries}.
+  memory usage, such as the total remaining free memory space and \emph{entry}.
 \end{itemize}
 
 \paragraph{Memory Management Functions}
@@ -582,21 +615,19 @@ memory usage, such as the total remaining free memory space and \fxerror*{???}{e
 \end{itemize}
 
 
-\csingle|void memman_init(struct MEMMAN* man);|
-\begin{itemize}
-\item The memory space is initialized and the \texttt{man} variable is used to record the
-  memory space usage and free information.
-\end{itemize}
-
 \csingle|unsigned int memman_total(struct MEMMAN* man);|
 \begin{itemize}
-\item Report the sum of all empty space. Return the size of free memory.
+\item Report the sum of all empty space. It will look for each \emph{entry} in the
+  \texttt{man} to add up the free space in it.
+  
 \end{itemize}
 
 \csingle|unsigned int memman_alloc(struct MEMMAN *man, unsigned int size);|
 \begin{itemize}
 \item Allocate memory to the application, where \texttt{size} is the space requested by the
-  application. Success returns the available starting address, otherwise 0.
+  application. Success returns the available starting address, otherwise 0. \texttt{man} records
+  information about all available entries in memory.
+  
 \end{itemize}
 
 \csingle|int memman_free(struct MEMMAN *man, unsigned int addr, unsigned int size);|
@@ -1551,7 +1582,7 @@ color, and so on.
 \begin{listing}[H]
   \begin{codeblock}
 \begin{ccode}
-struct 
+struct
 { 
   unsigned char name[8];   /* file name */
   unsigned char ext[3];    /* extend name of file */
@@ -1682,6 +1713,25 @@ comparison is definitely equivalent. So the above check subfunction should be do
 assembly language. Specific implementation, please see appendix
 ~\ref{sec:memory-check-process}.
 
+\subsubsection{Memory Allocation}
+\label{sec:memory-allocation}
+First explain some of the variables used to implement the memory allocation
+function. \texttt{size} refers to the space requested by the application but \texttt{SIZE}
+is the free space of one \emph{entry}. \texttt{free} is the number of memory available
+memory.
+
+\begin{enumerate}
+\item Traversing all the free entries in memory to find an \emph{entry} gives it more free space
+  than the application requested. If found then 2, otherwise 6.
+\item Add \texttt{size} to start address of \emph{entry} found in 1. Subtract 
+  \texttt{size} from free space \texttt{SIZE} in \emph{entry} found in 1. Jump to 3.
+\item Determine if the remaining free space \texttt{SIZE} in the entry is 0. If so, go to
+  4. Otherwise 5.
+\item Subtract the number of memory available entries \texttt{free} by 1.
+\item Returns the starting address of available memory.
+\item Returns 0 for memory allocation failure.
+\end{enumerate}
+Specific implementation see code ~\ref{sec:memory-alloc-proc}.
 
 
 \section{API}
@@ -1764,7 +1814,14 @@ linenos=true]{nasm}{../../src/kernel/ipl10.asm}
 \label{sec:memory-check-process}
 
 \inputminted[firstline=7, lastline=42, linenos=true]{c}{../../src/kernel/memory.c}
-\inputminted[firstline=220, lastline=254, linenos=true]{nasm}{../../src/kernel/naskfunc.asm}
+\inputminted[firstline=220, lastline=254,
+linenos=true]{nasm}{../../src/kernel/naskfunc.asm}
+
+\subsection{Memory allocation process}
+\label{sec:memory-alloc-proc}
+\inputminted[firstline=64, lastline=85,
+linenos=true]{c}{../../src/kernel/memory.c}
+
 
 
 \end{document} % 结束。不要动下面几行！
