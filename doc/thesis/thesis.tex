@@ -554,11 +554,11 @@ For RongOS, table ~\ref{tab:memo-tab} reflects the memory management system.
     \hline
     1 & 301 \\
     \hline
-    302 & 100 \\
+    348 & 50 \\
     \hline
-    402 & 203 \\
+    800 & 1000 \\
     \hline
-    605 & ... \\
+    3001 & ... \\
     \hline
   \end{tabular}
   \caption{memory management table}
@@ -605,7 +605,6 @@ struct MEMMAN
 \end{itemize}
 
 \paragraph{Memory Management Functions}
-\fxerror{All functions see more}
 \csingle|unsigned int memtest(unsigned int start, unsigned int end);|
 \begin{itemize}
 \item Check the memory capacity and confirm that the memory is intact. \texttt{start} is the start
@@ -639,14 +638,16 @@ struct MEMMAN
 
 \csingle|unsigned int memman_alloc_4k(struct MEMMAN *man, unsigned int size);|
 \begin{itemize}
-\item Memory is allocated in 4k memory units and the starting address of the allocated
-  memory is returned. \texttt{size} is the size of requested space.
+\item Basically it is similar to the \texttt{memman\_alloc} function, but memory is allocated
+  in 4k memory units and the starting address of the allocated memory is returned if
+  successful. \texttt{size} is the size of requested space.
 \end{itemize}
 
 \csingle|int memman_free_4k(struct MEMMAN *man, unsigned int addr, unsigned int size);|
 \begin{itemize}
-\item Memory space is freed in units of 4k, \texttt{addr} is the starting
-  point variable, and \texttt{size} is the release size.
+\item Basically it is similar to the \texttt{memman\_free}, but memory space is freed in
+  units of 4k, \texttt{addr}is the starting point variable, and \texttt{size} is the
+  release size.
 \end{itemize}
 
 \subsubsection{Task Management (Scheduler)}
@@ -1733,6 +1734,91 @@ memory.
 \end{enumerate}
 Specific implementation see code ~\ref{sec:memory-alloc-proc}.
 
+\subsubsection{Memory Release}
+\label{sec:memory-release}
+
+Memory release is a more complex part of memory management. In order to keep the memory
+free entries in an orderly manner and merge adjacent entries, the memory release code
+becomes somewhat complicated. It is mainly divided into the following categories.
+\begin{enumerate}
+\item Neither merge with the previous \emph{entry} nor with the latter \emph{entry}. For
+  this case, this entry needs to be inserted into the free memory entry. As the figure
+  ~\ref{fig:no-merge} shows.
+  \begin{figure}[!ht]
+    \centering
+    \includegraphics[width=.6\textwidth]{no_merge}
+    \caption{insert an entry no merge}
+    \label{fig:no-merge}
+  \end{figure}
+  As shown in the figure, the starting address of \texttt{new x} 803 is not adjacent to
+  the previous termination address 669, and its termination address 960 is also not
+  adjacent to the starting address 1000 of the next entry. The so-called neighboring means
+  that the difference between the two addresses is 1. Same as below.
+
+\item Can be merged with the previous entry. As the figure ~\ref{fig:former-merge} shows.
+  \begin{figure}[!ht]
+    \centering
+    \includegraphics[width=.6\textwidth]{former_merge}
+    \caption{Insert an item merged with the previous item}
+    \label{fig:former-merge}
+  \end{figure}
+  As shown in the figure, the starting address of \texttt{new x} 670 is adjacent to the
+  previous termination address 669, but its termination address 960 is not adjacent to the
+  starting address 1000 of the next entry.
+
+
+\item Can be merged with the latter entry. As the figure ~\ref{fig:latter-merge} shows.
+  \begin{figure}[!ht]
+    \centering
+    \includegraphics[width=.6\textwidth]{latter_merge}
+    \caption{Insert an item merged with the latter item}
+    \label{fig:latter-merge}
+  \end{figure}
+  The termination address 999 of \texttt{new x} is adjacent to the starting address 1000
+  of the next entry, but its starting address of \texttt{new x} 803 is not adjacent to the
+  previous termination address 669.
+  
+\end{enumerate}
+The memory release process can be described as follows.
+\begin{enumerate}
+\item Find the insertion position \emph{i}. The so-called insertion position is an \texttt{entry}
+  number that satisfies certain conditions. This condition is that the \texttt{size} of this
+  \texttt{entry} is larger than the size requested by the application.
+\item If $i > 0$, merge if the newly inserted \emph{entry} can be merged with the previous \texttt{entry},
+  the same as for the latter \emph{entry}. As long as it merges with the former, the
+  function returns 0 and the release is successful. Otherwise jump to 3.
+\item The program proceeds here so that the newly inserted \texttt{entry} must not be
+  merged with the previous \texttt{entry}. Now check if the newly inserted \texttt{entry}
+  can be merged with the latter \texttt{entries}. If so, merges it and return 0. Otherwise
+  jump to 4.
+\item The program proceeds here to represent that the newly inserted \texttt{entry} cannot be
+  merged with any of the entries. Now check the number of used entries with 4090. If the
+  former is less than the latter, move all items after the i'th item back one position to
+  make room for new items. Then insert this new \texttt{entry}. Otherwise jmup to 5.
+
+\item Failed to release, return -1.
+\end{enumerate}
+The above release process can be explained by the algorithm ~\ref{fig:mem-relase-algo}. Of
+course, the flow chart ~\ref{fig:mem-relase-flow} will be more clear. For specific code
+implementation, see ~\ref{sec:memory-rele-proc}
+
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.8\textwidth]{mem_free}
+  \caption{algorithm of release memory}
+  \label{fig:mem-relase-algo}
+\end{figure}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=1\textwidth]{mem_free_flow}
+  \caption{flow chart of relase memory}
+  \label{fig:mem-relase-flow}
+\end{figure}
+
+
+
 
 \section{API}
 \label{sec:API}
@@ -1807,9 +1893,11 @@ linenos=true]{nasm}{../../src/kernel/ipl10.asm}
 
 \subsection{The next cylinder}
 \label{sec:the-nex-cyl}
-
 \inputminted[firstline=134,lastline=137,linenos=true]{nasm}{../../src/kernel/ipl10.asm}
 
+
+\section{Kernel Modules}
+\label{sec:kernel-modules}
 \subsection{Memory check process}
 \label{sec:memory-check-process}
 
@@ -1821,6 +1909,12 @@ linenos=true]{nasm}{../../src/kernel/naskfunc.asm}
 \label{sec:memory-alloc-proc}
 \inputminted[firstline=64, lastline=85,
 linenos=true]{c}{../../src/kernel/memory.c}
+
+\subsection{Memory release process}
+\label{sec:memory-rele-proc}
+\inputminted[firstline=88, lastline=158,
+linenos=true]{c}{../../src/kernel/memory.c}
+
 
 
 

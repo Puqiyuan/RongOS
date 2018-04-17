@@ -1,0 +1,51 @@
+\input{printable}
+
+\begin{document}
+\begin{tikzpicture}[node distance=.2cm, thick]
+  \node (blk1) [process, minimum width=1cm] {x};
+  \node (blk1.range) [right=of blk1.east, xshift=-.2cm, scale=.5] {101};
+  \node (blk1.srt) [left=of blk1.west, yshift=0.18cm, scale=.3, xshift=.45cm] {1000};
+  \node (blk1.stp) [left=of blk1.west, yshift=-0.15cm, scale=.3, xshift=.45cm] {1100};
+
+  \node (blk2) [process, minimum width=1cm, above=of blk1] {x - 1};
+  \node (blk2.range) [right=of blk2.east, xshift=-.2cm, scale=.5] {136};
+  \node (blk2.srt) [left=of blk2.west, yshift=0.2cm, scale=.3, xshift=.45cm] {534};
+  \node (blk2.stp) [left=of blk2.west, yshift=-.2cm, scale=.3, xshift=.45cm] {669};
+
+  \node (more.abv) [above=of blk2, yshift=-0.07cm] {...};
+  \node (more.abv) [below=of blk1, yshift=0.07cm] {...};
+
+  \node[process, xshift=1.05cm] (add) at ($(blk1.west) + (1.1cm, .3cm)$) {new x};
+  \node (add.range) [right=of add.east, xshift=-.2cm, scale=.5] {158};
+
+  \node (add.srt) [left=of add.east, yshift=0.3cm, scale=.3, xshift=1cm] {803};
+  \node (add.stp) [left=of add.east, yshift=-0.27cm, scale=.3, xshift=1cm] {960};
+
+  
+
+  \draw[dashed, line width=.025em] ($(blk1.east) + (0, .2cm)$) -- ($(blk1.east) + (.4cm,
+  .2cm)$);
+  \draw[dashed, line width=.025em] ($(blk1.east) + (0, -.2cm)$) -- ($(blk1.east) + (.4cm,
+  -.2cm)$);
+
+  \draw[dashed, line width=.025em] ($(blk2.east) + (0, .24cm)$) -- ($(blk2.east) + (.4cm,
+  .24cm)$);
+  \draw[dashed, line width=.025em] ($(blk2.east) + (0, -.24cm)$) -- ($(blk2.east) + (.4cm,
+  -.24cm)$);
+
+  \draw[dashed, line width=.025em] ($(add.east) + (0, .2cm)$) -- ($(add.east) + (.4cm,
+  .2cm)$);
+  \draw[dashed, line width=.025em] ($(add.east) + (0, -.2cm)$) -- ($(add.east) + (.4cm,
+  -.2cm)$);
+
+  \draw[arrow, line width=0.025em] ($(blk1.east) + (0.55cm, .3cm)$) -- ($(blk1.west) + (1.1cm, .3cm)$);
+  
+\end{tikzpicture}
+\end{document}
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

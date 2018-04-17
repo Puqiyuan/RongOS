@@ -1,0 +1,57 @@
+\input{printable}
+
+
+\begin{document}
+\begin{tikzpicture}[node distance=1cm, thick]
+  \node (start)[startstop] {Start};
+  \node (pro1) [process, below=of start] {find release \\ position i };
+  \node (dec1) [decision, below=of pro1] {i > 0};
+  \node (dec2) [decision, below=of dec1] {merge \\ former?};
+  \node (pro2) [process, below=of dec2] {man->free[i-1].size \\ += size};
+  \node (dec3) [decision, below=of pro2] {i<man-> \\ frees?};
+  \node (dec4) [decision, below=of dec3] {merge \\ latter?};
+  \node (pro3) [process, below=of dec4] {process of \\ merging latter};
+  \node (end1) [startstop, below=of pro3] {return 0 \\ SUCCESSFULLY};
+  \node (dec5) [decision, right=of dec2] {i<man->\\frees?};
+  \node (dec6) [decision, below=of dec5] {merge \\ latter?};
+  \node (pro4) [process, below=of dec6] {process of \\ merging latter};
+  \node (end2) [startstop, below=of pro4] {return 0 \\ SUCCESSFULLY};
+  \node (dec7) [decision, right=of dec6]{man->frees\\< 4090?};
+  \node (pro5) [process, below=of dec7] {1,move back\\ 2,process of \\ insert one entry};
+  \node (end3) [startstop, below=of pro5] {return 0 \\ SUCCESSFULLY};
+  \node (pro6) [process, right=of dec7]{process of \\ failed processing};
+  \node (end4) [startstop, below=of pro6]{return -1 \\ FAILED};
+
+
+  \draw[arrow] (dec1) -| node[above, xshift=-2cm]{no}(dec5);
+  \draw[arrow] (pro6) -- (end4);
+  \draw[arrow] (dec7) -- node[above]{no}(pro6);
+  \draw[arrow] (pro5) -- (end3);
+  \draw[arrow] (dec7) -- node[left]{yes}(pro5);
+  \draw[arrow] (dec5) -| node[above, xshift=-1.5cm]{no}(dec7);
+  \draw[arrow] (dec6) -- node[above]{no}(dec7);
+  \draw[arrow] (pro4) -- (end2);
+  \draw[arrow] (dec6) -- node[left]{yes}(pro4);
+  \draw[arrow] (start) -- (pro1);
+  \draw[arrow] (pro1) -- (dec1);
+  \draw[arrow] (dec1) -- node[left]{yes}(dec2);
+  \draw[arrow] (dec2) -- node[left]{yes}(pro2);
+  \draw[arrow] (pro2) -- (dec3);
+  \draw[arrow] (dec3) -- node[left]{yes}(dec4);
+  \draw[arrow] (dec4) -- node[left]{yes}(pro3);
+  \draw[arrow] (pro3) -- (end1);
+  \draw[arrow, -] (dec3.east) -- node[above]{no}($(dec3.east) + (0.5cm, 0)$);
+  \draw[arrow] ($(dec3.east) + (0.5cm, 0)$) |- (end1.east);
+  \draw[arrow, -] (dec4.east) -- node[above]{no}($(dec4.east) + (0.75cm, 0)$);
+  \draw[arrow] (dec2) -- node[above]{no}(dec5);
+  \draw[arrow] (dec5) -- node[left]{yes}(dec6);
+  
+\end{tikzpicture}
+\end{document}
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

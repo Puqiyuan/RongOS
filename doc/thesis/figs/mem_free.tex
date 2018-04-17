@@ -1,0 +1,81 @@
+\documentclass{standalone}
+\usepackage[linesnumbered]{algorithm2e}
+
+\begin{document}
+\begin{algorithm}[H]
+  \SetAlgoLined
+  \SetKwFunction{memFree}{memFree}
+  \KwResult{free memory}
+
+  ENTRANCE: call memFree{(struct MEMMAN *man, unsigned int addr, unsigned int size)}\;
+  \SetKwProg{myproc}{Procedure}{}{}
+  \myproc{\memFree{struct MEMMAN *man, unsigned int addr, unsigned int size}}
+  {
+    Finding the starting address of the first \emph{entry} $i$ is greater than the released
+    address \emph{addr}\;
+    \eIf{i > 0}
+    {
+      \eIf{i'th entry can be merged with the previous one}
+      {
+        man->free[i - 1].size $\leftarrow$ man->free[i - 1].size + size\;
+        \eIf{i entry is less than the number of free entries}
+        {
+          \eIf{i'th can be merged with the latter}
+          {
+            man->free[i - 1].size $\leftarrow$ man->free[i-1].size + man->free[i].size\;
+            man->frees $\leftarrow$ man->frees - 1\;
+            move all free entries after \emph{i} by one\;
+          }
+          {
+            \emph{nothing to do here}\;
+          }
+        }
+        {
+          \emph{nothing to do here}\;
+        }
+      }
+      {
+        Successfully released, return 0, FINISHED\;
+      }
+    }
+    {
+      \emph{nothing to do here}\;
+    }
+    \eIf{i < the number of free entries}
+    {
+      \eIf{i'th entry can be merged with the latter}
+      {
+        man->free[i].addr $\leftarrow$ addr\;
+        man->free[i].size $\leftarrow$ man->free[i].size + size\;
+        Successfully released, return 0, FINISHED\;
+      }
+      {
+        \emph{nothing to do here}\;
+      }
+    }
+    {
+      \emph{nothing to do here}\;
+    }
+    \eIf{the number of free items used < the maximum number of free items(4090)}
+    {
+      move back all free entries after i'th entry by one\;
+      man-> frees $\leftarrow$ man->frees + 1\;
+      man -> free[i].addr $\leftarrow$ addr\;
+      man -> free[i].size $\leftarrow$ size\;
+      Successfully released, return 0, FINISHED\;
+    }
+    {
+      \emph{nothing to do here}\;
+    }
+    the number of release failures plus one\;
+    increase the \texttt{size} to release the failed space\;
+    Release failed, return -1, FINISHED\;
+  }
+\end{algorithm}
+\end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
