@@ -1,0 +1,169 @@
+\input{printable}
+\usetikzlibrary{decorations.pathreplacing}
+
+\begin{document}
+
+\begin{tikzpicture}[node distance=1cm, thick]
+  \node (new-task) [startstop, minimum height=1.5cm, label={[anchor=north, inner
+    sep=1.5pt]north: $new \enspace task$}] {\\  \vspace{-.5em} level $x$ \\ \vspace{-.7em}
+    ...};
+  \node (add) [process, right=of new-task] {task \\ add};
+  
+  \node (levelx) [process, right=of add, label={[anchor=south east, yshift=-0.35cm,
+    xshift=.5cm, inner
+    sep=1.5pt]south east:$level \enspace x$}] {\emph{1} \emph{\underline{2}}
+    \emph{3} 4 5 ... 100};
+  \node (running+1) [below=of levelx, xshift=-.35cm, yshift=.85cm, scale=.7]
+  {\textcircled{2}};
+  
+  \node (levelx+1) [process, above=of levelx, yshift=-.5cm, label={[anchor=south east, yshift=-0.4cm,
+    xshift=1.1cm, inner
+    sep=1.5pt]south east:$level \enspace x+1$}] {\emph{1} \emph{2} \emph{3}
+    \emph{4} \emph{\underline{5}} ... 100};
+  
+  \node (level100) [process, above=of levelx+1, yshift=-.2cm, scale=.95, label={[anchor=south east, yshift=-0.35cm,
+    xshift=0.7cm, inner
+    sep=1.5pt]south east:$level \enspace 10$}]
+  {\emph{\underline{\textcircled{1}}} 2 3 4 5 ... 100};
+  
+  \node (levelx-1) [process, below=of levelx, yshift=.4cm, label={[anchor=south east, yshift=-0.4cm,
+    xshift=1.1cm, inner
+    sep=1.5pt]south east:$level \enspace x-1$}] {\emph{\underline{1}} \emph{2}
+    3 4 5 ... 100};
+  
+  \node (level0) [process, scale=.9, below=of levelx-1, yshift=.1cm, label={[anchor=south east, yshift=-0.35cm,
+    xshift=.5cm, inner
+    sep=1.5pt]south east:$level \enspace 0$}] {\emph{1} \emph{2} \emph{3}
+    \emph{\underline{\textcircled{4}}} \emph{5} \emph{...} 100};
+
+  \node (more1) [above=of level0, yshift=-.7cm] {......};
+  \node (more2) [above=of levelx+1, yshift=-.7cm] {......};
+  \node (scd) [process, right=of levelx, xshift=2cm, yshift=-.2em] {Scheduler \\ \textcircled{4}};
+  \node (running) [oval, right=of scd, xshift=-.5cm] {\textcircled{4} \\ running};
+  \node (end) [process, right=of running, xshift=.4cm] {END};
+  \node (timeout) [process, above=of end] {TIMEOUT};
+  \node (sleep) [process, below=of end] {SLEEP};
+  \node (pic) [process, above=of scd] {PIC};
+  \node (fifo) [process, below=of running, yshift=-1.5cm] {FIFO data \\ wake up};
+  \node (alloc) [process, left=of new-task] {alloc \\ task};
+  \node (circle1) [below=of sleep, yshift=-2.2cm] {\textcircled{1}: idle task};
+  \node (circle2) [below=of circle1, xshift=.25cm, yshift=1cm] {\textcircled{2}: insert
+    point};
+  \node (circle4) [below=of circle2, xshift=.35cm, yshift=1cm] {\textcircled{4}: current running};
+  
+
+  \draw[arrow] (fifo) -| (new-task);
+  \draw[arrow, -] (sleep) |- (fifo);
+  \draw[arrow] (alloc) -- (new-task);
+  \draw[arrow] ($(timeout.north) + (0, 5em)$) -| (new-task);
+  \draw[arrow, -] (timeout) -- ($(timeout.north) + (0, 5em)$);
+  \draw[arrow] ($(running.east) + (1em, 0)$) |- (sleep.west);
+  \draw[arrow] ($(running.east) + (1em, 0)$) |- (timeout.west);
+  \draw[arrow] (pic) -- node[left]{int20} (scd);
+  \draw[arrow] (new-task) -- (add);
+  \draw[arrow] (running) -- (end);
+  \draw[arrow] (scd) -- (running);
+  \draw[arrow,-] ($(scd.west) + (-.8cm, 0em)$) -- (scd.west);
+  \draw  [decorate,decoration={brace,amplitude=10pt,mirror,raise=4pt},yshift=5pt]
+  (8.4,-3) -- (8.4,2.5) node
+  [black,midway,xshift=0.35cm, yshift=-.7cm, text width= 3cm]
+  {};
+  
+  \draw  [decorate,decoration={brace,amplitude=10pt,mirror,raise=4pt},yshift=5pt]
+  (-2.5,-4.5) -- (7.5,-4.5) node
+  [black,midway,xshift=0.35cm, yshift=-.7cm, text width= 5cm]
+  {task alloacte and add};
+
+  \draw  [decorate,decoration={brace,amplitude=10pt,mirror,raise=4pt},yshift=5pt]
+  (8.25,-4.5) -- (16,-4.5) node
+  [black,midway,xshift=0.35cm, yshift=-.7cm, text width= 5cm]
+  {task scheduling and running};
+  
+  \draw[arrow] ($(levelx+1.west) + (-.5cm, 0)$) -- node[left]{low}($(level100.west) +
+  (-.51cm, 0)$);
+  \draw[arrow] ($(levelx-1.west) + (-.5cm, 0)$) -- node[left]{high}($(level0.west) +
+  (-.53cm, 0)$);
+  
+  \draw[dashed] ($(level100.east) + (1.3cm, 1.3cm)$) -- ($(level0.east) + (1.3cm, -1.65cm)$);
+  \draw[line] ($(new-task.west) + (0, 0.5em)$) -- ($(new-task.east) + (0, 0.5em)$);
+  \draw[line] ($(new-task.west) + (0, -0.7em)$) -- ($(new-task.east) + (0, -0.7em)$);
+  \draw [arrow] (add.east) to [out=150,in=30, bend right] node[below]{insert}
+  ($(levelx.south)+ (-1em, 0)$);
+  \draw[line, line width=.025em] ($(levelx.north) + (-.3em, 0)$) -- ($(levelx.south) +
+  (-.3em, 0)$);
+  \draw[line, line width=.025em] ($(levelx.north) + (-1em, 0.5em)$) -- ($(levelx.south) +
+  (-1em, -.5em)$);
+  \draw[line, line width=.025em] ($(levelx.north) + (-1.9em, 0)$) -- ($(levelx.south) +
+  (-1.9em, 0)$);
+  \draw[line, line width=.025em] ($(levelx.north) + (-2.8em, 0)$) -- ($(levelx.south) +
+  (-2.8em, 0)$);
+  \draw[line, line width=.025em] ($(levelx.north) + (.5em, 0)$) -- ($(levelx.south) +
+  (.5em, 0)$);
+  \draw[line, line width=.025em] ($(levelx.north) + (2em, 0)$) -- ($(levelx.south) +
+  (2em, 0)$);
+
+
+  \draw[line, line width=.025em] ($(levelx+1.north) + (-.3em, 0)$) -- ($(levelx+1.south) +
+  (-.3em, 0)$);
+  \draw[line, line width=.025em] ($(levelx+1.north) + (-1em, 0em)$) -- ($(levelx+1.south) +
+  (-1em, 0em)$);
+  \draw[line, line width=.025em] ($(levelx+1.north) + (-1.9em, 0)$) -- ($(levelx+1.south) +
+  (-1.9em, 0)$);
+  \draw[line, line width=.025em] ($(levelx+1.north) + (-2.8em, 0)$) -- ($(levelx+1.south) +
+  (-2.8em, 0)$);
+  \draw[line, line width=.025em] ($(levelx+1.north) + (.5em, 0.5em)$) -- ($(levelx+1.south) +
+  (.5em, -0.5em)$);
+  \draw[line, line width=.025em] ($(levelx+1.north) + (2em, 0)$) -- ($(levelx+1.south) +
+  (2em, 0)$);
+
+
+  \draw[line, line width=.025em] ($(level100.north) + (-.2em, 0)$) -- ($(level100.south) +
+  (-.2em, 0)$);
+  \draw[line, line width=.025em] ($(level100.north) + (-.9em, 0em)$) -- ($(level100.south) +
+  (-.9em, 0em)$);
+  \draw[line, line width=.025em] ($(level100.north) + (-1.6em, 0)$) -- ($(level100.south) +
+  (-1.6em, 0)$);
+  \draw[line, line width=.025em] ($(level100.north) + (-2.5em, 0.5em)$) -- ($(level100.south) +
+  (-2.5em, -0.5em)$);
+  \draw[line, line width=.025em] ($(level100.north) + (.7em, 0em)$) -- ($(level100.south) +
+  (.7em, -0em)$);
+  \draw[line, line width=.025em] ($(level100.north) + (2em, 0)$) -- ($(level100.south) +
+  (2em, 0)$);
+
+  \draw[line, line width=.025em] ($(levelx-1.north) + (-.3em, 0)$) -- ($(levelx-1.south) +
+  (-.3em, 0)$);
+  \draw[line, line width=.025em] ($(levelx-1.north) + (-1em, 0em)$) -- ($(levelx-1.south) +
+  (-1em, -0em)$);
+  \draw[line, line width=.025em] ($(levelx-1.north) + (-1.9em, 0.5em)$) -- ($(levelx-1.south) +
+  (-1.9em, -0.5em)$);
+  \draw[line, line width=.025em] ($(levelx-1.north) + (-2.8em, 0)$) -- ($(levelx-1.south) +
+  (-2.8em, 0)$);
+  \draw[line, line width=.025em] ($(levelx-1.north) + (.5em, 0)$) -- ($(levelx-1.south) +
+  (.5em, 0)$);
+  \draw[line, line width=.025em] ($(levelx-1.north) + (2em, 0)$) -- ($(levelx-1.south) +
+  (2em, 0)$);
+
+
+  \draw[line, line width=.025em] ($(level0.north) + (-.1em, 0)$) -- ($(level0.south) +
+  (-.1em, 0)$);
+  \draw[line, line width=.025em] ($(level0.north) + (-1.2em, 0em)$) -- ($(level0.south) +
+  (-1.2em, -0em)$);
+  \draw[line, line width=.025em] ($(level0.north) + (-2em, 0em)$) -- ($(level0.south) +
+  (-2em, -0em)$);
+  \draw[line, line width=.025em] ($(level0.north) + (-2.8em, 0)$) -- ($(level0.south) +
+  (-2.8em, 0)$);
+  \draw[line, line width=.025em] ($(level0.north) + (.7em, 0)$) -- ($(level0.south) +
+  (.7em, 0)$);
+  \draw[line, line width=.025em] ($(level0.north) + (2em, 0.5em)$) -- ($(level0.south) +
+  (2em, -0.5em)$);
+  
+  
+\end{tikzpicture}
+
+\end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../thesis"
+%%% End:
