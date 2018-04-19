@@ -1655,6 +1655,7 @@ The boot loader is implemented in Intel assembly. It works as follows:
   \begin{figure}[!ht]
     \centering
     \includegraphics[width=.7\textwidth]{./figs/algorithm/read_two_side.pdf}
+    \caption{algorithm of read two sides of one track}
     \label{fig:read_two_sides}
   \end{figure}
 
@@ -1671,7 +1672,7 @@ The boot loader is implemented in Intel assembly. It works as follows:
 The above four steps can be intuitively reflected in the Fig. ~\ref{fig:iplflowchart}.
 \begin{figure}[!htbp]
   \centering
-  \includegraphics[width=1\textwidth]{flowchartp}
+  \includegraphics[width=.7\textwidth]{flowchartp}
   \caption{the working flowchart of boot loader}
   \label{fig:iplflowchart}
 \end{figure}
@@ -1812,7 +1813,7 @@ implementation, see ~\ref{sec:memory-rele-proc}
 
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width=1\textwidth]{mem_free_flow}
+  \includegraphics[width=.7\textwidth]{mem_free_flow}
   \caption{flow chart of relase memory}
   \label{fig:mem-relase-flow}
 \end{figure}
@@ -1866,10 +1867,7 @@ run. When a run is completed in one round, there are three destinations for a pr
 As shown in Fig. ~\ref{fig:proc-manage}, it can be seen as a snapshot of all the tasks in
 the system. In this transient state, a task is being added to the $(3+1=4)$ point of
 \emph{x-level} of \emph{task pool}. What is running in the system is task \textcircled{4}
-of \emph{level 0}.
-
-
-
+of \emph{level 0}. 
 
 
 \begin{figure}[!ht]
@@ -1878,6 +1876,130 @@ of \emph{level 0}.
   \caption{process of task management}
   \label{fig:proc-manage}
 \end{figure}
+
+\subsubsection{Task Allocate and Add}
+\label{sec:task-allocate-add}
+After the new process arrives, it must apply for a task structure to record its
+information. This process is simpler simply by iterating through the \emph{tasks0} structure array
+variable to find an unused task structure and assign it to the new task. \emph{tasks0} is
+used to record information for all tasks. At the same time put the address of this
+structure into the \emph{tasks} structure array. This structure \emph{tasks} is used to
+record the addresses of all tasks. Note that \emph{tasks} and \emph{tasks0} are
+functionally different arrays of structures. \emph{tasks0} records information for all
+1000 tasks in the system, while \emph{tasks} record their addresses.
+
+
+The next step is to add to the \emph{task pool} and wait to be scheduled. When adding,
+specify the \emph{level} and \emph{priority}. The specified \emph{level} and
+\emph{priority} may not be the same as the original task, or they may be the
+same. Different situations need to be handled differently. This can be done by the
+following steps.
+
+\begin{enumerate}
+\item If the \emph{level} passed in is less than 0, it means that the task is added without
+  changing the \emph{level} of the task, and the \emph{level} of the original task is used
+  to cover the incoming level. The check here is mainly for processing when the task is
+  awakened. When the task is awakened it should not change its \emph{level}. Continue to
+  step 2.
+    
+\item If the passed in \emph{priority} is greater than 0, the \emph{priority} of the
+  original task is overwritten with the passed in priority. Continue to step 3.
+
+\item If this task is waiting to be scheduled and the incoming \emph{level} is different from
+  its original \emph{level}. This means that this task must be removed from the original
+  \emph{level}. Continue to step 4.
+
+\item If the task is not in the task pool, it is added to the \emph{task pool} according
+  to its \emph{level}. These steps may change the level of the task, set the level change
+  flag \emph{lv\_change} to 1 so that the next time the scheduler schedules the task, it
+  must find the task in the entire \emph{task pool} to run again.
+  
+\end{enumerate}
+Specific code implementation, see ~\ref{sec:task-allocate} and
+~\ref{sec:task-add}. Fig. ~\ref{fig:algo-add} is an algorithm that adds tasks to the task
+pool to run.
+
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=.7\textwidth]{task-run}
+  \caption{algorithm to add tasks to task pool and prepare to run}
+  \label{fig:algo-add}
+\end{figure}
+
+\subsubsection{Task Scheduling and Running}
+\label{sec:task-sched-runn}
+
+
+The next step is for the scheduler to start scheduling task to running. The work of the
+scheduler requires the support of clock interrupts. Every time a clock interrupt occurs,
+the scheduler is run once. The \emph{now\_lv} variable is used to record which level is
+currently running. The \emph{now} variable is a pointer to a running task of a certain
+level. The specific workflow of the scheduler is described in the following steps. 
+
+
+\begin{enumerate}
+\item Find the currently running level \emph{tl} by \emph{now\_lv}. Move the
+  \emph{now} pointer of this layer by one position. Continue to step 2.
+  
+\item If the number of \emph{running} tasks is equal to the \emph{now} pointer. Move back
+  \emph{now} pointer to 0. Continue to step 3
+
+\item Check if the \emph{lv\_change} flag is 1. If it is 1, check the entire \emph{task
+    pool} to find the new \emph{now\_lv} and set the \emph{lv\_change} flag to 0. Continue
+  to step 4.
+
+\item Get the currently running task from \emph{now\_lv} with the \emph{now} pointer, set
+  the time slice, and jump to the task to start running.
+  
+\end{enumerate}
+Specific code implementation, see ~\ref{sec:task-scheduling} and ~\ref{sec:task-running}.
+
+\subsubsection{Task Sleep}
+\label{sec:task-sleep}
+
+The task may go to \emph{sleep} after it finishes running. A task going to sleep is
+actually removing it from the \emph{task pool}. Sleeping the task requires considering
+whether this task is a running task. If this is the case, after the task is removed, the
+task switch will be performed. Then jump to the newly switched task. These steps can be
+summarized as follows
+\begin{enumerate}
+\item Call \emph{task\_now} to return to the currently running task. Go to the next step.
+\item Call \emph{task\_remove} to remove this task from \emph{task pool}. Go to the next step.
+\item The task that is going to sleep are compared with the tasks that is running. If they
+  are equal, switch to the new task to start running.
+  
+\end{enumerate}
+Specific code implementation, see ~\ref{sec:task-sleep-1}.
+
+\subsubsection{Task\_now and Task\_remove Functions}
+\label{sec:taskn-taskr-funct}
+There are also two small functions that facilitate task management and are introduced
+here. One is the \emph{task\_now} function and the other is the \emph{task\_remove}
+function. \emph{task\_now}. The \emph{task\_now} function is used to return the address of
+the task that is currently running on the system. This function is relatively simple. The
+first is to find the current running level based on the \emph{now\_lv}, then the level of
+the now pointer to find the task that the layer is running, and finally returns its
+address.
+
+The \emph{task\_remove} function is somewhat complicated. It may involve moving all tasks
+for a layer. It may also cause various pointers to appear strange. All of these must be
+considered carefully, otherwise the system may experience unpredictable and strange
+behavior. Its running process can be summarized as follows.
+\begin{enumerate}
+\item First find the corresponding level of the task \emph{tl}. Go to the next step.
+\item Find out where this task is. Go to the next step.
+\item Reduce the number of processes running by 1. Go to the next step.
+\item If the position of this task is before the \emph{now} pointer, the \emph{now}
+  pointer is decremented by one. Go to the next step.
+\item If the \emph{now} pointer is greater than the number of \emph{running} processes, it
+  is necessary to correct the \emph{now} pointer to 0. Go to the next step.
+\item Change the \emph{flags} of the task to 1 to indicate that the task is dormant. Go to
+  the next step.
+\item Move the tasks between i and \emph{running} one step forward.
+  
+\end{enumerate}
+Specific code implementation, see ~\ref{sec:task-remove}.
 
 
 
@@ -1968,13 +2090,49 @@ linenos=true]{nasm}{../../src/kernel/naskfunc.asm}
 
 \subsection{Memory allocation process}
 \label{sec:memory-alloc-proc}
-\inputminted[firstline=64, lastline=85,
+\inputminted[tabsize=2, firstline=64, lastline=85,
 linenos=true]{c}{../../src/kernel/memory.c}
 
 \subsection{Memory release process}
 \label{sec:memory-rele-proc}
-\inputminted[firstline=88, lastline=158,
+\inputminted[tabsize=2, firstline=88, lastline=158,
 linenos=true]{c}{../../src/kernel/memory.c}
+
+\subsection{Task allocate}
+\label{sec:task-allocate}
+\inputminted[tabsize=2, firstline=115, lastline=143,
+linenos=true]{c}{../../src/kernel/mtask.c}
+
+
+\subsection{Task add}
+\label{sec:task-add}
+\inputminted[tabsize=2, firstline=14, lastline=21,
+linenos=true]{c}{../../src/kernel/mtask.c}
+
+\subsection{Task scheduling}
+\label{sec:task-scheduling}
+\inputminted[tabsize=2, firstline=186, lastline=205,
+linenos=true]{c}{../../src/kernel/mtask.c}
+\inputminted[tabsize=2, firstline=49, lastline=63,
+linenos=true]{c}{../../src/kernel/mtask.c}
+
+
+\subsection{Task running}
+\label{sec:task-running}
+\inputminted[tabsize=2, firstline=146, lastline=165,
+linenos=true]{c}{../../src/kernel/mtask.c}
+
+\subsection{Task sleep}
+\label{sec:task-sleep-1}
+\inputminted[tabsize=2, firstline=167, lastline=184,
+linenos=true]{c}{../../src/kernel/mtask.c}
+
+\subsection{Task remove}
+\label{sec:task-remove}
+\inputminted[tabsize=2, firstline=23, lastline=47,
+linenos=true]{c}{../../src/kernel/mtask.c}
+
+
 
 
 

@@ -1,0 +1,59 @@
+\documentclass{standalone}
+\usepackage[linesnumbered]{algorithm2e}
+
+\begin{document}
+\begin{algorithm}[H]
+  \SetAlgoLined
+  \SetKwFunction{taskRun}{taskRun}
+  \SetKwFunction{taskAdd}{taskAdd}
+  \KwResult{schedule a task to run}
+  
+  ENTRANCE: call taskRun{(sturct TASK *task, int level, int priority)}\;
+  \SetKwProg{myproc}{Procedure}{}{}
+  \myproc{\taskRun{struct TASK *task, int level, int priority}}
+  {
+    \eIf{level < 0}
+    {
+      don't change level, $level \leftarrow task->level$\;
+    }
+    {
+      \emph{nothing to do here}\;
+    }
+    \eIf{priority > 0}
+    {
+      Change the priority, $task->priority \leftarrow priority$\;
+    }
+    {
+      \emph{nothing to do here}\;
+    }
+    \eIf{the task is running and not at the level you want to set}
+    {
+      Remove the task from the original level\;
+    }
+    {
+      \emph{nothing to do here}\;
+    }
+    \eIf{task is not running, but sleeping}
+    {
+      set the new level, $task->level \leftarrow level$\;
+      waking up from sleep, call \taskAdd{task}\;
+    }
+    {
+      \emph{nothing to do here}\;
+    }
+    change the lv\_change flag to 1, therefore, tasks must be switched when the task is
+    scheduled next time\;
+    
+  }
+
+  \myproc{\taskAdd{struct TASK *task}}
+  {
+    look for the corresponding level of the task\;
+    place the task in the location indicated by running\;
+    runinng++;
+    Mark the task as running\;
+  }
+  
+  % \caption{add a task to task pool}
+\end{algorithm}
+\end{document}
