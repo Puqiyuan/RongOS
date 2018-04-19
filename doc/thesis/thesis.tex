@@ -1822,11 +1822,59 @@ implementation, see ~\ref{sec:memory-rele-proc}
 
 Process management is a very complex but very important part of operating system
 development. This part of the development has a very big impact on the performance of the
-entire system.
+entire system. For the RongOS operating system, all tasks are managed
+hierarchically. From \emph{level 0} to \emph{level 10}, there are a total of ten levels in
+the system. All these ten levels and the space they prepare for the task are called \emph{task
+  pool}. For each task, it also has a \emph{priority} attribute. It actually specifies how
+long each process can run, also known as a \emph{time slice}. 
+
+
+As Fig. ~\ref{fig:proc-manage} shows, each level can hold 100 tasks. The lower the
+level number, the higher the level's privilege. For example, \emph{x-level} permissions are
+higher than \emph{x+1}. The scheduler will select the task to run from a high-privilege
+level. Only lower-level tasks are scheduled when the task at the higher privilege level is
+completed. While tasks within the same layer are run in turn, their running time may be
+different, that is,  the \emph{time slice} is also called \emph{priority}. This can be
+illustrated by the peripheral loop arrows in \emph{level 0} in
+Fig. ~\ref{fig:proc-manage}. The other \emph{levels} are also similar except that the
+peripheral loop arrows are ignored.
+
+
+
+In Fig. ~\ref{fig:proc-manage}, a task is added to its corresponding
+level. There are many tasks in each level waiting for scheduling or a running task. Tasks
+that are waiting for scheduling are represented in italics but the task being run is
+underlined in each level. A place after the last task waiting to be scheduled is the
+\emph{insertion point} of a new task at a certain level.
+
+
+The PIC chip will generate 100 clock interrupts per second. Each time a clock interrupt
+occurs, it is serviced by the interrupt service routine 0x20. This subroutine will call
+the scheduler to schedule a task to run based on the above method of selecting the task to
+run. When a run is completed in one round, there are three destinations for a process.
+\begin{enumerate}
+\item The task did not complete, but the \emph{time slice} was used up. It will be added
+  to the task pool again and wait for it to be selected again to begin another run.
+\item The task completes the run and then enters the end processing subroutine.
+\item The \emph{time slice} of the process runs out, but it goes to \emph{sleep}. The
+  so-called \emph{sleep} state means that the process is paused, waiting for something to
+  happen and waking it up again, adding it to the \emph{task pool} and starting a round of
+  running. Something such as a keyboard input program waits for user input.
+  
+\end{enumerate}
+
+As shown in Fig. ~\ref{fig:proc-manage}, it can be seen as a snapshot of all the tasks in
+the system. In this transient state, a task is being added to the $(3+1=4)$ point of
+\emph{x-level} of \emph{task pool}. What is running in the system is task \textcircled{4}
+of \emph{level 0}.
+
+
+
+
 
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width=1\textwidth]{process-manage}
+  \includegraphics[width=1.1\textwidth]{process-manage}
   \caption{process of task management}
   \label{fig:proc-manage}
 \end{figure}
