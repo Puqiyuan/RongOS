@@ -659,12 +659,15 @@ an illusion. For a single CPU, it cannot handle multiple programs at the same ti
 merely divides the CPU time into many small pieces for different programs to run. The
 operating system should be able to do task switching, that is to pass the CPU from one
 process to another. And at a later time to switch it back, as shown in
-Fig.~\ref{fig:ctxt-switch}. \fxerror*{see wikipedia}{Therefore, the register values should
-  be saved when the task is switched. The task switching itself also takes time. The
-  operating system should try to shorten this time. Doing this on the one hand provides
-  the user with a good experience and does not leave the user with a delayed
-  impression. On the other hand, reducing this time can improve CPU utilization. Because
-  this time can not be used for program operation.}
+Fig.~\ref{fig:ctxt-switch}. 
+
+The operating system is responsible for allocating resources to processes when managing
+tasks. Manage the communication between them. To meet these goals, the operating system
+maintains a data structure called PCB(process control block) for each task. The PCB
+describes the resources and the state of the task, which also allows the operating system to
+exert control to each task.
+
+
 
 \begin{figure}
   \centering
@@ -688,7 +691,10 @@ struct TASKLEVEL
 \end{ccode}
 \end{codeblock}
 \begin{itemize}
-\item is used to record the status of each task in a layer\fxerror{What's a layer/level?}.
+\item is used to record the status of each task in a level. The definition of level, see
+  ~\ref{sec:process-management}.
+  
+  
 \end{itemize}
 
 \begin{codeblock}[1]
@@ -721,7 +727,8 @@ struct TSS32
 \end{codeblock}
 \begin{itemize}
 \item holds information about task status segments, which are based on CPU
-  specifications\cite[Sec.6.2.1]{intel_3a}. \fxerror{more about these registers}
+  specifications\cite[Sec.6.2.1]{intel_3a}. The \texttt{eip} register records where in the
+  memory the next instruction to be executed by the CPU is located.
 \end{itemize}
 
 \begin{codeblock}[1]
@@ -729,14 +736,18 @@ struct TSS32
 struct TASKCTL
 { 
   int now_lv;    /* current activity level */
-  int lv_change; /* does the hierarchy need to be changed next time the task is switched */
+  int lv_change; /* does the level need to be changed next time the task is switched */
   struct TASKLEVEL level[MAX_TASKLEVELS]; /* all levels*/
-  struct TASK tasks0[MAX_TASKS];          /* all running program */
+  struct TASK tasks0[MAX_TASKS];          /* all running tasks */
 };
 \end{ccode}
 \end{codeblock}
 \begin{itemize}
-\item is used to control all tasks in the system.\fxerror{not clear. the memory manage structure}
+\item is used to control all tasks in the system. This structure uses the \emph{now\_lv}
+  variable to record the current running \emph{level} in the system. See
+  Fig. ~\ref{fig:proc-manage}.
+  
+  
 \end{itemize}
 
 \begin{codeblock}[1]
@@ -763,40 +774,58 @@ struct TASK
 \end{codeblock}
 \begin{itemize}
 \item is used to manage variables for a task. Record the task's sections, permissions,
-  stacks, etc.
+  stacks, etc. Actually, this is a PCB.
 \end{itemize}
 
 \paragraph{Task Management Functions}
-\fxerror{more about each function}
 
 \csingle|struct TASK *task_now(void);|
 \begin{itemize}
-\item Returns which level of which task is currently running.
+\item Returns the address of which task level of which task is currently running. 
+    
 \end{itemize}
 
 \csingle|struct TASK *task_init(struct MEMMAN *memman);|
 \begin{itemize}
-\item Initialize a task.
+\item Initialize all empty tasks. This
+  function will register all 1000 empty tasks to the GDT table. Initialize all levels of
+  task running variables \emph{running} to 0. The pointer \emph{now} of each level
+  indicating that the task is currently running is also set to 0. In fact, this function
+  registers all empty PCBs for future management tasks. At the same time, the task that
+  calls this task needs tobe managed so the address of a PCB is returned. An idle task
+  needs to be set in the last \emph{level}. Ensure that at least one task is running in the
+  system.
+  
 \end{itemize}
 
 \csingle|struct TASK *task_alloc(void);|
 \begin{itemize}
-\item Initialize the structure of a task.
+\item Get an empty PCB from the \emph{task pool~\ref{sec:process-management}}. Return
+  its address if successful, otherwise 0. 
+  
 \end{itemize}
 
 \csingle|void task_run(struct TASK *task, int level, int priority);|
 \begin{itemize}
-\item Add a task to list.
+\item Add a task to \emph{task pool}. The \emph{level} and \emph{priority} of tasks
+  through this function can also be set. If the task is asleep, wake it up. Note that this
+  function will not immediately cause the running of task after the execution of this
+  function. Instead wait to be scheduled.
 \end{itemize}
 
 \csingle|void task_switch(void);|
 \begin{itemize}
-\item Switch to the next task.
+\item Switch to the next task. This function will select one of the highest \emph{level}
+  tasks to run from the \emph{task pool}. 
+  
 \end{itemize}
 
 \csingle|void task_sleep(struct TASK *task);|
 \begin{itemize}
-\item Put a task to sleep.
+\item Put a task into sleep. The task that is being promoted to sleep may be the currently
+  running task in the system. If this is the case, it must also schedule the task in
+  the entire \emph{task pool}. Then jump to this new task and start running.
+      
 \end{itemize}
 
 \subsubsection{Graphic Management}
@@ -1953,7 +1982,15 @@ level. The specific workflow of the scheduler is described in the following step
   the time slice, and jump to the task to start running.
   
 \end{enumerate}
-Specific code implementation, see ~\ref{sec:task-scheduling} and ~\ref{sec:task-running}.
+Specific code implementation, see ~\ref{sec:task-scheduling} and 
+~\ref{sec:task-running}. Fig. ~\ref{fig:task-schd} is the algorithm of task scheduling and
+switching.
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=.7\textwidth]{task-schedule} 
+  \caption{task scheduling}
+  \label{fig:task-schd}
+\end{figure}
 
 \subsubsection{Task Sleep}
 \label{sec:task-sleep}

@@ -1,0 +1,72 @@
+\documentclass{standalone}
+\usepackage[linesnumbered]{algorithm2e}
+\SetKw{KwBy}{by}
+
+
+\begin{document}
+\begin{algorithm}[H]
+  \SetAlgoLined
+  \SetKwFunction{taskSwitch}{taskSwitch}
+  \SetKwFunction{taskSwitchSub}{taskSwitchSub}
+  \KwResult{Schedule a task to run}
+
+  ENTRANCE: call \taskSwitch{}\;
+  \SetKwProg{myproc}{Procedure}{}{}
+  \myproc{\taskSwitch{}}
+  {
+    find out what task is running \emph{now\_task} in the current system based on
+    \emph{now\_lv} and \emph{now}\;
+    add the \emph{now} pointer to 1 for the next task scheduling\;
+    \eIf{if the \emph{now} pointer equals the number of \emph{running} tasks}
+    {
+      zero the \emph{now} pointer\;
+    }
+    {
+      \emph{nothing to do here}\;
+    }
+    \eIf{lv\_change is not 0}
+    {
+      call \taskSwitchSub{}\;
+      get the currently running layer\;
+    }
+    {
+      \emph{nothing to do here}\;
+    }
+    get the \emph{new\_task} from the currently running level at \emph{now} pointer\;
+    set the timer of the task according to the priority of the task\;
+    \eIf{new\_task != now\_task}
+    {
+      jump to \emph{new\_task} run\;
+    }
+    {
+      \emph{nothing to do here}\;
+    }
+  }
+
+  \SetKwProg{myproc}{Procedure}{}{}
+  \myproc{\taskSwitchSub{}}
+  {
+    \For{$i \gets0$ \KwTo $9$ \KwBy $1$}
+    {
+      \eIf{running task of i level > 0}
+      {
+        break\;
+      }
+      {
+        \emph{nothing to do here}\;
+      }
+    }
+    modify the current running level \emph{now\_lv} to i\;
+    modify the \emph{lv\_change} to 0, so the next time don't need to call \taskSwitchSub{}\;
+  }
+
+
+
+\end{algorithm}
+\end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
