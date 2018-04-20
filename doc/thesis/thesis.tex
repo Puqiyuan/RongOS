@@ -1,5 +1,12 @@
+%%%% HELP
+%%% 
+
+
 \documentclass{swfcthesis}
 \usepackage{makecell}
+\usepackage[export]{adjustbox}
+\usepackage{lipsum}
+\usepackage{mwe}
 
 
 \renewcommand{\acknowledgmentspage}{% Acknowledgments page  
@@ -276,7 +283,7 @@ used in programming RongOS:%
 
 \begin{description}
 \item[db:] the abbreviation of define byte, write a byte, also 8 bits to file.
-\item[resb:] the abbreviation of reserve byte, reserved bytes and filling \texttt{0x00} in these reserved space.
+\item[resb:] the abbreviation of reserve byte, reserved bytes and filling \emph{0x00} in these reserved space.
 \item[dw:] the abbreviation of define word, write two bytes, also 16 bits to file.
 \item[dd:] the abbreviation of define double-word, write four bytes, also 32 bits to file.
 \item[org:] load the program to specified address.
@@ -347,14 +354,14 @@ exist, see 3.4.1 and 3.4.2 \cite{guide2011intel}:
   \end{description}
 \end{multicols}
 
-Among these registers, \texttt{bx, bp, si} and \texttt{di} can be used to specify the
-address of memory. But \texttt{ax, cx, dx} and \texttt{sp} can not. When \emph{mov}
+Among these registers, \emph{bx, bp, si} and \emph{di} can be used to specify the
+address of memory. But \emph{ax, cx, dx} and \emph{sp} can not. When \emph{mov}
 instruction is used, the number of bits of source number should be the same with
 destination operand.
 
 \begin{description}
-\item[16-bit registers:] \texttt{ax, cx, dx, bx, sp, bp, si, di, es, cs, ss, ds}, and \texttt{fs}.
-\item[8-bit registers] \texttt{al, cl, dl, bl, ah, ch, dh}, and \texttt{bh}.
+\item[16-bit registers:] \emph{ax, cx, dx, bx, sp, bp, si, di, es, cs, ss, ds}, and \emph{fs}.
+\item[8-bit registers] \emph{al, cl, dl, bl, ah, ch, dh}, and \emph{bh}.
 \end{description}
 Actually, as shown in Fig.~\ref{fig:regs}, all these 8-bit registers are parts of
 corresponding 16-bit registers.
@@ -565,7 +572,7 @@ For RongOS, table ~\ref{tab:memo-tab} reflects the memory management system.
   \label{tab:memo-tab}
 \end{table}
 An \emph{entry} is a record reflects how much memory space is free from where. Actually,
-this table is an member \texttt{struct FREEINFO} in \texttt{struct MEMMAN}.
+this table is an member \emph{struct FREEINFO} in \emph{struct MEMMAN}.
 
 
 
@@ -607,46 +614,46 @@ struct MEMMAN
 \paragraph{Memory Management Functions}
 \csingle|unsigned int memtest(unsigned int start, unsigned int end);|
 \begin{itemize}
-\item Check the memory capacity and confirm that the memory is intact. \texttt{start} is the start
-  address of the memory check and \texttt{end} is the end address of the memory
+\item Check the memory capacity and confirm that the memory is intact. \emph{start} is the start
+  address of the memory check and \emph{end} is the end address of the memory
   check. This function returns the maximum value of available addresses. Memory is
-  available between this value and the \texttt{start} value.
+  available between this value and the \emph{start} value.
 \end{itemize}
 
 
 \csingle|unsigned int memman_total(struct MEMMAN* man);|
 \begin{itemize}
 \item Report the sum of all empty space. It will look for each \emph{entry} in the
-  \texttt{man} to add up the free space in it.
+  \emph{man} to add up the free space in it.
   
 \end{itemize}
 
 \csingle|unsigned int memman_alloc(struct MEMMAN *man, unsigned int size);|
 \begin{itemize}
-\item Allocate memory to the application, where \texttt{size} is the space requested by the
-  application. Success returns the available starting address, otherwise 0. \texttt{man} records
+\item Allocate memory to the application, where \emph{size} is the space requested by the
+  application. Success returns the available starting address, otherwise 0. \emph{man} records
   information about all available entries in memory.
   
 \end{itemize}
 
 \csingle|int memman_free(struct MEMMAN *man, unsigned int addr, unsigned int size);|
 \begin{itemize}
-\item Releases memory, where \texttt{addr} is the starting address variable and
-  \texttt{size} is the size of the release variable. Returns 0 if successful, otherwise
+\item Releases memory, where \emph{addr} is the starting address variable and
+  \emph{size} is the size of the release variable. Returns 0 if successful, otherwise
   -1.
 \end{itemize}
 
 \csingle|unsigned int memman_alloc_4k(struct MEMMAN *man, unsigned int size);|
 \begin{itemize}
-\item Basically it is similar to the \texttt{memman\_alloc} function, but memory is allocated
+\item Basically it is similar to the \emph{memman\_alloc} function, but memory is allocated
   in 4k memory units and the starting address of the allocated memory is returned if
-  successful. \texttt{size} is the size of requested space.
+  successful. \emph{size} is the size of requested space.
 \end{itemize}
 
 \csingle|int memman_free_4k(struct MEMMAN *man, unsigned int addr, unsigned int size);|
 \begin{itemize}
-\item Basically it is similar to the \texttt{memman\_free}, but memory space is freed in
-  units of 4k, \texttt{addr}is the starting point variable, and \texttt{size} is the
+\item Basically it is similar to the \emph{memman\_free}, but memory space is freed in
+  units of 4k, \emph{addr}is the starting point variable, and \emph{size} is the
   release size.
 \end{itemize}
 
@@ -727,7 +734,7 @@ struct TSS32
 \end{codeblock}
 \begin{itemize}
 \item holds information about task status segments, which are based on CPU
-  specifications\cite[Sec.6.2.1]{intel_3a}. The \texttt{eip} register records where in the
+  specifications\cite[Sec.6.2.1]{intel_3a}. The \emph{eip} register records where in the
   memory the next instruction to be executed by the CPU is located.
 \end{itemize}
 
@@ -831,10 +838,29 @@ struct TASK
 \subsubsection{Graphic Management}
 \label{sec:graphic}
 
-The patterns on the screen belong to one layer. The movement of the window is achieved
-through layers\fxerror{???}. The height of the layer affects the layout of the
-screen. \fxerror*{bad}{Layers to consider how to cover when moving, which one is on and
-  below.}
+The patterns on the screen belong to one \emph{sheet}. A \emph{sheet} is a structure that
+records how a certain height of a certain area of a computer screen should be
+displayed. Graphics management is also responsible for refreshing the computer screen when
+the content displayed by a \emph{sheet} changes. Graphic management is also responsible
+for setting the height of the \emph{sheet}. The \emph{sheet} height setting is a relatively
+complex part of the graphics management, which will be explained in detail in the
+implementation section. Usually the lowest \emph{sheet} is the computer desktop, which is the
+background layer. The highest \emph{sheet} is the mouse layer. In general, for modern
+operating systems, graphics management is not a matter of the operating system kernel. So
+this part only shows in detail the more complicated part of the \emph{sheet} height
+setting. Fig. ~\ref{fig:state-sheets} shows the possible state of some of the \emph{sheet}
+on the computer screen.
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=.5\textwidth]{sheets.pdf}
+  \caption{a state of sheets}
+  \label{fig:state-sheets}
+\end{figure}
+The figure shows three \emph{sheet} and is labeled 0, 1, 2. Of course there may be more
+than three \emph{sheet}. \emph{Sheet} 2 is in the highest position, and \emph{sheet} 0 is
+the lowest.
+
+
   
 \paragraph{Graphic Management Data Structures}
 
@@ -878,48 +904,63 @@ struct SHTCTL
 \end{itemize}
 
 \paragraph{Graphic Management Functions}
-\fxerror{more about each function}
 
 \csingle|struct SHTCTL *shtctl_init(struct MEMMAN *memman,unsigned char *vram,int xsize,int ysize);|
 \begin{itemize}
-\item Initialize a sheet control structure, \texttt{vram} is the address of video
-  RAM. \texttt{xsize} and \texttt{ysize} is the size of sheet.
+\item Initialize a sheet control structure, \emph{vram} is the address of video
+  RAM. \emph{xsize} and \emph{ysize} is the size of sheet. Mark all sheet structures
+  as 0 to indicate that they are not used.
+  
 \end{itemize}
 
 \csingle|struct SHEET *sheet_alloc(struct SHTCTL *ctl);|
 \begin{itemize}
-\item Return a \texttt{SHEET} structure if success, otherwise 0.
+\item Return a \emph{SHEET} structure if success, otherwise 0. Find an unused \emph{sheet} from
+  the sheet structure control structure and making this \emph{sheet} in using.
+  
 \end{itemize}
 
 \csingle|void sheet_setbuf(struct SHEET *sht,unsigned char *buf,int xsize,int ysize,int col_inv);|
 \begin{itemize}
-\item Set the properties of the layer \texttt{buf}.
+\item Set the properties of the \emph{buf} pf \emph{sheet}. 
 \end{itemize}
 
 \csingle|void sheet_updown(struct SHEET *sht, int height);|
 \begin{itemize}
-\item Set the height of layer \texttt{sht}.
+\item Set the height of layer \emph{sht}. The height of the \emph{sheet} is more complicated to
+  set, which will be explained in detail in the implementation section.
+  
+  
 \end{itemize}
 
 \csingle|void sheet_refresh(struct SHEET *sht, int bx0, int by0, int bx1, int by1);|
 \begin{itemize}
-\item Refreshes the screen range specified by \texttt{bx0}, \texttt{by0}, \texttt{bx1} and
-  \texttt{by1}.
+\item Refreshes the screen range specified by \emph{bx0}, \emph{by0}, \emph{bx1} and
+  \emph{by1}. There are many \emph{sheet} on the computer screen. Not all the ranges of
+  all \emph{sheet} will be refreshed when the screen is refreshed. Considering the
+  efficiency of the refresh, this also requires a delicate design. But this is generally
+  not something that the operating system kernel cares about, so it will be omitted.
 \end{itemize}
 
 \csingle|void sheet_free(struct SHEET *sht);|
 \begin{itemize}
-\item Release layer.
+\item Release a \emph{sheet}. In addition to marking the \emph{sheet} as unused, the first
+  thing to do is to hide the \emph{sheet}. 
 \end{itemize}
 
 \csingle|void make_window8(unsigned char *buf, int xsize, int ysize, char *title, char act);|
 \begin{itemize}
-\item Make a window in \texttt{SHEET} \texttt{buf}.
+\item Make a window in \emph{SHEET} \emph{buf}. A window is almost indistinguishable from
+  a \emph{sheet}. When we create a window, we simply write different data to the
+  \emph{buf} of the \emph{sheet} to make it appear as a window.
+  
 \end{itemize}
 
 \csingle|void putfonts8_asc_sht(struct SHEET *sht, int x, int y, int c, int b, char *s, int l);|
 \begin{itemize}
-\item Paint the background color and write the characters and finish the refresh.
+\item Paint the background color \emph{b} and write the characters and finish the
+  refreshing. \emph{l} specifies the length of the string \emph{s} to be written.
+    
 \end{itemize}
 
 \subsubsection{System Calls}
@@ -934,28 +975,28 @@ application.\fxerror{see wikipedia}
 
 \csingle|void cons_putchar(struct CONSOLE *cons, int chr, char move);|
 \begin{itemize}
-\item put a \texttt{chr} character on \texttt{cons} console.
+\item put a \emph{chr} character on \emph{cons} console.
 \end{itemize}
 
 \csingle|void cons_newline(struct CONSOLE *cons);|
 \begin{itemize}
-\item newline in \texttt{cons} console.
+\item newline in \emph{cons} console.
 \end{itemize}
 
 \csingle|void cons_putstr0(struct CONSOLE *cons, char *s);|
 \begin{itemize}
-\item put string \texttt{s} in \texttt{cons} console, no length.
+\item put string \emph{s} in \emph{cons} console, no length.
 \end{itemize}
 
 \csingle|void cons_putstr1(struct CONSOLE *cons, char *s, int l);|
 \begin{itemize}
-\item put string \texttt{s} in \texttt{cons}, \texttt{l} is the length of string
-  \texttt{s}.
+\item put string \emph{s} in \emph{cons}, \emph{l} is the length of string
+  \emph{s}.
 \end{itemize}
 
 \csingle|int cmd_app(struct CONSOLE *cons, int *fat, char *cmdline);|
 \begin{itemize}
-\item Start an application based on the input from the command line \texttt{cmdline};
+\item Start an application based on the input from the command line \emph{cmdline};
 \end{itemize}
 
 \subsubsection{Driver}
@@ -1033,7 +1074,7 @@ struct FILEINFO
 
 \csingle|struct FILEINFO *file_search(char *name, struct FILEINFO *finfo, int max);|
 \begin{itemize}
-\item search for files based on provided \texttt{name}.
+\item search for files based on provided \emph{name}.
 \end{itemize}
 
 \subsection{API}
@@ -1049,17 +1090,17 @@ exposing objects or actions the developer needs, an API simplifies programming.
 
 \csingle|void api_putchar(int c);|
 \begin{itemize}
-\item output a character \texttt{c} on the console window.
+\item output a character \emph{c} on the console window.
 \end{itemize}
 
 \csingle|void api_putstr0(char *s);|
 \begin{itemize}
-\item ouput a string \texttt{s} on the console window.
+\item ouput a string \emph{s} on the console window.
 \end{itemize}
 
 \csingle|void api_putstr1(char *s, int l);|
 \begin{itemize}
-\item output a string \texttt{s} on console window, \texttt{l} is the length of this string.
+\item output a string \emph{s} on console window, \emph{l} is the length of this string.
 \end{itemize}
 
 \csingle|void api_end(void);|
@@ -1074,7 +1115,7 @@ exposing objects or actions the developer needs, an API simplifies programming.
 
 \csingle|void api_putstrwin(int win, int x, int y, int col, int len, char *str);|
 \begin{itemize}
-\item display string \texttt{str} on window. 
+\item display string \emph{str} on window. 
 \end{itemize}
 
 \csingle|void api_boxfilwin(int win, int x0, int y0, int x1, int y1, int col);|
@@ -1099,7 +1140,7 @@ exposing objects or actions the developer needs, an API simplifies programming.
 
 \csingle|void api_point(int win, int x, int y, int col);|
 \begin{itemize}
-\item draw a pint on \texttt{win} window.
+\item draw a pint on \emph{win} window.
 \end{itemize}
 
 \csingle|void api_refreshwin(int win, int x0, int y0, int x1, int y1);|
@@ -1164,7 +1205,7 @@ exposing objects or actions the developer needs, an API simplifies programming.
 
 \csingle|int api_fsize(int fhandle, int mode);|
 \begin{itemize}
-\item return the size of \texttt{fhandle} file.
+\item return the size of \emph{fhandle} file.
 \end{itemize}
 
 \csingle|int api_fread(char *buf, int maxsize, int fhandle);|
@@ -1186,8 +1227,8 @@ exposing objects or actions the developer needs, an API simplifies programming.
 \label{sec:apps-1}
 Since this design is only about the operating system itself, only three representative
 applications are introduced. The first is the application of the display color:
-\texttt{color}. The second is the application for timing: \texttt{sundial}. The third
-application is to imitate the application of stars in the sky: \texttt{stars2}.
+\emph{color}. The second is the application for timing: \emph{sundial}. The third
+application is to imitate the application of stars in the sky: \emph{stars2}.
 
 \iffalse %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{1. Data Structure in Kernel}
@@ -1210,7 +1251,7 @@ struct BOOTINFO
 };
 \end{ccode}
   \end{codeblock}
-  \caption{\texttt{struct BOOTINFO}}\label{src:bootinfo}
+  \caption{\emph{struct BOOTINFO}}\label{src:bootinfo}
 \end{listing}
 
 (code~\ref{src:bootinfo}) is used to store startup-related
@@ -1236,7 +1277,7 @@ struct
 };
 \end{ccode}
   \end{codeblock}
-  \caption{\texttt{struct FIFO32}}\label{src:FIFO32}
+  \caption{\emph{struct FIFO32}}\label{src:FIFO32}
 \end{listing}
 
 (code~\ref{src:FIFO32}) is used to
@@ -1261,7 +1302,7 @@ struct
 };
 \end{ccode}
   \end{codeblock}
-  \caption{\texttt{struct SEGMENT\_DESCRIPTOR}}\label{src:DESCRIPTOR}
+  \caption{\emph{struct SEGMENT\_DESCRIPTOR}}\label{src:DESCRIPTOR}
 \end{listing}
 
 (code~\ref{src:DESCRIPTOR}) structure is
@@ -1284,7 +1325,7 @@ struct
 };
 \end{ccode}
   \end{codeblock}
-  \caption{\texttt{struct GATE\_DESCRIPTOR}}\label{src:GATEDESCRIPTOR}
+  \caption{\emph{struct GATE\_DESCRIPTOR}}\label{src:GATEDESCRIPTOR}
 \end{listing}
 
 (code~\ref{src:GATEDESCRIPTOR}) structure is used to
@@ -1307,7 +1348,7 @@ struct
 };
 \end{ccode}
   \end{codeblock}
-  \caption{\texttt{struct MOUSE\_DEC}}\label{src:MOUSE}
+  \caption{\emph{struct MOUSE\_DEC}}\label{src:MOUSE}
 \end{listing}
 
 (code~\ref{src:MOUSE}) structure is used to store information about the mouse, such as the
@@ -1325,7 +1366,7 @@ struct
 };
 \end{ccode}
   \end{codeblock}
-  \caption{\texttt{struct FREEINFO}}\label{src:FREEINFO}
+  \caption{\emph{struct FREEINFO}}\label{src:FREEINFO}
 \end{listing}
 
 (code~\ref{src:FREEINFO}) structure stores how many bytes are
@@ -1349,7 +1390,7 @@ struct
 };
 \end{ccode}
   \end{codeblock}
-  \caption{\texttt{struct MEMMAN}}\label{src:MEMMAN}
+  \caption{\emph{struct MEMMAN}}\label{src:MEMMAN}
 \end{listing}
 
 (code~\ref{src:MEMMAN}) structure is used to store the entire memory usage, such as the total
@@ -1375,7 +1416,7 @@ struct
 };
 \end{ccode}
   \end{codeblock}
-  \caption{\texttt{struct SHEET}}\label{src:SHEET}
+  \caption{\emph{struct SHEET}}\label{src:SHEET}
 \end{listing}
 
 (code~\ref{src:SHEET}) structure is used to store the entire memory usage, such as the
@@ -1400,7 +1441,7 @@ struct
 };
 \end{ccode}
   \end{codeblock}
-  \caption{\texttt{struct SHTCTL}}\label{src:SHTCTL}
+  \caption{\emph{struct SHTCTL}}\label{src:SHTCTL}
 \end{listing}
 
 (code~\ref{src:SHTCTL}) structure is used to manage the structure of multiple layer information,
@@ -1424,7 +1465,7 @@ struct
 };
 \end{ccode}
   \end{codeblock}
-  \caption{\texttt{struct TIMER}}\label{src:TIMER}
+  \caption{\emph{struct TIMER}}\label{src:TIMER}
 \end{listing}
 
 (code~\ref{src:TIMER}) structure is used to manage the time slice of the CPU. The timer
@@ -1447,7 +1488,7 @@ struct
 };
 \end{ccode}
   \end{codeblock}
-  \caption{\texttt{struct TIMERCTL}}\label{src:TIMERCTL}
+  \caption{\emph{struct TIMERCTL}}\label{src:TIMERCTL}
 \end{listing}
 
 (code~\ref{src:TIMERCTL}) structure is used to manage all timers in the system. Including
@@ -1486,7 +1527,7 @@ struct
 };
 \end{ccode}
   \end{codeblock}
-  \caption{\texttt{struct TSS32}}\label{src:TSS32}
+  \caption{\emph{struct TSS32}}\label{src:TSS32}
 \end{listing}
 
 (code~\ref{src:TSS32}) structure holds information about task status segments, which are
@@ -1506,7 +1547,7 @@ struct
 };
 \end{ccode}
   \end{codeblock}
-  \caption{\texttt{struct FILEHANDLE}}\label{src:FILEHANDLE}
+  \caption{\emph{struct FILEHANDLE}}\label{src:FILEHANDLE}
 \end{listing}
 
 (code~\ref{src:FILEHANDLE}) is used to record an open file related data structure.
@@ -1538,7 +1579,7 @@ struct
 };
 \end{ccode}
   \end{codeblock}
-  \caption{\texttt{struct TASK}}\label{src:TASK}
+  \caption{\emph{struct TASK}}\label{src:TASK}
 \end{listing}
 
 (code~\ref{src:TASK})is used to manage variables for a task. Record the task's sections,
@@ -1558,7 +1599,7 @@ struct
 };
 \end{ccode}
   \end{codeblock}
-  \caption{\texttt{struct TASKLEVEL}}\label{src:TASKLEV}
+  \caption{\emph{struct TASKLEVEL}}\label{src:TASKLEV}
 \end{listing}
 
 (code~\ref{src:TASKLEV}) is used to record the status of each task in a layer.
@@ -1576,7 +1617,7 @@ struct
 };
 \end{ccode}
   \end{codeblock}
-  \caption{\texttt{struct TASKCTL}}\label{src:TASKCT}
+  \caption{\emph{struct TASKCTL}}\label{src:TASKCT}
 \end{listing}
 
 (code~\ref{src:TASKCT}) is used to control all tasks in the system.
@@ -1598,7 +1639,7 @@ struct
 };
 \end{ccode}
   \end{codeblock}
-  \caption{\texttt{struct CONSOLE}}\label{src:CONSOLE}
+  \caption{\emph{struct CONSOLE}}\label{src:CONSOLE}
 \end{listing}
 
 (code~\ref{src:CONSOLE})is used to record information about a console terminal, such as location,
@@ -1624,7 +1665,7 @@ struct
 };
 \end{ccode}
   \end{codeblock}
-  \caption{\texttt{struct FILEINFO}}\label{src:FILEINFO}
+  \caption{\emph{struct FILEINFO}}\label{src:FILEINFO}
 \end{listing}
 
 (code~\ref{src:FILEINFO}) is used to record file-related information, such as file name, size,
@@ -1652,12 +1693,12 @@ The boot loader is implemented in Intel assembly. It works as follows:
 \item \textbf{Display boot information:} Firstly, the code in boot sector (See
   Appendix~\ref{sec:dis-boo-inf}) outputs some boot information. \fxerror*{Not clear. You
     have to explain what is al/ah for. For example, as shown in table... al is for..., ah
-    is for... int 0x10 is for...}{When \texttt{al=0}, the
-  null character of boot information hit. Interrupt \texttt{0x10} is used for showing a
+    is for... int 0x10 is for...}{When \emph{al=0}, the
+  null character of boot information hit. Interrupt \emph{0x10} is used for showing a
   character on the screen.}
-\item \textbf{Read the second sector:} Then jump to load C0-H0-S2, \texttt{ax} register
+\item \textbf{Read the second sector:} Then jump to load C0-H0-S2, \emph{ax} register
   saved the address where beginning puts the sectors from floppy. And preparing parameters
-  for interrupt \texttt{0x13} in registers. The \texttt{0x13} interrupt used for read
+  for interrupt \emph{0x13} in registers. The \emph{0x13} interrupt used for read
   sector from floppy to memory. (See Appendix~\ref{sec:rea-sec-sec}).
 \item \textbf{Read two sides of a track:}
   
@@ -1665,19 +1706,19 @@ The boot loader is implemented in Intel assembly. It works as follows:
   reset the registers and try reading it again. The read process aborts after five
   unsuccessful read.
 
-  Register \texttt{si} is a counter. If no carry (success), jump to next segment, as one
+  Register \emph{si} is a counter. If no carry (success), jump to next segment, as one
   sector has been read into memory already. The address should increase 512 byte. Then
-  sector number (\texttt{cl} register) is added by 1 and compare it to 18, if it's smaller
-  than 18, jump to \texttt{readloop}, read the next sector.
+  sector number (\emph{cl} register) is added by 1 and compare it to 18, if it's smaller
+  than 18, jump to \emph{readloop}, read the next sector.
 
-  If the value of \texttt{cl} register is bigger or equal to 18, meaning that one track
+  If the value of \emph{cl} register is bigger or equal to 18, meaning that one track
   18 sector in this side of floppy read already, then reversed the head, add 1 to
-  \texttt{dh} register.
+  \emph{dh} register.
 
-  If the value of \texttt{dh} register after adding larger than or equal to 2, it's saying
+  If the value of \emph{dh} register after adding larger than or equal to 2, it's saying
   the original head is 1, one track of two sides read already. Otherwise the value of
-  \texttt{dh} register smaller than 2, read this side indicating by \texttt{dh} register,
-  jump to \texttt{readloop} segmentation. Appendix~\ref{sec:rea-two-sid} is the code 
+  \emph{dh} register smaller than 2, read this side indicating by \emph{dh} register,
+  jump to \emph{readloop} segmentation. Appendix~\ref{sec:rea-two-sid} is the code 
   performing this function.
 
   There is a pseudo code about this process:
@@ -1691,9 +1732,9 @@ The boot loader is implemented in Intel assembly. It works as follows:
   
   
 \item \textbf{The next cylinder:} So the next step is moving a cylinder, add 1 to register
-  \texttt{ch}. Otherwise the value of \texttt{dh} register smaller than 2, read this side
-  indicating by \texttt{dh} register, jump to \texttt{readloop} segmentation. After
-  \texttt{ch} register add 1, if it's smaller than 10, jump to \texttt{readloop},
+  \emph{ch}. Otherwise the value of \emph{dh} register smaller than 2, read this side
+  indicating by \emph{dh} register, jump to \emph{readloop} segmentation. After
+  \emph{ch} register add 1, if it's smaller than 10, jump to \emph{readloop},
   otherwise end loading floppy to memory process, for we only load ten cylinders of
   floppy. Appendix~\ref{sec:the-nex-cyl} is the code to perform this function.
 \end{enumerate}
@@ -1701,7 +1742,7 @@ The boot loader is implemented in Intel assembly. It works as follows:
 The above four steps can be intuitively reflected in the Fig. ~\ref{fig:iplflowchart}.
 \begin{figure}[!htbp]
   \centering
-  \includegraphics[width=.7\textwidth]{flowchartp}
+  \includegraphics[width=1\textwidth]{flowchartp}
   \caption{the working flowchart of boot loader}
   \label{fig:iplflowchart}
 \end{figure}
@@ -1747,18 +1788,18 @@ assembly language. Specific implementation, please see appendix
 \subsubsection{Memory Allocation}
 \label{sec:memory-allocation}
 First explain some of the variables used to implement the memory allocation
-function. \texttt{size} refers to the space requested by the application but \texttt{SIZE}
-is the free space of one \emph{entry}. \texttt{free} is the number of memory available
+function. \emph{size} refers to the space requested by the application but \emph{SIZE}
+is the free space of one \emph{entry}. \emph{free} is the number of memory available
 memory.
 
 \begin{enumerate}
 \item Traversing all the free entries in memory to find an \emph{entry} gives it more free space
   than the application requested. If found then 2, otherwise 6.
-\item Add \texttt{size} to start address of \emph{entry} found in 1. Subtract 
-  \texttt{size} from free space \texttt{SIZE} in \emph{entry} found in 1. Jump to 3.
-\item Determine if the remaining free space \texttt{SIZE} in the entry is 0. If so, go to
+\item Add \emph{size} to start address of \emph{entry} found in 1. Subtract 
+  \emph{size} from free space \emph{SIZE} in \emph{entry} found in 1. Jump to 3.
+\item Determine if the remaining free space \emph{SIZE} in the entry is 0. If so, go to
   4. Otherwise 5.
-\item Subtract the number of memory available entries \texttt{free} by 1.
+\item Subtract the number of memory available entries \emph{free} by 1.
 \item Returns the starting address of available memory.
 \item Returns 0 for memory allocation failure.
 \end{enumerate}
@@ -1780,7 +1821,7 @@ becomes somewhat complicated. It is mainly divided into the following categories
     \caption{insert an entry no merge}
     \label{fig:no-merge}
   \end{figure}
-  As shown in the figure, the starting address of \texttt{new x} 803 is not adjacent to
+  As shown in the figure, the starting address of \emph{new x} 803 is not adjacent to
   the previous termination address 669, and its termination address 960 is also not
   adjacent to the starting address 1000 of the next entry. The so-called neighboring means
   that the difference between the two addresses is 1. Same as below.
@@ -1792,7 +1833,7 @@ becomes somewhat complicated. It is mainly divided into the following categories
     \caption{Insert an item merged with the previous item}
     \label{fig:former-merge}
   \end{figure}
-  As shown in the figure, the starting address of \texttt{new x} 670 is adjacent to the
+  As shown in the figure, the starting address of \emph{new x} 670 is adjacent to the
   previous termination address 669, but its termination address 960 is not adjacent to the
   starting address 1000 of the next entry.
 
@@ -1804,27 +1845,27 @@ becomes somewhat complicated. It is mainly divided into the following categories
     \caption{Insert an item merged with the latter item}
     \label{fig:latter-merge}
   \end{figure}
-  The termination address 999 of \texttt{new x} is adjacent to the starting address 1000
-  of the next entry, but its starting address of \texttt{new x} 803 is not adjacent to the
+  The termination address 999 of \emph{new x} is adjacent to the starting address 1000
+  of the next entry, but its starting address of \emph{new x} 803 is not adjacent to the
   previous termination address 669.
   
 \end{enumerate}
 The memory release process can be described as follows.
 \begin{enumerate}
-\item Find the insertion position \emph{i}. The so-called insertion position is an \texttt{entry}
-  number that satisfies certain conditions. This condition is that the \texttt{size} of this
-  \texttt{entry} is larger than the size requested by the application.
-\item If $i > 0$, merge if the newly inserted \emph{entry} can be merged with the previous \texttt{entry},
+\item Find the insertion position \emph{i}. The so-called insertion position is an \emph{entry}
+  number that satisfies certain conditions. This condition is that the \emph{size} of this
+  \emph{entry} is larger than the size requested by the application.
+\item If $i > 0$, merge if the newly inserted \emph{entry} can be merged with the previous \emph{entry},
   the same as for the latter \emph{entry}. As long as it merges with the former, the
   function returns 0 and the release is successful. Otherwise jump to 3.
-\item The program proceeds here so that the newly inserted \texttt{entry} must not be
-  merged with the previous \texttt{entry}. Now check if the newly inserted \texttt{entry}
-  can be merged with the latter \texttt{entries}. If so, merges it and return 0. Otherwise
+\item The program proceeds here so that the newly inserted \emph{entry} must not be
+  merged with the previous \emph{entry}. Now check if the newly inserted \emph{entry}
+  can be merged with the latter \emph{entries}. If so, merges it and return 0. Otherwise
   jump to 4.
-\item The program proceeds here to represent that the newly inserted \texttt{entry} cannot be
+\item The program proceeds here to represent that the newly inserted \emph{entry} cannot be
   merged with any of the entries. Now check the number of used entries with 4090. If the
   former is less than the latter, move all items after the i'th item back one position to
-  make room for new items. Then insert this new \texttt{entry}. Otherwise jmup to 5.
+  make room for new items. Then insert this new \emph{entry}. Otherwise jmup to 5.
 
 \item Failed to release, return -1.
 \end{enumerate}
@@ -1853,7 +1894,21 @@ implementation, see ~\ref{sec:memory-rele-proc}
 Process management is a very complex but very important part of operating system
 development. This part of the development has a very big impact on the performance of the
 entire system. For the RongOS operating system, all tasks are managed
-hierarchically. From \emph{level 0} to \emph{level 10}, there are a total of ten levels in
+hierarchically. Fig. ~\ref{fig:proc-manage} clearly shows how all the tasks in the system
+are managed.
+
+
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=1.1\textwidth]{process-manage}
+  \caption{process of task management}
+  \label{fig:proc-manage}
+\end{figure}
+
+
+
+From \emph{level 0} to \emph{level 10}, there are a total of ten levels in
 the system. All these ten levels and the space they prepare for the task are called \emph{task
   pool}. For each task, it also has a \emph{priority} attribute. It actually specifies how
 long each process can run, also known as a \emph{time slice}. 
@@ -1898,13 +1953,6 @@ the system. In this transient state, a task is being added to the $(3+1=4)$ poin
 \emph{x-level} of \emph{task pool}. What is running in the system is task \textcircled{4}
 of \emph{level 0}. 
 
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[width=1.1\textwidth]{process-manage}
-  \caption{process of task management}
-  \label{fig:proc-manage}
-\end{figure}
 
 \subsubsection{Task Allocate and Add}
 \label{sec:task-allocate-add}
@@ -1951,7 +1999,7 @@ pool to run.
 
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width=.7\textwidth]{task-run}
+  \includegraphics[width=.6\textwidth]{task-run}
   \caption{algorithm to add tasks to task pool and prepare to run}
   \label{fig:algo-add}
 \end{figure}
@@ -1987,7 +2035,7 @@ Specific code implementation, see ~\ref{sec:task-scheduling} and
 switching.
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width=.7\textwidth]{task-schedule} 
+  \includegraphics[width=.6\textwidth]{task-schedule} 
   \caption{task scheduling}
   \label{fig:task-schd}
 \end{figure}
@@ -2037,6 +2085,101 @@ behavior. Its running process can be summarized as follows.
   
 \end{enumerate}
 Specific code implementation, see ~\ref{sec:task-remove}.
+
+\subsection{Graphic Management}
+\label{sec:graphic-management}
+
+In modern operating systems, graphics management is often not a concern of the operating
+system kernel. However, as a simple multitasking 32-bit operating system with windows it
+is necessary to demonstrate the implementation of a graphical management subproblem. The
+issue that was selected for detailed discussion was the more complex \emph{sheet} height
+settings in the graphics management section.
+
+\subsubsection{Sheet Height Setting}
+\label{sec:sheet-height-setting}
+
+There are many \emph{sheet} on the computer screen. Which \emph{sheet} is located at which
+height requires careful design and detailed consideration. When the \emph{sheet} height is set,
+the height of other layers must be taken into account. When the setting is complete, the
+relative height of other \emph{sheet} cannot be changed. First, the algorithm for setting
+the height of the \emph{sheet} is given in Fig. ~\ref{fig:sheet-heht}.
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=.7\textwidth]{sheet_move_algo} 
+  \caption{algorithm of sheet height setting}
+  \label{fig:sheet-heht}
+\end{figure}
+
+The height of passing in may not be compliant, for example, pass a negative number and so
+on. Therefore, it is necessary to check the height value first. If it does not meet the
+regulations, it needs to be corrected. \emph{Sheet} height settings can be divided into
+four sections.
+
+\begin{enumerate}
+\item The original height of the \emph{sheet} is higher than the newly transmitted
+  height. The \emph{sheet} between the newly transmitted height and the original height
+  needs to be moved upward by a height. After the move is complete, place the original
+  height \emph{sheet} on the new height. Fig. ~\ref{fig:sit-one} shows this situation.
+  The following explanations are necessary to understand this diagram. These explanations
+  are also used for the next three cases. 1, each horizontal line represents a
+  \emph{sheet}, the label on the right represents the height of the layer. 2, the old and
+  new heights are mark done the left. 3, the label next to the arrow represents the order
+  of movement. 4, the bottom dashed line represents the hidden \emph{sheet}, while the
+  topmost dashed line represents the highest \emph{sheet}.
+
+  \begin{figure}
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=1.2\textwidth]{sheet_move1} % first figure itself
+        \caption{height setting one}
+        \label{fig:sit-one}
+    \end{minipage}\hfill
+    \begin{minipage}{0.45\textwidth}
+      \centering
+      \includegraphics[width=1.2\textwidth]{sheet_move3} 
+      \caption{height setting three}
+      \label{fig:sit-three}
+    \end{minipage}\hfill
+    \begin{minipage}{0.45\textwidth}
+      \centering
+      \includegraphics[width=1.2\textwidth]{sheet_move2} 
+      \caption{height setting two}
+      \label{fig:sit-two}
+    \end{minipage}\hfill
+    \begin{minipage}{0.45\textwidth}
+      \centering
+      \includegraphics[width=1.2\textwidth]{sheet_move4} 
+      \caption{height setting 4}
+      \label{fig:sit-four}
+    \end{minipage}
+    \caption{all four setting height conditions}
+\end{figure}
+  
+
+\item The original height of the \emph{sheet} is higher than the newly transmitted
+  height. However, the height of the new pass is less than 0. This means that the
+  \emph{sheet} at old height needs to be hidden, the so-called hiding is to set its height
+  to -1. \emph{Sheet} above this height need to be moved down one
+  height. Fig. ~\ref{fig:sit-two} shows this situation.
+  
+
+\item The original height of the \emph{sheet} is less than the newly transmitted
+  height. The \emph{sheet} between the newly transmitted height and the original height
+  needs to be moved down by a height. After the move is complete, place the original
+  height \emph{sheet} on the new height. Fig. ~\ref{fig:sit-three} shows this situation.
+
+
+\item The original height of the \emph{sheet} is less than the newly transmitted
+  height. However, the height of the new pass is greater than top. This means that the
+  \emph{sheet} at old height needs to be displayed, the so-called displayed is to set its height
+  larger than 0. \emph{Sheet} above this new height need to be moved upward one
+  height. Fig. ~\ref{fig:sit-four} shows this situation.
+        
+\end{enumerate}
+Specific code implementation, see ~\ref{sec:graph-height-sett}.
+
+
 
 
 
@@ -2168,6 +2311,13 @@ linenos=true]{c}{../../src/kernel/mtask.c}
 \label{sec:task-remove}
 \inputminted[tabsize=2, firstline=23, lastline=47,
 linenos=true]{c}{../../src/kernel/mtask.c}
+
+\subsection{Graphic height setting}
+\label{sec:graph-height-sett}
+\inputminted[tabsize=2, firstline=250, lastline=322,
+linenos=true]{c}{../../src/kernel/sheet.c}
+
+
 
 
 

@@ -1,0 +1,93 @@
+\documentclass{standalone}
+\usepackage[linesnumbered]{algorithm2e}
+\SetKw{KwBy}{by}
+
+\begin{document}
+\begin{algorithm}[H]
+  \SetAlgoLined
+  \SetKwFunction{sheetMove}{sheetMove}
+  \KwResult{Set the height of a sheet}
+  ENTRANCE: call \sheetMove{(struct SHTCTL *ctl, struct SHEET *sht, int height)}\;
+  \SetKwProg{myproc}{Procedure}{}{}
+  \myproc{\sheetMove{struct SHTCTL *ctl, sturct SHEET *sht, int height}}
+  {
+    old $\leftarrow$ the original height of \emph{sht}\;
+    \eIf{height > top sheet plus 1}
+    {
+      height $\leftarrow$ top + 1\;
+    }
+    {
+      \emph{nothing to do here}\;
+    }
+    \eIf{height < -1}
+    {
+      this means to hide \emph{sht} sheet, height $\leftarrow$ -1;
+    }
+    {
+      \emph{nothing to do here}\;
+    }
+    \eIf{old > height}
+    {
+      \eIf {height >= 0}
+      {
+        \For{$h \gets old$ \KwTo $height$ \KwBy $1$}
+        {
+          increases the height of all sheets between \emph{height} and \emph{old} by one\;
+          modify the height of all sheets to \emph{h}\;
+        }
+        place the \emph{sht} sheet at \emph{height}\;
+      }
+      {
+        \eIf {highest sheet top > old}
+        {
+          \For{$h \gets old$ \KwTo $top$ \KwBy $1$}
+          {
+            drop all sheets between \emph{old} and \emph{top} by one height\;
+            modify the height of all sheets to \emph{h}\;
+          }
+        }
+        {
+          \emph{nothing to do here}\;
+        }
+        the displayed sheet is reduced by one, top $\leftarrow$ top - 1\;
+      }
+      refersh screen\;
+    }
+    {
+      \eIf{old < height}
+      {
+        \eIf{old >= 0}
+        {
+          \For{$h \gets old$ \KwTo $height$ \KwBy $1$}
+          {
+            drop all sheets between \emph{old} and \emph{height} by one height\;
+            modify the height of all sheets to \emph{h}\;
+          }
+          place the \emph{sht} sheet at \emph{height}\;
+        }
+        {
+          \For{$h \gets top$ \KwTo $height$ \KwBy $1$}
+          {
+            increases the height of all sheets between \emph{top} and \emph{height} by one\;
+            modify the height of all sheets to \emph{h+1}\;
+          }
+          place the \emph{sht} sheet at \emph{height}\;
+          the displayed sheet is increased by one, top $\leftarrow$ top + 1\;
+        }
+      }
+      {
+        \emph{nothing to do here}\;
+      }
+    }
+  }
+
+
+\end{algorithm}
+\end{document}
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
