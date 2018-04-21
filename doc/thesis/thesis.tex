@@ -1023,33 +1023,46 @@ system kernel.
 \subsubsection{Driver}
 \label{sec:driver}
 
-The device drivers are used to control and manipulate the
-hardware. \fxerror*{wikipedia}{The driver blocked the hardware information}. It is the
-dividing line between hardware and software. A driver provides a software interface to
-hardware devices, enabling operating systems and other computer programs to access
-hardware functions without needing to know precise details of the hardware being used.
+The device drivers are used to control and manipulate the hardware. It is the dividing
+line between hardware and software. A driver provides a software interface to hardware
+devices, enabling operating systems and other computer programs to access hardware
+functions without needing to know precise details of the hardware being used. In this way,
+application programmers can develop hardware-independent programs.
+
+When the driver is called, it sends the command to operate the hardware. Once the hardware
+device returns data, the driver informs the calling program to process it. The entire
+process is an interruption.
+
+For \emph{RongOS}, the main hardware devices are floppy disks, mice, keyboard, and
+screen. So the following driver functions are mainly used to manipulate them.
 
 \paragraph{Driver Functions}
 
-\fxerror{more about each function}
 \csingle|void set_palette(int start, int end, unsigned char *rgb);|
 \begin{itemize}
-\item initialize the palette.
+\item Initialize the palette. It is necessary to set the color number in the palette
+  register for setting palette mode. 
 \end{itemize}
 
 \csingle|void init_pic(void);|
 \begin{itemize}
-\item initialize the PIC.
+\item Initialize the PIC. PIC is an abbreviation for programmable interrupt
+  controller. PIC is used to inform the CPU if there is an interrupt. 
+  
+  
 \end{itemize}
 
 \csingle|void init_keyboard(struct FIFO32 *fifo, int data0);|
 \begin{itemize}
-\item initialze the keyboard.
+\item Initialze the keyboard. The mouse control circuit is included in the keyboard
+  control circuit. Therefore, if the initialization of the keyboard circuit is completed,
+  the initialization of the mouse circuit is completed.
+  
 \end{itemize}
 
 \csingle|void enable_mouse(struct FIFO32 *fifo, int data0, struct MOUSE_DEC *mdec);|
 \begin{itemize}
-\item activate mouse.
+\item Activate mouse. Makes the mouse itself effective.
 \end{itemize}
 
 \subsubsection{FAT File System}
@@ -2200,9 +2213,56 @@ four sections.
 \end{enumerate}
 Specific code implementation, see ~\ref{sec:graph-height-sett}.
 
+\subsection{Driver}
+\label{sec:driver-1}
+The following parts of the driver are implemented.
 
+\subsubsection{Palette}
+\label{sec:palette}
 
+The palette setting needs to write the color number into the palette register. There are
+two main palette registers, one is register write 0x3c8, and the other is data port
+0x3c9. The palette settings are divided into the following steps.
 
+\begin{enumerate}
+\item Masking interrupts first.
+\item Write the number of the palette to be set to 0x3c8. Finally write 0x3c9 in order of
+  R, G, and B.
+\item Allow interrupts.
+\end{enumerate}
+Specific code implementation, see ~\ref{sec:palette-setting}.
+
+\subsubsection{PIC}
+\label{sec:pic}
+
+In design, the CPU can only handle one interrupt. The PIC monitors the eight signals at
+the input pins. As soon as an interrupt signal comes in, the only one is turned on and
+notified to the CPU.
+
+The primary PIC is directly connected to the CPU, and the slave PIC is connected to the
+primary PIC. The master PIC is responsible for handling the 0th to 7th interrupt signals,
+and the slave PIC is responsible for handling the 8th to 15th interrupt signals. So the
+PIC settings can be divided into the following steps.
+
+\begin{enumerate}
+\item Disable interrupts.
+\item Setting 0 to 7 interrupts is accepted by the main PIC.
+\item Setting 8 to 15 interrupts is accepted by the main PIC.
+\item Resume interruption.
+\end{enumerate}
+Specific code implementation, see ~\ref{sec:pic-1}.
+
+\subsubsection{Keyboard and Mouse}
+\label{sec:keyboard-mouse}
+
+For the mouse and keyboard to work, instructions must be sent to the appropriate circuits
+and devices. But the mouse circuit is included in the keyboard circuit. Therefore, only
+the keyboard circuit needs to be initialized for the circuit. The mouse device needs to be
+activated additionally. The control circuit needs to be effective first, otherwise the
+device sending data to the control circuit will have unpredictable consequences.
+
+What command to send, where to send please refer to the specific code implementation
+~\ref{sec:kbd-mse}, these are specified by the hardware.
 
 \section{API}
 \label{sec:API}
@@ -2337,6 +2397,25 @@ linenos=true]{c}{../../src/kernel/mtask.c}
 \label{sec:graph-height-sett}
 \inputminted[tabsize=2, firstline=250, lastline=322,
 linenos=true]{c}{../../src/kernel/sheet.c}
+
+\subsection{Palette setting}
+\label{sec:palette-setting}
+\inputminted[tabsize=2, firstline=3, lastline=64,
+linenos=true]{c}{../../src/kernel/graphic.c}
+
+\subsection{PIC}
+\label{sec:pic-1}
+\inputminted[tabsize=2, firstline=6, lastline=25,
+linenos=true]{c}{../../src/kernel/int.c}
+
+
+\subsection{Keyboard and Mouse}
+\label{sec:kbd-mse}
+\inputminted[tabsize=2, firstline=21, lastline=45,
+linenos=true]{c}{../../src/kernel/keyboard.c}
+\inputminted[tabsize=2, firstline=21, lastline=36,
+linenos=true]{c}{../../src/kernel/mouse.c}
+
 
 
 
