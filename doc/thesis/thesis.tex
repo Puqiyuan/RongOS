@@ -484,7 +484,7 @@ the kernel, APIs, and some applications.
 
 \section{Top Level Design}
 
-As shown in Fig.~\ref{fig:top-level} shown, \fxerror{correct picture}, all applications
+As shown in Fig.~\ref{fig:top-level} shown, all applications
 require services from the
 operating system through a set of function calls. This set of functions provided by the OS
 kernel is usually called \emph{system calls}. However, the user applications do not invoke
@@ -494,7 +494,7 @@ which the API invokes a system call and hands over processing to the kernel is c
 
 Within the kernel, there are some important software modules working to keep the system
 running well. The process control subsystem provides graphics processing, CPU scheduling,
-and memory management functions for processes. \fxerror{do you have VFS?} The file
+and memory management functions for processes. The file
 subsystem provides a friendly way to the user processes for accessing disk data. For
 example, to launch an application program stored on the disk, the function in the file
 system must be invoked to find the specific application. All of these subsystems may
@@ -503,7 +503,7 @@ hardwares.
 
 \begin{figure}%[!htbp]
   \centering
-  \includegraphics[width=.7\textwidth]{kernel-block.pdf}
+  \includegraphics[width=1.1\textwidth]{kernel-block.pdf}
   \caption{top-level design}
   \label{fig:top-level}
 \end{figure}
@@ -533,8 +533,22 @@ to the entry point of the operating system.
 \subsection{Kernel}
 \label{sec:kernel}
 
-The kernel receives the API calls from user processes, and operates the
-hardwares through the device drivers.\fxerror{say some more.}
+The kernel is the core part of the operating system. Usually the kernel is loaded after
+the bootloader finishes loading. The code in the kernel is separate from the application
+and other non-critical operating system code in memory. This is mainly to protect the
+kernel.
+
+The kernel receives the API calls from user processes, and operates the hardwares through
+the device drivers. The functions it provides mainly include the following parts
+\begin{enumerate}
+\item Mediate the use of the CPU, random-access memory and input/output devices and other
+  devices for each program.
+\item Provides mechanisms for process communication.
+\item The kernel itself and other user programs can be protected even when there are
+  malicious programs.
+\item Serve user programs through system calls.
+\end{enumerate}
+
 
 \subsubsection{Memory Management}
 \label{sec:memory-management-1}
@@ -1068,10 +1082,22 @@ screen. So the following driver functions are mainly used to manipulate them.
 \subsubsection{FAT File System}
 \label{sec:fat}
 
-\fxerror*{wikipedia}{The file system defines how data is stored and accessed. The file
-  system divides the entire storage space according to a certain form. This facilitates
-  the storage of files while increasing the utilization of storage media. The small blocks
-  thus divided are called sectors. The FAT records which sectors all files are stored on.}
+File Allocation Table (FAT) is a computer file system architecture and a family of
+industry-standard file systems utilizing it. The FAT file system is a continuing standard
+which borrows source code from the original, legacy file system and proves to be simple
+and robust. It offers useful performance even in lightweight implementations, but cannot
+deliver the same performance, reliability and scalability as some modern file systems. It
+is, however, supported for compatibility reasons by nearly all currently developed
+operating systems for personal computers and many mobile devices and embedded systems, and
+thus is a well-suited format for data exchange between computers and devices of almost any
+type and age from 1981 up to the
+present\footnote{\url{https://en.wikipedia.org/wiki/File_Allocation_Table}}.
+
+
+The file allocation table(FAT) records which disk blocks the file occupies. According to
+the FAT table, the contents of the file can be read out. FAT is a chain of connections to
+each block of a file. Such a chain may be disconnected, so FAT information is stored in
+two copies on the disk.
   
 \paragraph{FAT Data Structure}
 
@@ -1094,21 +1120,25 @@ struct FILEINFO
 \end{itemize}
 
 \paragraph{FAT Functions}
-\fxerror{more about each function}
 
 \csingle|void file_readfat(int *fat, unsigned char *img);|
 \begin{itemize}
-\item read file allocation table
+\item Read file allocation table. The first FAT table is stored at 0x000200. The fat table
+  is compressed. Must be unzipped to \emph{fat} to use. 
+  
 \end{itemize}
 
 \csingle|void file_loadfile(int clustno, int size, char *buf, int *fat, char *img);|
 \begin{itemize}
-\item read file contents into memory
+\item Read file contents into \emph{buf} memory according to \emph{fat}, \emph{size} is
+  the size of file, \emph{clustno} is the number of the first disk block that the file
+  occupies.
+    
 \end{itemize}
 
 \csingle|struct FILEINFO *file_search(char *name, struct FILEINFO *finfo, int max);|
 \begin{itemize}
-\item search for files based on provided \emph{name}.
+\item Search for files based on provided \emph{name}. The file name is stored at 0x002600.
 \end{itemize}
 
 \subsection{API}
@@ -1120,141 +1150,167 @@ exposing objects or actions the developer needs, an API simplifies programming.
 
 \subsubsection{All APIs}
 \label{sec:all-apis}
-\fxerror{more about each function}
+The application is directly facing the API. The RongOS system has more than 20 APIs.
+For the API more is introduced.
+
 
 \csingle|void api_putchar(int c);|
 \begin{itemize}
-\item output a character \emph{c} on the console window.
+\item Output a character \emph{c} on the console window.
 \end{itemize}
 
 \csingle|void api_putstr0(char *s);|
 \begin{itemize}
-\item ouput a string \emph{s} on the console window.
+\item Ouput a string \emph{s} on the console window.
 \end{itemize}
 
 \csingle|void api_putstr1(char *s, int l);|
 \begin{itemize}
-\item output a string \emph{s} on console window, \emph{l} is the length of this string.
+\item Output a string \emph{s} on console window, \emph{l} is the length of this string.
 \end{itemize}
 
 \csingle|void api_end(void);|
 \begin{itemize}
-\item end the application's running.
+\item End the application's running.
 \end{itemize}
 
 \csingle|int api_openwin(char *buf, int xsiz, int ysiz, int col_inv, char *title);|
 \begin{itemize}
-\item open a window, return the hanlder of window.
+\item Open a window, return the hanlder of window, \emph{xsiz} is the width. \emph{ysiz}
+  is height, \emph{col\_inv} is the color of window, \emph{title} is the window name.
 \end{itemize}
 
 \csingle|void api_putstrwin(int win, int x, int y, int col, int len, char *str);|
 \begin{itemize}
-\item display string \emph{str} on window. 
+\item Display string \emph{str} on window, \emph{x} and \emph{y} indicate where the string
+  is displayed, \emph{col} is the color of string, \emph{str} is the address of the string
+  to display.
 \end{itemize}
 
 \csingle|void api_boxfilwin(int win, int x0, int y0, int x1, int y1, int col);|
 \begin{itemize}
-\item draw a box on the window
+\item Draw a box on the window. \emph{x0} and \emph{y0} are the starting point of the
+  drawn box. \emph{x1} and \emph{y1} are the end point of the drawn box.
+  
 \end{itemize}
 
 \csingle|void api_initmalloc(void);|
 \begin{itemize}
-\item initialize the structure of the management memory
+\item Initialize the structure of the management memory
 \end{itemize}
 
 \csingle|char *api_malloc(int size);|
 \begin{itemize}
-\item allocating memory for the application.
+\item Allocating memory for the application, \emph{size} is the size of the
+  request. Returns the allocated starting address.
+  
 \end{itemize}
 
 \csingle|void api_free(char *addr, int size);|
 \begin{itemize}
-\item free up memory used by the application.
+\item Free up memory used by the application. \emph{addr} is the starting address of the
+  release, \emph{size} is the size of the free.
 \end{itemize}
 
 \csingle|void api_point(int win, int x, int y, int col);|
 \begin{itemize}
-\item draw a pint on \emph{win} window.
+\item Draw a pint on \emph{win} window. \emph{x} and \emph{y} indicate the coordinates of
+  the drawing, \emph{col} is the color of the depicted point.
+  
 \end{itemize}
 
 \csingle|void api_refreshwin(int win, int x0, int y0, int x1, int y1);|
 \begin{itemize}
-\item refresh the window.
+\item Refresh the \emph{win} window, \emph{x0} and \emph{y0} indicates the starting
+  coordinate of the drawing, \emph{x1} and \emph{y1} indicates the end of the drawing.
+    
 \end{itemize}
 
 \csingle|void api_linewin(int win, int x0, int y0, int x1, int y1, int col);|
 \begin{itemize}
-\item draw a straight line.
+\item Draw a straight line on \emph{win} window, \emph{x0} and \emph{y0} indicates the
+  starting coordinate of the drawing, \emph{x1} and \emph{y1} indicates the end of the
+  drawing.
+  
 \end{itemize}
 
 \csingle|void api_closewin(int win);|
 \begin{itemize}
-\item close window.
+\item Close \emph{win} window.
 \end{itemize}
 
 \csingle|int api_getkey(int mode);|
 \begin{itemize}
-\item accept keyboard input.
+\item Accept keyboard input, \emph{mode} indicates whether the keyboard is sleeping.
 \end{itemize}
 
 \csingle|int api_alloctimer(void);|
 \begin{itemize}
-\item get timer.
+\item Get timer.
 \end{itemize}
 
 \csingle|void api_inittimer(int timer, int data);|
 \begin{itemize}
-\item set the data of timer sending.
+\item Set the \emph{data} of \emph{timer} for sending.
 \end{itemize}
 
 \csingle|void api_settimer(int timer, int time);|
 \begin{itemize}
-\item set the time of timer.
+\item Set the \emph{time} of \emph{timer}.
 \end{itemize}
 
 \csingle|void api_freetimer(int timer);|
 \begin{itemize}
-\item release timer.
+\item Release the \emph{timer}.
 \end{itemize}
 
 \csingle|void api_beep(int tone);|
 \begin{itemize}
-\item make a buzzer sound
+\item Make a buzzer sound.
 \end{itemize}
 
 \csingle|int api_fopen(char *fname);|
 \begin{itemize}
-\item open file, return file hanlder
+\item Open file based on \emph{fname}, return file hanlder.
 \end{itemize}
 
 \csingle|void api_fclose(int fhandle);|
 \begin{itemize}
-\item close file
+\item Close the \emph{fhandle} file.
 \end{itemize}
 
 \csingle|void api_fseek(int fhandle, int offset, int mode);|
 \begin{itemize}
-\item locate a file
+\item Locate the \emph{fhandle} file, \emph{offset} indicates the size of the offset,
+  \emph{mode} indicates whereto start positioning. 0 represents the size of the file, 1
+  from the beginning of the file, 2 from the end of the file.
+  
 \end{itemize}
 
 \csingle|int api_fsize(int fhandle, int mode);|
 \begin{itemize}
-\item return the size of \emph{fhandle} file.
+\item Return the size of \emph{fhandle} file. The meaning of \emph{mode} is the same as
+  above.
 \end{itemize}
 
 \csingle|int api_fread(char *buf, int maxsize, int fhandle);|
 \begin{itemize}
-\item read file, return read bytes. 
+\item Read the \emph{fhandle} file to \emph{buf}, return read bytes in \emph{eax}
+  register, \emph{maxsize} indicates the maximum number of bytes that can be read at a
+  time.
+    
 \end{itemize}
 
 \csingle|int api_cmdline(char *buf, int maxsize);|
 \begin{itemize}
-\item return the context of command line.
+\item Return the context of command line in \emph{buf}, \emph{maxsize} indicates how many
+  bytes can be stored.
+  
 \end{itemize}
 
 \csingle|int api_getlang(void);|
 \begin{itemize}
-\item return the language mode.
+\item Return the language mode in \emph{eax}.
 \end{itemize}
 
 \subsection{APPs}
@@ -1263,6 +1319,15 @@ Since this design is only about the operating system itself, only three represen
 applications are introduced. The first is the application of the display color:
 \emph{color}. The second is the application for timing: \emph{sundial}. The third
 application is to imitate the application of stars in the sky: \emph{stars2}.
+
+\begin{enumerate}
+\item \emph{color}: After running the color command on the command line, a window with
+  many colors appears.
+\item \emph{sundial}: This is an application used for timing. After running, it will start
+  timing in seconds.
+\item \emph{starts2}: This application will imitate the distribution of stars in the sky.
+  
+\end{enumerate}
 
 \iffalse %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{1. Data Structure in Kernel}
@@ -1725,11 +1790,44 @@ The boot loader is implemented in Intel assembly. It works as follows:
 
 \begin{enumerate}
 \item \textbf{Display boot information:} Firstly, the code in boot sector (See
-  Appendix~\ref{sec:dis-boo-inf}) outputs some boot information. \fxerror*{Not clear. You
-    have to explain what is al/ah for. For example, as shown in table... al is for..., ah
-    is for... int 0x10 is for...}{When \emph{al=0}, the
-  null character of boot information hit. Interrupt \emph{0x10} is used for showing a
-  character on the screen.}
+  Appendix~\ref{sec:dis-boo-inf}) outputs some boot information. When \emph{al=0}, the
+    null character ofboot information hit. Interrupt \emph{0x10} is used for showing a
+    character on the screen.
+    
+    The number of interrupt functions used in \emph{RongOS} and their register parameters
+    are shown in table ~\ref{tab:int-info}.
+
+
+
+
+\begin{table}[!ht]
+  \centering\tabulinesep=2mm
+  \begin{tabu}{X[l,m,-1]X[l,m]X[-1,l,m]X[-1,l,m]}
+    \tabucline-\rowfont\bfseries
+    Interrupt\par{}Number & Register Parameter & Return Value & Function\\ \tabucline-
+    0x10 &
+    ah=0x0e(write character in tty mode)\par{}
+    al=character code\par{}
+    bh=0, bl=colorcolor& null & video services \\\tabucline-
+    0x13 &
+    ah=0x02(read sectors)\par{}
+    ah=0x03(write sectors)\par{}
+    ah=0x04(verify sectors)\par{}
+    ah=0x0c(seek to specified track)\par{}
+    al=number of sectors processing\par{}
+    ch=cylinder \& 0xff  cl=sector number\par{}
+    dh=header number dl=driver number\par{}
+    es:bx=buffer address &
+    FLACS.CF=0\par{}
+    no error, ah = 0\par{}
+    FLAGS.CF=1\par{}
+    error, ah=error number\par{}& disk services \\ \tabucline-
+  \end{tabu}
+  \caption{\emph{RongOS} interrupt calls}\label{tbl:intcall}
+  \label{tab:int-info}
+\end{table}
+
+
 \item \textbf{Read the second sector:} Then jump to load C0-H0-S2, \emph{ax} register
   saved the address where beginning puts the sectors from floppy. And preparing parameters
   for interrupt \emph{0x13} in registers. The \emph{0x13} interrupt used for read
@@ -2264,48 +2362,122 @@ device sending data to the control circuit will have unpredictable consequences.
 What command to send, where to send please refer to the specific code implementation
 ~\ref{sec:kbd-mse}, these are specified by the hardware.
 
+\subsection{FAT system}
+\label{sec:fat-system}
+
+The related implementation of the FAT part focuses on the decompression of fat, the
+reading and searching of files.
+
+\subsubsection{Read Fat}
+\label{sec:read-fat}
+The storage FAT table itself also needs a certain amount of space. So in order to save
+space, FAT data is compressed. The compression method is as follows.
+$$1, \enspace F0 \enspace FF \enspace FF \rightarrow FF0 \enspace FFF$$
+$$2, \enspace ab \enspace cd \enspace ef \rightarrow dab \enspace efc$$
+Equation 2 reflects the general exchange rules, and Equation 1 reflects an exchange
+example. Three bytes before compression and only two bytes after compression. Specific
+code implementation, see ~\ref{sec:read-fat-1}.
+
+\subsubsection{Load File}
+\label{sec:load-file}
+File reading is divided into two cases. First, the block it occupies is full, in this case
+the entire block is copied, the other is that the file is not full of one block. This
+requires that the end point of the copy be determined based on the size of the file. When
+reading a file, the block number also moves downwards. This algorithm is relatively
+simple, please refer to ~\ref{sec:read-file}.
+
+\subsubsection{Search File}
+\label{sec:search-file}
+
+The search file is based on the file name. In \emph{RongOS} systems, only file names
+shorter than 8 are supported temporarily. So the file search function first needs to
+detect the length of the file name. The status of the file also needs to be checked. The
+deleted file cannot be returned. Specific code implementation, see ~\ref{sec:search-file-1}.
+
+
 \section{API}
 \label{sec:API}
+There are more than twenty APIs for this system. Their implementation is much the same,
+they are all stored in the register parameter value, \emph{edx} register to save the
+function number, and then trigger the 0x40 interrupt by the operating system kernel
+according to the function number to choose which system call to provide services. If there
+is a return value, it is stored in the \emph{eax} register. So the implementation section
+only focuses on the first API: \emph{void api\_putchar(int c)}.
+
+The function number of this API is 1, it is stored in the \emph{edx} register. Character
+encoding is variable \emph{c}, it is stored in the \emph{al} register. Then trigger 0x40
+interrupt. Specific code implementation, see ~\ref{sec:api-1}.
 
 
 \section{APPs}
 \label{sec:apps}
+Obviously, application development is not the content of operating system development. But
+in order to verify that \emph{RongOS} is able to run programs developed in accordance with
+the \emph{RongOS} API, I decided to introduce an application implementation that is
+\emph{stars2}. This application is to imitate the stars in the sky, I think the stars are
+a symbol of dreams, and I intend to end my thesis by showing dream. And developing an
+operating system is one of my dreams. The paper ends but the dream will not.
 
+
+This application first initializes the memory management structure. Then apply for memory
+space. Then open a window. All operations are done by calling the API of
+\emph{RongOS}. The coordinates of the point are generated by a random function \emph{rand}
+of C. Then call the \emph{api\_point} API to draw a point. Finally wait for the user to
+enter any key to end the display. The operating result is shown in the
+Fig. ~\ref{fig:result}.
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=1.1\textwidth]{output}
+  \caption{results of stars2}
+  \label{fig:result}
+\end{figure}
+
+How a RongOS application specifically requests operating system services through the API
+is shown in Fig. ~\ref{fig:trap}. Specific code implementation of this application, see
+~\ref{sec:stars2}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=1.1\textwidth]{call-graphic}
+  \caption{the process of an application requesting a kernel service}
+  \label{fig:trap}
+\end{figure}
 
 
 
 \chapter{Conclusions}%{Prospects And Shortages}
+This project intends to develop a simple operating system from scratch. The so-called
+start from scratch means that directly facing the hardware device does not depend on any
+existing three-party software. The main work to be done is to complete the loading of the
+operating system, memory management, and task management. 
 
-\footnotetext{\url{https://thesistips.wordpress.com/2012/03/25/how-to-write-your-introduction-abstract-and-summary/}}
+The purpose of this project is to develop a simple 32-bit multitasking operating system
+with windows. All these goals have been achieved in this development.
 
-\paragraph{What goes in your ``Conclusions'' chapter?}
+The results of this operating system development test mainly rely on the QEMU
+simulator. Decide on how to modify the code based on whether the results given by the QEMU
+simulator are as expected.
 
-{\fontspec[Scale=.8]{Purisa} The purpose of this chapter is to provide a summary of the
-  whole thesis or report.  In this context, it is similar to the Abstract, except that the
-  Abstract puts roughly equal weight on all thesis/report chapters, whereas the
-  Conclusions chapter focuses primarily on the findings, conclusions and/or
-  recommendations of the project.
+Developing an operating system is not an easy task. Many of its modules are
+interrelated. The relationship between these modules is complicated. The development of
+operating systems should adopt a modular approach. A complete and robust module is
+necessary to develop a module that depends on it. Process management should be the most
+complex part of developing an operating system. Despite this, the development of this part
+has a particularly large impact on the performance of the entire system. The illustration
+of these abstract concepts is helpful for an in-depth understanding of the various modules
+and their relationships.
 
-  There are a couple of rules – one rigid, one common sense, for this chapter:
-  \begin{itemize}
-  \item All material presented in this chapter must have appeared already in the report;
-    no new material can be introduced in this chapter. (rigid rule of technical writing)
-  \item Usually, you would not present any new figures or tables in this chapter. (rule of thumb)
-  \end{itemize}
+For future research, consider more services that the operating system should have
+provided. For example, provide network services. Of course, based on the concept of
+starting from scratch, you can also have your own ideas on how to implement the TCP/IP
+protocol. The file system is not perfect. It can even be said that there is basically no
+file system in this system. The reading and writing of hard disks and memory cards have
+not been able to achieve support. Implementing virtual memory is also a major
+issue. Almost all modern operating systems support virtual memory. In short, despite a lot
+of work, this simple operating system can only be more of a demonstration program.
 
-  Generally, for most technical reports and Masters theses, the Conclusions chapter would
-  be~3 to 5 pages long (double spaced).  It would generally be longer in a large PhD
-  thesis. Typically you would have a paragraph or two for each chapter or major
-  subsection.  Aim to include the following (typical) content.
-  \begin{enumerate}
-  \item Re-introduce the project and the need for the work – though more briefly than in
-    the intro;
-  \item Re-iterate the purpose and specific objectives of your project.
-  \item Re-cap the approach taken – similar to the road map in the intro; however, in this
-    case, you are re-capping the data, methodology and results as you go.
-  \item Summarize the major findings and recommendations of your work.
-  \item Make recommendations for future research.
-  \end{enumerate}}
+I see no ending, yet high and low I’ll search with my will unbending.
 
 %%% 正文部分到此结束。下面是『参考文献』、『指导教师简介』、『鸣谢』、『附录』
 
@@ -2409,19 +2581,38 @@ linenos=true]{c}{../../src/kernel/graphic.c}
 linenos=true]{c}{../../src/kernel/int.c}
 
 
-\subsection{Keyboard and Mouse}
+\subsection{Keyboard and mouse}
 \label{sec:kbd-mse}
 \inputminted[tabsize=2, firstline=21, lastline=45,
 linenos=true]{c}{../../src/kernel/keyboard.c}
 \inputminted[tabsize=2, firstline=21, lastline=36,
 linenos=true]{c}{../../src/kernel/mouse.c}
 
+\subsection{Read fat}
+\label{sec:read-fat-1}
+\inputminted[tabsize=2, firstline=5, lastline=16,
+linenos=true]{c}{../../src/kernel/file.c}
 
 
+\subsection{Load file}
+\label{sec:read-file}
+\inputminted[tabsize=2, firstline=18, lastline=40,
+linenos=true]{c}{../../src/kernel/file.c}
 
+\subsection{Search file}
+\label{sec:search-file-1}
+\inputminted[tabsize=2, firstline=42, lastline=93,
+linenos=true]{c}{../../src/kernel/file.c}
 
+\section{API}
+\label{sec:api-1}
+\inputminted[tabsize=2, firstline=10, lastline=14,
+linenos=true]{nasm}{../../src/apilib/api001.asm}
 
-
+\section{APPs}
+\label{sec:stars2}
+\inputminted[tabsize=2, firstline=1, lastline=29,
+linenos=true]{c}{../../src/app/stars2/stars2.c}
 
 
 \end{document} % 结束。不要动下面几行！

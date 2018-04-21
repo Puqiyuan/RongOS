@@ -23,15 +23,15 @@
   \node (fs) [draw,above=22mm of drv.north east, anchor=south east,xshift=5mm,%
   minimum height=3cm,minimum width=4.5cm,%
   label={above,yshift=-4ex:{File subsystem}}] {};%
-  \node (vfs)  [draw,below=7ex of fs.north,anchor=north,minimum width=3.5cm] {VFS};%
-  \node (nfs)  [draw,below=3ex of vfs.south, scale=.8, xshift=-1cm] {FAT};%
+  %\node (vfs)  [draw,below=7ex of fs.north,anchor=north,minimum width=3.5cm] {VFS};%
+  \node (nfs)  [draw,above=20ex of drv, scale=.8] {FAT};%
   \node (more) [draw,right=3mm of nfs,scale=.8] {$\cdots$};%
   %\node (ext2) [draw,right=3mm of more,scale=.6] {Ext2};%
   %\node (vfat) [draw,right=3mm of ext2,scale=.6] {VFAT};%
-  \draw [arrow] (nfs) -- ($(drv.north) + (-1.55em, 0)$);
+  \draw [arrow] (nfs) -- (drv);
 
-  \draw [arrow]  (nfs.north)-- ++ (0,5mm);%
-  \draw [arrow] (more.north)-- ++ (0,5mm);%
+  %\draw [arrow]  (nfs.north)-- ++ (0,5mm);%
+  %\draw [arrow] (more.north)-- ++ (0,5mm);%
   %\draw [arrow] (ext2.north)-- ++ (0,5mm);%
   %\draw [arrow] (vfat.north)-- ++ (0,5mm);%
   
@@ -45,7 +45,7 @@
   \node (syscall) [draw,above=7.7cm of hwctrl.north,anchor=south,%
   minimum width=8cm] {System call interface};%
   \node (lib) [draw,above=of syscall, minimum width=4cm]%
-  {Libraries};%
+  {API};%
 
   \draw [dashed] ($(hw.north west) + (0,5mm)$)--%
   node [above,xshift=-4.3cm,scale=.6] {Kernel level}%
