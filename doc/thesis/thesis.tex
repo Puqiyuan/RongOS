@@ -20,7 +20,7 @@
     
   What I most want to thank is my girlfriend. She tolerated me when I finished this
   graduation project many nights did not accompany her, gave me support, encouraged me,
-  and did not complain. So I would like to name this simple operating system as RongOS. Rong
+  and did not complain. So I would like to name this simple operating system as \emph{RongOS}. Rong
   is the last word of her name. Thank you, my dearest.
   
   My special thanks to a great company - Google, I think I need to thank you in this very
@@ -53,7 +53,7 @@
 
 \begin{document}
 
-\Title{RongOS --- 一个简单操作系统的设计与实现}
+\Title{\emph{RongOS} --- 一个简单操作系统的设计与实现}
 \Author{蒲启元}
 \Advisor{王晓林}
 \AdvisorTitle{讲师}
@@ -72,7 +72,7 @@
 
 \Keywords{操作系统，进程，内存，中断，boot loader}
 
-\enTitle{RongOS --- A simple OS implementation}
+\enTitle{\emph{RongOS} --- A simple OS implementation}
 
 \enAuthor{Qiyuan PU}
 
@@ -146,7 +146,7 @@ computing environment\cite{hunt2005broad}.
 
 \subsection{Tools}
 
-Some tools were used to develop RongOS, See \emph{tools}\footnote{\url{https://github.com/Puqiyuan/RongOS/tree/master/z_tools}}. Note that
+Some tools were used to develop \emph{RongOS}, See \emph{tools}\footnote{\url{https://github.com/Puqiyuan/RongOS/tree/master/z_tools}}. Note that
 these tools are Windows executable. Please install wine if you want to run these tools on
 Linux. In these tools, the most important ones are:
 
@@ -278,8 +278,8 @@ On traditional architectures, an instruction includes an opcode that specifies t
 operation to perform, such as add contents of memory to register—and zero or more operand
 specifiers, which may specify registers, memory locations, or literal data\cite{wiki:isa}.
 
-This simple RongOS is based on x86 architecture, the following instructions are commonly
-used in programming RongOS:%
+This simple \emph{RongOS} is based on x86 architecture, the following instructions are commonly
+used in programming \emph{RongOS}:%
 
 \begin{description}
 \item[db:] the abbreviation of define byte, write a byte, also 8 bits to file.
@@ -382,7 +382,7 @@ return system information to the program, or do both. A key element of the purpo
 calls is abstraction. The BIOS calls perform generally defined functions, and the specific
 details of how those functions are executed on the particular hardware of the system are
 encapsulated in the BIOS and hidden from the program\cite{wiki:bios-int}. The interrupt
-calls are commonly used in RongOS are listed in Table~\ref{tbl:intcall}.
+calls are commonly used in \emph{RongOS} are listed in Table~\ref{tbl:intcall}.
 
 \begin{table}[!ht]
   \centering\tabulinesep=2mm
@@ -407,7 +407,7 @@ calls are commonly used in RongOS are listed in Table~\ref{tbl:intcall}.
     FLAGS.CF=1\par{}
     error, ah=error number\par{}& disk services \\ \tabucline-
   \end{tabu}
-  \caption{RongOS interrupt calls}\label{tbl:intcall}
+  \caption{\emph{RongOS} interrupt calls}\label{tbl:intcall}
 \end{table}
 
 \section{Memory Map}
@@ -417,7 +417,7 @@ operating system kernel about memory layout. It contains the information regardi
 size of total memory, any reserved regions and may also provide other details specific to
 the
 architecture\footnote{http://hypervsir.blogspot.com/2014/09/approach-to-retrieving-bios-memory-map.html}. For
-loading RongOS to memory, the memory layout should be clarified as in
+loading \emph{RongOS} to memory, the memory layout should be clarified as in
 Table~\ref{tbl:memlayout}.
 
 
@@ -444,7 +444,7 @@ Table~\ref{tbl:memlayout}.
     c8000 & cbfff & 819200 & 835583 & 16K & IDE hard drive \\ 
     cc000 & cffff & 835584 & 851967 & 16K & optional adapter \\ \tabucline-
   \end{tabu}
-  \caption{RongOS Memory Layout}\label{tbl:memlayout}
+  \caption{\emph{RongOS} Memory Layout}\label{tbl:memlayout}
 \end{table}
 
 \section{Floppy Disk}
@@ -504,7 +504,7 @@ hardwares.
 \begin{figure}%[!htbp]
   \centering
   \includegraphics[width=.7\textwidth]{kernel-block.pdf}
-  \caption{Top-level design}
+  \caption{top-level design}
   \label{fig:top-level}
 \end{figure}
 
@@ -552,7 +552,7 @@ that are temporarily not running will be moved to secondary storage through pagi
 swapping. How virtual memory is designed and how it is implemented will have a wide impact
 on the overall system performance.
 
-For RongOS, table ~\ref{tab:memo-tab} reflects the memory management system.
+For \emph{RongOS}, table ~\ref{tab:memo-tab} reflects the memory management system.
 \begin{table}[!ht]
   \centering
   \begin{tabular}{|c|c|}
@@ -681,7 +681,7 @@ exert control to each task.
   \begin{center}
     \includegraphics[width=.5\textwidth]{switch}
   \end{center}
-  \caption{Context switch}
+  \caption{context switch}
   \label{fig:ctxt-switch}
 \end{figure}
 
@@ -966,37 +966,58 @@ struct SHTCTL
 \subsubsection{System Calls}
 \label{sec:system-call}
 
-The system calls encapsulate each module in the kernel\fxerror{???}. These system calls are part of the
-kernel. In this system, system calls are called by the API instead of the
-application.\fxerror{see wikipedia}
+The application requests the operating system kernel to provide services through system
+calls. These services include both hardware services such as reading disks and software
+services such as creating child processes and communicating between processes. But in the
+\emph{RongOS} operating system, the user process is not directly facing the system call,
+but the API. System calls provide an essential interface between a API and the operating
+system kernel.
+
 
 \paragraph{System Calls Prototype}
-\fxerror{more about each function}
 
 \csingle|void cons_putchar(struct CONSOLE *cons, int chr, char move);|
 \begin{itemize}
-\item put a \emph{chr} character on \emph{cons} console.
+\item Put a \emph{chr} character on \emph{cons} console. A \emph{console} is a command line
+  window where users can enter commands to run. Entering a character at the command line
+  involves moving the mouse. This is controlled by \emph{move} variable.
+  
 \end{itemize}
 
 \csingle|void cons_newline(struct CONSOLE *cons);|
 \begin{itemize}
-\item newline in \emph{cons} console.
+\item Newline in \emph{cons} console. The command line needs to wrap when the enter key is
+  pressed. 
+  
 \end{itemize}
 
 \csingle|void cons_putstr0(struct CONSOLE *cons, char *s);|
 \begin{itemize}
-\item put string \emph{s} in \emph{cons} console, no length.
+\item Put string \emph{s} in \emph{cons} console, no length was specified. This function
+  will call \emph{void cons\_putchar(struct CONSOLE *cons, int chr, char move)} to
+  complete its service. 
+  
+  
 \end{itemize}
 
 \csingle|void cons_putstr1(struct CONSOLE *cons, char *s, int l);|
 \begin{itemize}
-\item put string \emph{s} in \emph{cons}, \emph{l} is the length of string
-  \emph{s}.
+\item Put string \emph{s} in \emph{cons}, \emph{l} is the length of string
+  \emph{s}. In general, the service provided by this function is similar to that of
+  \emph{void cons\_putstr0(struct CONSOLE *cons, char *s)}. Only in this function can
+  specify the length of the string by \emph{l}.
+  
 \end{itemize}
 
 \csingle|int cmd_app(struct CONSOLE *cons, int *fat, char *cmdline);|
 \begin{itemize}
-\item Start an application based on the input from the command line \emph{cmdline};
+\item Start an application based on the input from the command line
+  \emph{cmdline}. emph{fat} is a file allocation
+  table. In this table it records which files are stored on which blocks and how these
+  blocks relate to each other. This function finds the application to start by searching
+  the \emph{fat} table and runs it. 
+  
+  
 \end{itemize}
 
 \subsubsection{Driver}
@@ -1232,7 +1253,7 @@ application is to imitate the application of stars in the sky: \emph{stars2}.
 
 \iffalse %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{1. Data Structure in Kernel}
-In this section data structures used in the RongOS operating system will be introduced in
+In this section data structures used in the \emph{RongOS} operating system will be introduced in
 detail.
 
 \paragraph{BOOTINFO}
@@ -1830,7 +1851,7 @@ becomes somewhat complicated. It is mainly divided into the following categories
   \begin{figure}[!ht]
     \centering
     \includegraphics[width=.6\textwidth]{former_merge}
-    \caption{Insert an item merged with the previous item}
+    \caption{insert an item merged with the previous item}
     \label{fig:former-merge}
   \end{figure}
   As shown in the figure, the starting address of \emph{new x} 670 is adjacent to the
@@ -1842,7 +1863,7 @@ becomes somewhat complicated. It is mainly divided into the following categories
   \begin{figure}[!ht]
     \centering
     \includegraphics[width=.6\textwidth]{latter_merge}
-    \caption{Insert an item merged with the latter item}
+    \caption{insert an item merged with the latter item}
     \label{fig:latter-merge}
   \end{figure}
   The termination address 999 of \emph{new x} is adjacent to the starting address 1000
@@ -1893,7 +1914,7 @@ implementation, see ~\ref{sec:memory-rele-proc}
 
 Process management is a very complex but very important part of operating system
 development. This part of the development has a very big impact on the performance of the
-entire system. For the RongOS operating system, all tasks are managed
+entire system. For the \emph{RongOS} operating system, all tasks are managed
 hierarchically. Fig. ~\ref{fig:proc-manage} clearly shows how all the tasks in the system
 are managed.
 
@@ -2150,7 +2171,7 @@ four sections.
     \begin{minipage}{0.45\textwidth}
       \centering
       \includegraphics[width=1.2\textwidth]{sheet_move4} 
-      \caption{height setting 4}
+      \caption{height setting four}
       \label{fig:sit-four}
     \end{minipage}
     \caption{all four setting height conditions}
