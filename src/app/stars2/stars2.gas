@@ -41,7 +41,7 @@ L6:
 	leal	6(%edx), %esi
 	call	_rand
 	movl	$67, %edx
-	pushl	$3
+	pushl	$7
 	movl	%edx, %ecx
 	cltd
 	idivl	%ecx
