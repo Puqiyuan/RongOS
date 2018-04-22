@@ -77,16 +77,18 @@ keystatus:
 ; Hang up occasionally if you do not do this before CLI.
 ; Initialize PIC later.
 	mov al,0xff
-	out 0x21,al
+	out 0x21,al ; io_out(PIC0_IMR, 0xff), all interrupts of the primary PIC are prohibited.
 	nop ; if the out command is executed continuously, some models will not work normally.
-	out 0xa1,al
+    out 0xa1,al ; io_out(PIC1_IMR, 0xff), all interrupts of the slave PIC are prohibited.
 	cli ; in addition, interrupt disabled even at CPU level.
 
-	; set A20GATE so that CPU can access 1 MB or more of memory.
-	call waitkbdout
-	mov al,0xd1
-	out 0x64,al
-	call waitkbdout
+; set A20GATE so that CPU can access 1 MB or more of memory.
+; Send 0xdf to the slave port of the keyboard control circuit. This port is connected to the motherboard.
+; so enable A20GATE.
+	call waitkbdout ; wait_KBC_sendready(), send commands to the keyboard and wait for the keyboard to be ready.
+	mov al,0xd1 ; 
+	out 0x64,al ; io_out8(PORT_KEYCMD, KEYCMD_WRITE_OUTPORT)
+	call waitkbdout ; wait_KBC_sendready()
 	mov al,0xdf ; enable A20
 	out 0x60,al
 	call waitkbdout
@@ -98,17 +100,20 @@ keystatus:
 	mov eax,cr0
 	and eax,0x7fffffff ; set bit 31 to 0(because paging is prohibited)
 	or eax,0x00000001 ; set bit 0 to 1(for protect mode transition)
-	mov cr0,eax
-	jmp pipelineflush
+	mov cr0,eax ; Until now, the interpretation of the segment register is no longer 16 times, but the use of GDT.
+	jmp pipelineflush ; after switch mode, jmp must.
 pipelineflush:
-	mov ax,1*8 ; readable / writable segment 32 bits.
-	mov ds,ax
+	mov ax,1*8 ; readable / writable segment 32 bits. The value of all segment registers changed from 0000 to 0008 in addition to cs, also gdt + 1.
+	mov ds,ax 
 	mov es,ax
 	mov fs,ax
 	mov gs,ax
 	mov ss,ax
 
 ; transfer bootpack
+; memcpy(bootpack, BOTPAK, 512 * 1024 / 4)
+; Copy bootpack.ros 512KB to memory at 0x00280000.
+; Asmhead.bin is combined with bootpack.ros to make Rongbote.sys (this can be done by the makefile). After executing asmhead.bin, it will jump to 0x00280000 and execute the operating system itself.
 	mov esi,bootpack
 	mov edi,BOTPAK
 	mov ecx,512*1024/4
@@ -116,12 +121,17 @@ pipelineflush:
 
 ; also transfer disk data to its original position
 ; first from the boot sector
+; memcpy(0x7c00, 0x00100000, 512 / 4)
+;           src,   des,        mount
+; Copy the boot sector to the 1MB memory space.
 	mov esi,0x7c00 ; transfer source
 	mov edi,DSKCAC ; forwarding destination
 	mov ecx,512/4
 	call memcpy
 
 ; all remaining
+; memcpy(DSKCAC0+512, DSKCAC+512, cyls * 512 * 18 * 2 / 4 - 512 / 4);
+; Copy the contents of the disk at 0x0008200 to 0x100200 in memory.
 	mov esi,DSKCAC0+512 ; transfer source
 	mov edi,DSKCAC+512 ; forwarding destination
 	mov ecx,0

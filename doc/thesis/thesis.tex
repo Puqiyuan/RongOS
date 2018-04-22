@@ -1786,6 +1786,10 @@ etc.
 \section{Boot Up}
 \label{sec:boot-up-1}
 
+\subsection{Boot Loader}
+\label{sec:boot-loader}
+
+
 The boot loader is implemented in Intel assembly. It works as follows:
 
 \begin{enumerate}
@@ -1878,6 +1882,43 @@ The above four steps can be intuitively reflected in the Fig. ~\ref{fig:iplflowc
   \caption{the working flowchart of boot loader}
   \label{fig:iplflowchart}
 \end{figure}
+
+\subsection{Mode Switch}
+\label{sec:mode-switch}
+
+One of the purposes of developing RongOS is to make it support 32-bit mode. When the CPU
+is started, it is in real mode, that is, 16-bit mode. Writes out \emph{jmp 0x2c00} at the
+end of the IPL. This means that after the IPL is loaded, it will jump to the \emph{asmhead}
+execution. \emph{asmhead} will implement the mode conversion and jump to the operating system's
+own code to begin execution. This mainly includes the following steps.
+\begin{enumerate}
+\item The CPU cannot interrupt when it performs mode conversion, so first it is necessary
+  to disable the interrupt. Forbidden to interrupt is actually to set the corresponding
+  register to 1. See the code ~\ref{sec:switch1} for details.
+
+\item When initially having a computer, the CPU has only 16-bit mode, so the maximum
+  memory is only 1MB. Later, the memory became larger, but in order to be compatible with
+  the previous operating system, the circuit was limited to use only 1 MB of memory before
+  activating the instruction. So the next step is to make the A20 address valid.
+
+  The A20GATE signal line can be turned ON by instructing the keyboard control circuit's
+  auxiliary port output 0xdf. This accessory port is connected to many places on the
+  motherboard. Different control functions can be achieved by inputting different values
+  to this port. Since the circuit is to be controlled by the keyboard, the keyboard
+  control circuit must be enabled. See the code for details ~\ref{sec:switch2}.
+
+\item Next is the mode switch. This only needs to modify the least significant bit of the
+  \emph{cr0} register to 1. However, RongOS does not support paging, so the highest bit is
+  set to 0, and paging is prohibited. However, the \emph{cr0} register cannot be operated
+  directly, so the value must be moved to the \emph{eax} register. Specific code
+  implementation, see ~\ref{sec:switch3}. After switching to protected mode, the
+  interpretation of the registers changes, so their values need to be reset.
+
+\end{enumerate}
+
+
+
+
 
 \section{Kernel}
 \label{sec:kernel-1}
@@ -2489,7 +2530,7 @@ I see no ending, yet high and low I’ll search with my will unbending.
 
 \chapter{Main Program Code} %附录一
 
-\section{Boot loader}
+\section{Boot Up}
 
 \subsection{Display boot information}
 \label{sec:dis-boo-inf}
@@ -2510,6 +2551,18 @@ linenos=true]{nasm}{../../src/kernel/ipl10.asm}
 \subsection{The next cylinder}
 \label{sec:the-nex-cyl}
 \inputminted[firstline=134,lastline=137,linenos=true]{nasm}{../../src/kernel/ipl10.asm}
+
+\subsection{Disable interrupts}
+\label{sec:switch1}
+\inputminted[firstline=75,lastline=83,linenos=true]{nasm}{../../src/kernel/asmhead.asm}
+
+\subsection{Enable A20}
+\label{sec:switch2}
+\inputminted[firstline=85,lastline=94,linenos=true]{nasm}{../../src/kernel/asmhead.asm}
+
+\subsection{Mode switch}
+\label{sec:switch3}
+\inputminted[firstline=98,lastline=111,linenos=true]{nasm}{../../src/kernel/asmhead.asm}
 
 
 \section{Kernel Modules}
