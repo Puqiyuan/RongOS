@@ -14,7 +14,7 @@ void HariMain(void)
 		{
 			x = (rand() % 137) + 6;
 			y = (rand() % 67) + 26;
-			api_point(win + 1, x, y, 3);
+			api_point(win + 1, x, y, 7);
 		}
 	api_refreshwin(win, 6, 26, 144, 94);
 	for (;;)
