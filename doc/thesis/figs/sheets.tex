@@ -1,23 +1,23 @@
 \input{printable}
 
 \begin{document}
-\begin{tikzpicture}[node distance=1cm, thick]
-  \node (sheet0) [io, trapezium left angle=40, trapezium right angle=140, minimum
-  height=.5cm, minimum width=1.5cm, line width=0.05em, label={[anchor=south
-    west, inner sep=1.5pt, scale=.5, xshift=-.9cm]south west:$0$}] {};
+\begin{tikzpicture}[node distance=1cm,
+  every node/.style ={fill=gray, opacity=.1, io,
+    trapezium left angle=40, trapezium right angle=140,
+    minimum height=.5cm, minimum width=1.5cm, line width=0.05em}, ]%
 
-  \node (sheet1) [io, above=of sheet0, yshift=-1.35cm, xshift=.4cm, trapezium left angle=40, trapezium right angle=140, minimum
-  height=.5cm, minimum width=1.5cm, line width=0.03em, label={[anchor=south
-    west, inner sep=1.5pt, scale=.5, xshift=-.9cm]south west:$1$}] {};
+  \node (sheet0) [label={[anchor=south west, inner sep=1.5pt, scale=.5, xshift=-1cm, yshift=-.5ex]south
+    west:$0$}] {};
 
-  \node (sheet2) [io, above=of sheet1, yshift=-1.35cm, xshift=.4cm, trapezium left angle=40, trapezium right angle=140, minimum
-  height=.5cm, minimum width=1.5cm, line width=0.01em, label={[anchor=south
-    west, inner sep=1.5pt, scale=.5, xshift=-.9cm]south west:$2$}] {};
+  \node (sheet1) [above=of sheet0, yshift=-1.4cm, xshift=.4cm, label={[anchor=south west, inner sep=1.5pt, scale=.5, xshift=-1cm,yshift=-.5ex]south
+    west:$1$}] {};
 
-  \node (more) [above=of sheet2, yshift=-1.3cm, xshift=0cm, scale=.5] {......};
+  \node (sheet2) [above=of sheet1, yshift=-1.4cm, xshift=.4cm, label={[anchor=south west,
+    inner sep=1.5pt, scale=.5, xshift=-1cm,yshift=-.8ex]south west:$...$}] {};
 
+  \node (more) [above=of sheet2, yshift=-1.4cm, xshift=.4cm, label={[anchor=south west,
+    inner sep=1.5pt, scale=.5, xshift=-1cm, yshift=-.8ex]south west:$n$}] {};
   
-
 \end{tikzpicture}
 \end{document}
 

@@ -146,9 +146,12 @@ computing environment\cite{hunt2005broad}.
 
 \subsection{Tools}
 
-Some tools were used to develop \emph{RongOS}, See \emph{tools}\footnote{\url{https://github.com/Puqiyuan/RongOS/tree/master/z_tools}}. Note that
-these tools are Windows executable. Please install wine if you want to run these tools on
-Linux. In these tools, the most important ones are:
+Some tools were used to develop \emph{RongOS}, See
+\emph{tools}\footnote{\url{https://github.com/Puqiyuan/RongOS/tree/master/z_tools}}. Since
+my system is Linux, these tools are in exe format. These tools include tools for creating
+image files and assemblers. Note that these tools are Windows executable. Please install
+wine if you want to run these tools on Linux. In these tools, the most important ones are:
+
 
 \begin{description}
 \item[nask.exe:] the assembler, a modified version of NASM\cite{30_os}
@@ -529,6 +532,13 @@ in the following four steps:
 
 At this stage, it is also necessary to complete the 32-bit protection mode switch and jump
 to the entry point of the operating system.
+\begin{enumerate}
+\item All interrupts are disabled because they cannot accept interrupts when the CPU
+  switches between modes.
+\item Make the A20 address line valid.
+\item Mode switching is performed by modifying the value of the \texttt{cr0} register.
+\item Jump to the code of the operating system itself.  
+\end{enumerate}
 
 \subsection{Kernel}
 \label{sec:kernel}
@@ -566,19 +576,19 @@ that are temporarily not running will be moved to secondary storage through pagi
 swapping. How virtual memory is designed and how it is implemented will have a wide impact
 on the overall system performance.
 
-For \emph{RongOS}, table ~\ref{tab:memo-tab} reflects the memory management system.
+For \emph{RongOS}, Table ~\ref{tab:memo-tab} reflects the memory management system. 
 \begin{table}[!ht]
   \centering
-  \begin{tabular}{|c|c|}
+  \begin{tabular}{c|c}
     \hline
     Start Address & Free Size \\
     \hline
     1 & 301 \\
-    \hline
+
     348 & 50 \\
-    \hline
+
     800 & 1000 \\
-    \hline
+
     3001 & ... \\
     \hline
   \end{tabular}
@@ -586,9 +596,11 @@ For \emph{RongOS}, table ~\ref{tab:memo-tab} reflects the memory management syst
   \label{tab:memo-tab}
 \end{table}
 An \emph{entry} is a record reflects how much memory space is free from where. Actually,
-this table is an member \emph{struct FREEINFO} in \emph{struct MEMMAN}.
+this table is an member \texttt{struct FREEINFO} in \texttt{struct MEMMAN}. The entire memory
+can be managed by operating the \texttt{MEMMAN} structure.
 
-
+The function of memory release and memory application is mainly implemented in the memory
+management module in \emph{RongOS}.
 
 
 \paragraph{Data Structures used in MM}
@@ -622,13 +634,16 @@ struct MEMMAN
 \end{codeblock}
 \begin{itemize}
 \item is used to record the entire
-  memory usage, such as the total remaining free memory space and \emph{entry}.
+  memory usage, such as the total remaining free memory space and \emph{entry}. An
+  \emph{entry} records a free memory message.
+  
 \end{itemize}
 
 \paragraph{Memory Management Functions}
 \csingle|unsigned int memtest(unsigned int start, unsigned int end);|
 \begin{itemize}
-\item Check the memory capacity and confirm that the memory is intact. \emph{start} is the start
+\item Check the memory capacity and confirm that the memory is intact. Because before we
+  do memory management we must know how big and where is good. \emph{start} is the 
   address of the memory check and \emph{end} is the end address of the memory
   check. This function returns the maximum value of available addresses. Memory is
   available between this value and the \emph{start} value.
@@ -644,7 +659,7 @@ struct MEMMAN
 
 \csingle|unsigned int memman_alloc(struct MEMMAN *man, unsigned int size);|
 \begin{itemize}
-\item Allocate memory to the application, where \emph{size} is the space requested by the
+\item Allocate memory to the application that required the space, where \emph{size} is the space requested by the
   application. Success returns the available starting address, otherwise 0. \emph{man} records
   information about all available entries in memory.
   
@@ -688,6 +703,8 @@ maintains a data structure called PCB(process control block) for each task. The 
 describes the resources and the state of the task, which also allows the operating system to
 exert control to each task.
 
+For \emph{RongOS}, the task management module implements the PCB application, the release
+of the PCB, and the scheduling of task operations.
 
 
 \begin{figure}
@@ -747,7 +764,8 @@ struct TSS32
 \end{ccode}
 \end{codeblock}
 \begin{itemize}
-\item holds information about task status segments, which are based on CPU
+\item holds information about task status segments(TSS segments), For example, which
+  instruction is currently being executed, the stack address, etc. which are based on CPU
   specifications\cite[Sec.6.2.1]{intel_3a}. The \emph{eip} register records where in the
   memory the next instruction to be executed by the CPU is located.
 \end{itemize}
@@ -764,9 +782,9 @@ struct TASKCTL
 \end{ccode}
 \end{codeblock}
 \begin{itemize}
-\item is used to control all tasks in the system. This structure uses the \emph{now\_lv}
-  variable to record the current running \emph{level} in the system. See
-  Fig. ~\ref{fig:proc-manage}.
+\item By operating this structure, all tasks in the system can be controlled. This
+  structure uses the \texttt{now\_lv} variable to record the current running
+  \texttt{level} in the system. See Fig. ~\ref{fig:proc-manage}.
   
   
 \end{itemize}
@@ -859,9 +877,9 @@ the content displayed by a \emph{sheet} changes. Graphic management is also resp
 for setting the height of the \emph{sheet}. The \emph{sheet} height setting is a relatively
 complex part of the graphics management, which will be explained in detail in the
 implementation section. Usually the lowest \emph{sheet} is the computer desktop, which is the
-background layer. The highest \emph{sheet} is the mouse layer. In general, for modern
-operating systems, graphics management is not a matter of the operating system kernel. So
-this part only shows in detail the more complicated part of the \emph{sheet} height
+background layer. The highest \emph{sheet} is the mouse layer. 
+
+This part only shows in detail the more complicated part of the \emph{sheet} height
 setting. Fig. ~\ref{fig:state-sheets} shows the possible state of some of the \emph{sheet}
 on the computer screen.
 \begin{figure}[!ht]
@@ -921,9 +939,10 @@ struct SHTCTL
 
 \csingle|struct SHTCTL *shtctl_init(struct MEMMAN *memman,unsigned char *vram,int xsize,int ysize);|
 \begin{itemize}
-\item Initialize a sheet control structure, \emph{vram} is the address of video
-  RAM. \emph{xsize} and \emph{ysize} is the size of sheet. Mark all sheet structures
-  as 0 to indicate that they are not used.
+\item Initialize a sheet control structure;
+\item \texttt{vram} is the address of video RAM;
+\item \texttt{xsize}, \texttt{ysize} — the size of sheet.
+\item Mark all flag of sheet structures as 0 to indicate that they are not used.
   
 \end{itemize}
 
@@ -952,14 +971,13 @@ struct SHTCTL
 \item Refreshes the screen range specified by \emph{bx0}, \emph{by0}, \emph{bx1} and
   \emph{by1}. There are many \emph{sheet} on the computer screen. Not all the ranges of
   all \emph{sheet} will be refreshed when the screen is refreshed. Considering the
-  efficiency of the refresh, this also requires a delicate design. But this is generally
-  not something that the operating system kernel cares about, so it will be omitted.
+  efficiency of the refresh, this also requires a delicate design. 
 \end{itemize}
 
 \csingle|void sheet_free(struct SHEET *sht);|
 \begin{itemize}
-\item Release a \emph{sheet}. In addition to marking the \emph{sheet} as unused, the first
-  thing to do is to hide the \emph{sheet}. 
+\item Release a \emph{sheet}. In addition to marking the \emph{sheet} as unused, the
+  thing need  to do is to hide the \emph{sheet}.
 \end{itemize}
 
 \csingle|void make_window8(unsigned char *buf, int xsize, int ysize, char *title, char act);|
@@ -1043,9 +1061,9 @@ devices, enabling operating systems and other computer programs to access hardwa
 functions without needing to know precise details of the hardware being used. In this way,
 application programmers can develop hardware-independent programs.
 
-When the driver is called, it sends the command to operate the hardware. Once the hardware
-device returns data, the driver informs the calling program to process it. The entire
-process is an interruption.
+When the driver is called, it sends the command to the devices operate the hardware. Once
+the hardware device returns data, the driver informs the calling program to process
+it. The entire process is an interruption.
 
 For \emph{RongOS}, the main hardware devices are floppy disks, mice, keyboard, and
 screen. So the following driver functions are mainly used to manipulate them.
@@ -1151,7 +1169,8 @@ exposing objects or actions the developer needs, an API simplifies programming.
 \subsubsection{All APIs}
 \label{sec:all-apis}
 The application is directly facing the API. The RongOS system has more than 20 APIs.
-For the API more is introduced.
+For a detailed description of the API, please refer to the source code.
+
 
 
 \csingle|void api_putchar(int c);|
@@ -1925,6 +1944,9 @@ own code to begin execution. This mainly includes the following steps.
 
 \subsection{Memory Management}
 \label{sec:memory-management-2}
+The RongOS implementation includes several features, memory checking, release, and
+application.
+
 
 \subsubsection{Memory Check}
 \label{sec:memory-check}
@@ -1999,7 +2021,7 @@ becomes somewhat complicated. It is mainly divided into the following categories
   adjacent to the starting address 1000 of the next entry. The so-called neighboring means
   that the difference between the two addresses is 1. Same as below.
 
-\item Can be merged with the previous entry. As the figure ~\ref{fig:former-merge} shows.
+\item Can be merged with the previous entry. As the Fig.~\ref{fig:former-merge} shows.
   \begin{figure}[!ht]
     \centering
     \includegraphics[width=.6\textwidth]{former_merge}
@@ -2011,7 +2033,7 @@ becomes somewhat complicated. It is mainly divided into the following categories
   starting address 1000 of the next entry.
 
 
-\item Can be merged with the latter entry. As the figure ~\ref{fig:latter-merge} shows.
+\item Can be merged with the latter entry. As the Fig.~\ref{fig:latter-merge} shows.
   \begin{figure}[!ht]
     \centering
     \includegraphics[width=.6\textwidth]{latter_merge}
@@ -2081,7 +2103,7 @@ are managed.
 
 
 
-From \emph{level 0} to \emph{level 10}, there are a total of ten levels in
+From \texttt{level 1} to \texttt{level 10}, there are a total of ten levels in
 the system. All these ten levels and the space they prepare for the task are called \emph{task
   pool}. For each task, it also has a \emph{priority} attribute. It actually specifies how
 long each process can run, also known as a \emph{time slice}. 
