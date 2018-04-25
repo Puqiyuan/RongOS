@@ -1,0 +1,58 @@
+\documentclass{swfcgtaskspec}
+
+\Gyear{2015} % 毕业年份
+\Year{\hspace{4em}} %填表年份
+\Month{\hspace{2em}}   % 月
+\Date{\hspace{2em}}   % 日
+\Signature{ \includegraphics[width=.4\linewidth]{../signature} }
+\StudSignature{\hspace{4em}} %学生签名
+\Prjtitle{RongOS — 一个简单操作系统的设计与实现}
+
+\Studclass{计科网络14}\Studname{蒲启元}\Studid{20141156009}
+
+\Prjwhy{ % 目的、意义。不要超过400字。
+  \hspace{2em}
+  操作系统管理着计算机的硬件和软件资源，它是向上层应用软件提供服务（接口）的核心系
+  统软件，这些服务包括进程管理，内存管理，文件系统，网络通信，安全机制等。操作系统的设计与
+  实现则是软件工业的基础。
+  
+  \hspace{2em}本项目从零开始设计开发一个简单的操作系统，包括boot loader，中断，
+  内存管理，图形接口，多任务等功能模块，以及能运行在这个系统之上的几个小应用程序。尽管这
+  个系统很简单，但它是自主开发操作系统的一次尝试。
+  
+  \hspace{2em}本课题的研究目的是深入理解操作系统原理，对课本上的一些难以琢磨的概念进行实践，
+  为以后做有关操作系统的研究打下扎实的基础。}
+
+\Prjwhen{ % 进度、安排。不要超过10行。
+  \begin{itemize}
+  \item 每周: 交一次周报告
+  \item 每两周: 开会讨论一次
+  \item 1 -- 4周: 调研，并确定论文一级目录
+  \item 5 -- 8周: 明确要实现的内核功能模块
+  \item 8 -- 12周: 编码实现，并完成论文的相应部分
+  \item 12 -- 16周: 测试、完善，并完成论文的相应部分
+  \item 16 -- 20周: 论文终稿
+  \end{itemize}
+}
+
+\Prjwhat{ % 任务、要求。不要超过400字。
+  \hspace{2em}本实验通过对操作系统的简单研究和探索，了解操作系统的原理和实现过程。通过了解
+  操作系统的基本概念，包括系统的启动、进程及进程间通信、消息传递、调度算法、输入/输出、设备
+  驱动程序、存储器管理、文件系统设计、安全机制、窗口等。另外，对相应的硬件设 备也进行了一些简单的了解。在此基础上，立足实践，开发出一个简单的操作系统，用以理解由启动
+  到运行，并执行用户输入命令的过程。通过探究操作系统开发的细节问题，更深刻的理解操作系统的
+  核心原理。}
+
+\addbibresource{os.bib}
+\Prjbib{ % 参考文献。不要超过6条。
+  \nocite{30_os,china_2025,wiki:qemu,hunt2005broad,intel_3a}
+  \printbibliography[heading=none]{}
+  %参考文献里有中文的话编译会报错，但结果没问题。
+}
+\begin{document}
+\makeform
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
