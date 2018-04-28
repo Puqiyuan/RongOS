@@ -108,6 +108,10 @@ research. The setup of the development environment will also be presented here.
 
 
 \section{Background}
+An operating system acts as an intermediary between the user of a computer and the
+computer hardware. The purpose of an operating system is to provide an environment in
+which a user can execute programs in a convenient manner\cite{abrahamoperating}.
+
 
 Contemporary software systems are beset by problems that create challenges and
 opportunities for broad new OS research. There are five areas could improve user
@@ -128,7 +132,6 @@ The world needs broad operating system research. Dependability, security, system
 configuration, system extension, and multi-processor programming illustrate areas were
 contemporary operating systems have failed to meet the software challenges of the modern
 computing environment\cite{hunt2005broad}.
-
 
 \section{Preliminary Works}
 
@@ -1099,6 +1102,10 @@ screen. So the following driver functions are mainly used to manipulate them.
 
 \subsubsection{FAT File System}
 \label{sec:fat}
+All computer applications need to store and retrieve information. While a proc-
+ess is running, it can store a limited amount of information within its own address
+space. However, the storage capacity is restricted to the size of the virtual address
+space\cite{tanenbaum2009modern}.
 
 File Allocation Table (FAT) is a computer file system architecture and a family of
 industry-standard file systems utilizing it. The FAT file system is a continuing standard
@@ -1816,7 +1823,10 @@ The boot loader is implemented in Intel assembly. It works as follows:
   Appendix~\ref{sec:dis-boo-inf}) outputs some boot information. When \emph{al=0}, the
     null character ofboot information hit. Interrupt \emph{0x10} is used for showing a
     character on the screen.
-    
+
+    An interrupt is an asynchronous event that is typically triggered by an I/O
+    device\cite{intelbasic}.
+        
     The number of interrupt functions used in \emph{RongOS} and their register parameters
     are shown in table ~\ref{tab:int-info}.
 
@@ -2085,6 +2095,10 @@ implementation, see ~\ref{sec:memory-rele-proc}
 
 \subsection{Process Management}
 \label{sec:process-management}
+A process can be thought of as a program in execution. A process will
+need certain resources — such as CPU time, memory, files, and I/O devices
+— to accomplish its task. These resources are allocated to the process
+either when it is created or while it is executing\cite{silberschatz2014operating}.
 
 Process management is a very complex but very important part of operating system
 development. This part of the development has a very big impact on the performance of the
